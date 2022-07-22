@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang=en>
+	<head>
+		<meta charset="utf-8">
+	   <title>Bit Tac Toe</title>
+		<style>
+			body {
+				word-wrap: break-word;
+				text-align: center;
+				padding-left: 25%;
+				padding-right: 25%;
+			}
+			#box {
+				margin: auto;
+				padding: 5px;
+				border: 10px solid black;
+			}
+			p {
+				font-size: 40px;
+				margin: 0px;
+			}
+			#buttonbox {
+				padding-left: 25%;
+			}
+			button {
+			   width: 100px;
+				height: 100px;
+				padding: 0px;
+				font-size: 40px;
+				font-family: monospace;
+				font-variant: all-small-caps;
+			}
+		</style>
+    </head>
+    <body>
+		 <h1>Bit Tac Toe</h1>
+		 <div id=box>
+		 </div>
+		 <script>
+			 var win = 0;
+			 var winbit = "";
+			 
+			 var cache = document.getElementById("box");
+			 console.log(cache);
+			 
+			 var turn = 0;
+			 
+			 var bits = ["!","!","!","!","!","!","!","!","!"];
+			 
+			 var bitloc = [[],[]];
+			 
+			 //button functions
+			 var click0 = function() {
+				 if (bits[0] === "!") {
+					click(0); 
+				 }
+				 else {
+					alert("someone already claimed that bit"); 
+				 }
+			 }
+			 var click1 = function() {
+				 if (bits[1] === "!") {
+					click(1); 
+				 }
+				 else {
+					alert("someone already claimed that bit"); 
+				 }
+			 }
+			 var click2 = function() {
+				 if (bits[2] === "!") {
+				 	click(2); 
+				 }
+				 else {
+					alert("someone already claimed that bit"); 
+				 }
+			 }
+			 var click3 = function() {
+				 if (bits[3] === "!") {
+					click(3); 
+				 }
+				 else {
+					alert("someone already claimed that bit"); 
+				 }
+			 }
+			 var click4 = function() {
+				 if (bits[4] === "!") {
+					click(4); 
+				 }
+				 else {
+					alert("someone already claimed that bit"); 
+				 }
+			 }
+			 var click5 = function() {
+				 if (bits[5] === "!") {
+					click(5); 
+				 }
+				 else {
+					alert("someone already claimed that bit"); 
+				 }
+			 }
+			 var click6 = function() {
+				 if (bits[6] === "!") {
+					click(6); 
+				 }
+				 else {
+					alert("someone already claimed that bit"); 
+				 }
+			 }
+			 var click7 = function() {
+				 if (bits[7] === "!") {
+					click(7); 
+				 }
+				 else {
+					alert("someone already claimed that bit"); 
+				 }
+			 }
+			 var click8 = function() {
+				 if (bits[8] === "!") {
+					click(8); 
+				 }
+				 else {
+					alert("someone already claimed that bit"); 
+				 }
+			 }
+			 //buttons
+			 
+			 function render() {
+				  if (win === 0) {
+			     cache.innerHTML = "<p>It is "+turn+"'s turn</p><table id=\"buttonbox\"><tr></tr><tr><td><button onclick=\"click0()\">"+bits[0]+"</button></td><td><button onclick=\"click1()\">"+bits[1]+"</button></td><td><button onclick=\"click2()\">"+bits[2]+"</button></td></tr><tr><td><button onclick=\"click3()\">"+bits[3]+"</button></td><td><button onclick=\"click4()\">"+bits[4]+"</button></td><td><button onclick=\"click5()\">"+bits[5]+"</button></td></tr><tr><td><button onclick=\"click6()\">"+bits[6]+"</button></td><td><button onclick=\"click7()\">"+bits[7]+"</button></td><td><button onclick=\"click8()\">"+bits[8]+"</button></td></tr></table>";
+				 checkForWin();
+				 }
+				 else {
+					 cache.innerHTML = "";
+					 var winMessage = document.createElement("h1");
+					 winMessage.textContent = winbit + " won!";
+					 document.getElementById("box").appendChild(winMessage);
+				 }
+			 };
+			 
+			 function click(buttonid) {
+				 bits[buttonid] = turn;
+				 bitloc[turn][buttonid] = "a";
+					 if (turn === 0) {
+					 turn = 1;
+					 }
+					 else {
+				    turn = 0; 
+					 }
+				    render();
+			 };
+			 var checkForWin = function() {
+				 for (var i = 0; i < 2; i++) {
+					 if (bitloc[i][0] === "a" && bitloc[i][3] === "a" && bitloc[i][6] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][1] === "a" && bitloc[i][4] === "a" && bitloc[i][7] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][2] === "a" && bitloc[i][5] === "a" && bitloc[i][8] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][6] === "a" && bitloc[i][7] === "a" && bitloc[i][8] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][3] === "a" && bitloc[i][4] === "a" && bitloc[i][5] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][0] === "a" && bitloc[i][1] === "a" && bitloc[i][2] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][2] === "a" && bitloc[i][4] === "a" && bitloc[i][6] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][0] === "a" && bitloc[i][4] === "a" && bitloc[i][8] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+				 }
+				 if (win === 1) {
+					 render();
+				 }
+			 }
+			 
+			 //render board for the fist time
+			 render();
+		 </script>
+    </body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Stopwatch</title>
+		  <style>
+			  body {
+				  text-align: center;
+				  
+			  }
+		    #stopwatch {
+				 width: 200px;
+				 border: 10px solid black;
+				 
+			  }
+		  </style>
+    </head>
+    <body>
+        <div id="stopwatch">
+		  <h1>Stopwatch</h1>
+        <button id="stop-button" type="button">Stop</button>
+        <p>
+            <span id="seconds">0</span> seconds have gone by!
+        </p>
+		  <button id="start-button" type="button">Start</button>
+		  <h2 id="timer-text"></h2>
+		 </div>
+        <script>
+            // Make it count up on a timer, calling this function
+			  var timerText = document.getElementById("timer-text");
+			  var timerRunning = 0;
+			  var timerData = function() {
+			  		if (timerRunning === 0) {
+						timerText.textContent = "Stopwatch is not running";
+					}
+				   else {
+						timerText.textContent = "Stopwatch is running";
+					}
+				  
+			  }
+			  var timer;
+           var seconds = document.getElementById("seconds");
+           var countUp = function() {
+                var second = parseFloat(seconds.textContent);
+            	seconds.textContent = second + 1;
+            };
+				var startButton = document.getElementById("start-button");
+				var startCountUp = function() {
+					if (timerRunning === 0) {
+					console.log("start");
+					timer = window.setInterval(countUp, 1000);
+						timerRunning = 1;
+					}
+					else {
+						window.alert("Stopwatch is already running");	
+					}
+					timerData();
+				};
+            var stopButton = document.getElementById("stop-button");
+            // How can you make it stop counting?
+            var stopCountUp = function() {
+					if (timerRunning === 1) {
+                console.log("stop");
+                window.clearInterval(timer);
+					timerRunning = 0;
+					}
+					else {
+						window.alert("The stopwatch was already not running");	
+					}
+					timerData();
+            };
+            stopButton.addEventListener("click", stopCountUp);
+        	   startButton.addEventListener("click",startCountUp);
+            timerData();
+        </script>
+    </body>
+</html>
