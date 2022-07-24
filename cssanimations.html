@@ -19,12 +19,26 @@
           opacity: 1;
         }
       }
+      @keyframes spinfade {
+        from {
+          transform: rotate(0deg);
+          opacity: 0;
+        }
+        to {
+          transform: rotate(360deg);
+          opacity: 1;
+        }
+      }
       .spin {
         animation-name: spin;
         animation-duration: 5s;
       }
       .fade {
         animation-name: fade;
+        animation-duration: 5s;
+      }
+      .spinfade {
+        animation-name: spinfade;
         animation-duration: 5s;
       }
       div {
@@ -37,6 +51,6 @@
   <body>
     <div class="spin">Spin!</div>
     <div class="fade">Fade!</div>
-    <div class="spin fade">Spin Fade!</div>
+    <div class="spinfade">Spin Fade!</div>
   </body>
 </html>
