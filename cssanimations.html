@@ -19,16 +19,6 @@
           opacity: 1;
         }
       }
-      @keyframes spinfade {
-        from {
-          transform: rotate(0deg);
-          opacity: 0;
-        }
-        to {
-          transform: rotate(360deg);
-          opacity: 1;
-        }
-      }
       .spin {
         animation-name: spin;
         animation-duration: 5s;
@@ -38,7 +28,7 @@
         animation-duration: 5s;
       }
       .spinfade {
-        animation-name: spinfade;
+        animation-name: spin, fade;
         animation-duration: 5s;
       }
       div {
