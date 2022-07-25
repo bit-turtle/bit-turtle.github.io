@@ -1,7 +1,0 @@
-theme: jekyll-theme-hacker
-defaults:
-  -
-    scope:
-      path: "" # an empty string here means all files in the project
-    values:
-      layout: "default"
