@@ -22,7 +22,7 @@
 			  #size, #color {
 				  float: left;
 			  }
-			  #export, #import {
+			  #import, #export, #clear {
 				  float: right;
 				  margin-right: 5px;
 			  }
@@ -43,7 +43,7 @@
     <body>
 		 <h1>Painter+</h1>
 		 <p>Move your mouse in the canvas to draw.</p>
-		 <p><button id="color">Change Color</button><button id="size">Change Size</button> Current Size: <span id="currentsize">10px</span><button id="import">Import</button><button id="export">Export</button></p>
+		 <p><button id="color">Change Color</button><button id="size">Change Size</button> Current Size: <span id="currentsize">10px</span><button id="import">Import</button><button id="export">Export</button><button id="clear">Clear</button></p>
 		 <div id="canvas">
 		 </div>
 		 <p id="result">
@@ -70,6 +70,8 @@
 		 $("#export").on("click",function(){var dots=$(".dot");var exp0rt="";for(var i=0;i<dots.length;i++){exp0rt=exp0rt+dots[i].style.top+":";exp0rt=exp0rt+dots[i].style.left+":";exp0rt=exp0rt+dots[i].style.width+":";exp0rt=exp0rt+dots[i].style.background+":";}$("#result").html("Export Code:<br><br>"+exp0rt);});
 		  //import manager
 		 $("#import").on("click",function(){var code=prompt("Enter the export code of the file you want to import (this will replace your current drawing):").split(":");if (code !== ""){$(".dot").remove();for(var i=0;i<code.length-1/4;i++){var current=i*4;$("<div>").addClass("dot").appendTo("body").css("top",code[current]).css("left",code[current+1]).css("background",code[current+3]).css("width",code[current+2]).css("height",code[current+2])}}});
+		  //clear manager
+		  $("#clear").on("click",function(){$(".dot").remove()});
     	</script>
     </body>
 </html>
