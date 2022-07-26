@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Painter +</title>
+        <style>
+			  body {
+				  padding: 10px;
+				  padding-right: 30px;
+				  font-family: sans-serif;
+			  }
+			  p {
+				  margin-bottom: 0px;  
+			  }
+			  button {
+				  border-color: black;
+				  margin-right: 5px;
+			  }
+			  button:hover {
+				  cursor: pointer;
+			  }
+			  #size, #color {
+				  float: left;
+			  }
+			  #export, #import {
+				  float: right;
+				  margin-right: 5px;
+			  }
+			  #canvas {
+				  border: 10px solid black;
+				  width: 100%;
+				  height: 500px;
+				  margin: 0px;
+			  }
+            .dot {
+					border-radius: 100%;
+               background: black;
+               position: absolute;
+					z-index: -1;
+            }
+        </style>
+    </head>
+    <body>
+		 <h1>Painter+</h1>
+		 <p>Move your mouse in the canvas to draw.</p>
+		 <p><button id="color">Change Color</button><button id="size">Change Size</button> Current Size: <span id="currentsize">10px</span><button id="import">Import</button><button id="export">Export</button></p>
+		 <div id="canvas">
+		 </div>
+		 <p id="result">
+		 </p>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+     <script>
+		 //the size variables
+		 var size = 10;
+		 var minSize = 10;
+		 var maxSize = 40;
+		 //thecolor variables
+		 var color = "0";
+		 var colors = ["red","orange","yellow","green","blue","purple","brown","black"]
+		 //this variable tells the program what color the text on the button should be
+		 var textColors = ["black","black","black","black","black","white","black","white"];
+		 //color manager
+		 $("#color").css("background",colors[color]);
+		 $("#color").on("click",function(){if(color!==colors.length){color++;}else {color=0;}$("#color").css("background",colors[color]).css("color",textColors[color]);});
+		 //size manager
+		 $("#size").on("click",function(){if(size!==maxSize){size+=10}else{size=minSize}$("#currentsize").text(size+"px")});		 
+		//paint manager 
+    	$("#canvas").mousemove(function(event){$("<div>").addClass("dot").appendTo("body").css("top",event.pageY-size/2+"px").css("left",event.pageX-size/2+"px").css("background",colors[color]).css("width",size+"px").css("height",size+"px");});
+		 //export manager
+		 $("#export").on("click",function(){var dots=$(".dot");var exp0rt="";for(var i=0;i<dots.length;i++){exp0rt=exp0rt+dots[i].style.top+":";exp0rt=exp0rt+dots[i].style.left+":";exp0rt=exp0rt+dots[i].style.width+":";exp0rt=exp0rt+dots[i].style.background+":";}$("#result").html("Export Code:<br><br>"+exp0rt);});
+		  //import manager
+		 $("#import").on("click",function(){var code=prompt("Enter the export code of the file you want to import (this will replace your current drawing):").split(":");if (code !== ""){$(".dot").remove();for(var i=0;i<code.length-1/4;i++){var current=i*4;$("<div>").addClass("dot").appendTo("body").css("top",code[current]).css("left",code[current+1]).css("background",code[current+3]).css("width",code[current+2]).css("height",code[current+2])}}});
+    	</script>
+    </body>
+</html>
