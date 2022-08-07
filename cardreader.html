@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Card Reader</title>
+	</head>
+	<body>
+		<h1>Card Reader</h1>
+		<p id="name"></p>
+		<p id ="id"></p>
+		<script>
+			var cr_cardData = new URLSearchParams(window.location.search);
+			var cr_name = cr_cardData.get('name');
+			var cr_id = cr_cardData.get('id');
+			document.getElementById("name").textContent = cr_name;
+			document.getElementById("id").textContent = cr_id;
+		</script>
+	</body>
+</html>
