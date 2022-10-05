@@ -144,6 +144,7 @@
 						setCookie("highscore",highscore,30);
 					}
 					highp.textContent = "HI:" + highscore;
+					window.setTimeout(playsymbol, 1000)
 				}
 			}
 			function startgame() {
@@ -155,6 +156,11 @@
 					pointp.textContent = "";
 					highp.textContent = "";
 					blob = window.setInterval(gametick,20);
+				}
+			}
+			function playsymbol() {
+				if (game === 0) {
+					gameh1.textContent = "▶"
 				}
 			}
 		</script>
