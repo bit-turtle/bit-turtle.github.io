@@ -8,8 +8,10 @@ canvas {
   border: 5px solid white;
   margin: 0 auto;
 }
-div {
+div, a {
   color: white;
+  text-decoration: underline;
+  font-size: 10px;
   position: relative;
   top: 10px;
   width: 400px;
