@@ -14,7 +14,6 @@ Give me sugestions :)
 
 var gamestarted = false;
 var gameplayed = false;
-var highscore = 0;
 var score = 0;
 var enemys = [];
 var enemysDeafeat = [];
@@ -53,7 +52,10 @@ function draw() {
     damage-=0.6;
     cooldown-=1;
     if (lives <= 0 && damage < 0) {
-      if (score > highscore) {highscore = score;}
+      if (score > highscore) {
+        highscore = score;
+        setCookie("attackhighscore", highscore, 30);
+      }
       gamestarted = false;
     }
     timer++;
