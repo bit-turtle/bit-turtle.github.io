@@ -9,13 +9,15 @@ canvas {
   margin: 0 auto;
 }
 div, a {
-  color: white;
-  text-decoration: underline;
-  font-size: 10px;
   position: relative;
   top: 10px;
   width: 400px;
   display: block;
   border: 5px solid white;
   margin: 0 auto;
+}
+a {
+  color: white;
+  text-decoration: underline;
+  font-size: 10px;
 }
