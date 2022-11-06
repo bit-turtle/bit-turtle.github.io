@@ -15,6 +15,7 @@ Check out my website: bit-turtle.github.io
 https://bit-turtle.github.io/attack.html
 
 */
+document.querySelector(main .load).remove();
 
 var gamestarted = false;
 var gameplayed = false;
