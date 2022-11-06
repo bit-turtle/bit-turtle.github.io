@@ -1,4 +1,4 @@
-document.querySelector("main #load").remove();
+document.querySelector("main .load").remove();
 
 /*
 Attack of the Cubes v1.2
