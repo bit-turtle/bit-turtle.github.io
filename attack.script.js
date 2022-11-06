@@ -57,7 +57,9 @@ function draw() {
     damage-=0.6;
     cooldown-=1;
     if (lives <= 0 && damage < 0) {
-      if (score > highscore) {highscore = score;}
+      if (score > highscore) {
+        highscore = score;setCookie("attackhighscore", highscore, 30);
+      }
       gamestarted = false;
     }
     timer++;
