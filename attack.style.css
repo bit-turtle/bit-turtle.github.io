@@ -10,9 +10,17 @@ canvas {
   border: 5px solid white;
   margin: 0 auto;
 }
-div {
+#beta {
   position: relative;
   top: 40px;
+  width: 400px;
+  display: block;
+  border: 5px solid white;
+  margin: 0 auto;
+}
+#extention {
+  position: relative;
+  top: 60px;
   width: 400px;
   display: block;
   border: 5px solid white;
