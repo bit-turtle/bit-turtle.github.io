@@ -1,22 +1,26 @@
-document.querySelector("main .load").remove();
-
 /*
-Attack of the Cubes v1.2
-219 lines of code!
+Attack of the Cubes v1.5 (The Squish Update)
+250 lines of code!
 
 Controls:
-Move mouse to move
+Mouse to move
 Click to shoot
 
+Sugestions
 mspears.27@acsamman.edu.jo
 Give me sugestions :)
+
+Website:
+Check out my website: bit-turtle.github.io
+https://bit-turtle.github.io/attack.html
+
 */
 
 var gamestarted = false;
 var gameplayed = false;
 var score = 0;
 var enemys = [];
-var enemysDeafeat = [];
+var Dead = [];
 var lazers = [];
 var cooldown = 0;
 var difficulty = 0;
@@ -36,6 +40,7 @@ function setup() {
 function prepare() {
   gameplayed = true;
   enemys = [];
+  enemysDead = [];
   lazers = [];
   difficulty = 0;
   score = 0;
@@ -52,10 +57,7 @@ function draw() {
     damage-=0.6;
     cooldown-=1;
     if (lives <= 0 && damage < 0) {
-      if (score > highscore) {
-        highscore = score;
-        setCookie("attackhighscore", highscore, 30);
-      }
+      if (score > highscore) {highscore = score;}
       gamestarted = false;
     }
     timer++;
@@ -151,6 +153,7 @@ function draw() {
       for (i2 = 0; i2 < lazers.length; i2++) {
         if (enemys[i].type < 3) {
           if (lazers[i2].x > enemys[i].x - 10 && lazers[i2].x < enemys[i].x + 10 && lazers[i2].y > enemys[i].y - 10 && lazers[i2].y < enemys[i].y + 10) {
+            enemysDead.push({x:enemys[i].x,y:enemys[i].y,type:enemys[i].type,squish:0});
             enemys.splice(i,1);
             lazers.splice(i2,1);
             score++;
@@ -163,10 +166,11 @@ function draw() {
               enemys[i].sheild = 0;
             }
             else {
+              enemysDead.push({x:enemys[i].x,y:enemys[i].y,type:enemys[i].type,squish:0});
               enemys.splice(i,1);
+              score++;
             }
             lazers.splice(i2,1);
-            score++;
             break;
           }
         }
@@ -177,6 +181,28 @@ function draw() {
         enemys.splice(i,1);
         damage = 20;
         lives -= 1;
+      }
+    }
+    for (i = 0; i < enemysDead.length; i++) {
+      enemysDead[i].squish++;
+      if (enemysDead[i].type === 0) {
+        fill(255,0,0);
+        rect(enemysDead[i].x-10-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,20+enemysDead[i].squish*2,20-enemysDead[i].squish);
+      }
+      else if (enemysDead[i].type === 1) {
+        fill(210,0,0);
+        rect(enemysDead[i].x-10-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,20+enemysDead[i].squish*2,20-enemysDead[i].squish);
+      }
+      else if (enemysDead[i].type === 2) {
+        fill(180,0,0);
+        rect(enemysDead[i].x-10-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,20+enemysDead[i].squish*2,20-enemysDead[i].squish);
+      }
+      else if (enemysDead[i].type === 3) {
+        fill(255,0,0);
+        rect(enemysDead[i].x-15-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,30+enemysDead[i].squish*2,20-enemysDead[i].squish);
+      }
+      if (enemysDead[i].squish > 20) {
+        enemysDead.splice(i,1);
       }
     }
     //healthbar
