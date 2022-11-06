@@ -1,3 +1,5 @@
+document.querySelector("main #load").remove();
+
 /*
 Attack of the Cubes v1.2
 219 lines of code!
