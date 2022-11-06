@@ -3,7 +3,14 @@ html, body {
   padding: 0;
   background-color: black;
 }
-canvas, div {
+canvas {
+  display: block;
+  border: 5px solid white;
+  margin: 0 auto;
+}
+canvas {
+  color: white;
+  width: 200px;
   display: block;
   border: 5px solid white;
   margin: 0 auto;
