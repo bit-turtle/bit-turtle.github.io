@@ -10,8 +10,8 @@ canvas {
 }
 div {
   color: white;
-  padding: 10px;
-  width: 200px;
+  margin: 10px;
+  width: 400px;
   display: block;
   border: 5px solid white;
   margin: 0 auto;
