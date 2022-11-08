@@ -1,5 +1,5 @@
 /*
-Attack of the Cubes v1.6 beta
+Attack of the Cubes v1.6
 250+ lines of code!
 
 Changelog:
