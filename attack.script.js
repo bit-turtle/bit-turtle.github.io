@@ -1,6 +1,6 @@
 /*
 Attack of the Cubes v1.6
-250+ lines of code!
+440+ lines of code!
 
 Changelog:
 *Update: Keyboard Controls and Control Type toggle
