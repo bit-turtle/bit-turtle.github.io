@@ -238,7 +238,7 @@ function draw() {
           enemys[i].x+=4;
         }
         else if (difficulty > 8) {
-          enemys[i].y+=3;
+          enemys[i].x+=3;
         }
         else {
           enemys[i].y+=2;
