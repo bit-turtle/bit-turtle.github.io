@@ -93,7 +93,7 @@ function prepare() {
   lives = 3;
   speed = 0;
   timer = 0;
-  enemys.push({x:Math.floor(Math.random()*400),y:-10,type:4});
+  enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0});
 }
 function keyPressed() {
   if (key === "ArrowRight") {
