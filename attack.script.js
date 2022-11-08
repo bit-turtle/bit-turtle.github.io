@@ -1,5 +1,5 @@
 /*
-Attack of the Cubes v1.6 beta (The Update Update)
+Attack of the Cubes v1.6 beta
 250+ lines of code!
 
 Changelog:
@@ -93,7 +93,7 @@ function prepare() {
   lives = 3;
   speed = 0;
   timer = 0;
-  enemys.push({x:Math.floor(Math.random()*400),y:-10,type:0});
+  enemys.push({x:Math.floor(Math.random()*400),y:-10,type:4});
 }
 function keyPressed() {
   if (key === "ArrowRight") {
@@ -293,11 +293,11 @@ function draw() {
       }
     }
     for(i = 0; i < enemys.length; i++) {
+      var enemyDelete = false
       for (i2 = 0; i2 < lazers.length; i2++) {
         if (enemys[i].type < 3) {
           if (lazers[i2].x > enemys[i].x - 15 && lazers[i2].x < enemys[i].x + 15 && lazers[i2].y > enemys[i].y - 15 && lazers[i2].y < enemys[i].y + 15) {
-            enemysDead.push({x:enemys[i].x,y:enemys[i].y,type:enemys[i].type,squish:0});
-            enemys.splice(i,1);
+            enemyDelete = true;
             lazers.splice(i2,1);
             score++;
             break;
@@ -309,8 +309,7 @@ function draw() {
               enemys[i].sheild = 0;
             }
             else {
-              enemysDead.push({x:enemys[i].x,y:enemys[i].y,type:enemys[i].type,squish:0});
-              enemys.splice(i,1);
+              enemyDelete = true;
               score++;
             }
             lazers.splice(i2,1);
@@ -318,26 +317,31 @@ function draw() {
           }
         }
         if (enemys[i].type === 4) {
-          if (enemys[i].y === 100) {
-            for (i3 = 0; i3 < 4; i3++) {
-              if (Math.floor(Math.random()*4) === 0) {
-                enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:2});
-              }
-              else if (Math.floor(Math.random()*2) === 0) {
-                enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:1});
-              }
-              else {
-                enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:0});
-              }
-            }
-            enemys.splice(i,1);
-          }
           if (lazers[i2].x > enemys[i].x - 20 && lazers[i2].x < enemys[i].x + 20 && lazers[i2].y > enemys[i].y - 20 && lazers[i2].y < enemys[i].y + 20) {
             lazers.splice(i2,1);
           }
         }
       }
-
+      if (enemys[i].type === 4) {
+        if (enemys[i].y >= 100) {
+          for (i3 = 0; i3 < 4; i3++) {
+            if (Math.floor(Math.random()*4) === 0) {
+              enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:2});
+            }
+            else if (Math.floor(Math.random()*2) === 0) {
+              enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:1});
+            }
+            else {
+              enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:0});
+            }
+          }
+          enemys.splice(i,1);
+        }
+      }
+      if (enemyDelete) {
+        enemysDead.push({x:enemys[i].x,y:enemys[i].y,type:enemys[i].type,squish:0});
+        enemys.splice(i,1);
+      }
     }
     for (i = 0; i < enemys.length; i++) {
       if (enemys[i].y > 390) {
