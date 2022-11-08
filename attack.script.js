@@ -241,7 +241,7 @@ function draw() {
           enemys[i].x+=3;
         }
         else {
-          enemys[i].y+=2;
+          enemys[i].x+=2;
         }
         fill(210,0,0);
         rect(enemys[i].x-10,enemys[i].y-10,20,20);
