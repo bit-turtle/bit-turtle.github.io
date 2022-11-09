@@ -235,13 +235,13 @@ function draw() {
       }
       else if (enemys[i].type === 1) {
         if (difficulty > 12) {
-          enemys[i].x+=4;
+          enemys[i].y+=4;
         }
         else if (difficulty > 8) {
-          enemys[i].x+=3;
+          enemys[i].y+=3;
         }
         else {
-          enemys[i].x+=2;
+          enemys[i].y+=2;
         }
         fill(210,0,0);
         rect(enemys[i].x-10,enemys[i].y-10,20,20);
