@@ -177,7 +177,7 @@ function draw() {
     if (lives <= 0 && damage < 0) {
       if (score > highscore) {
         highscore = score;
-        setCookie("attackhighscore",0,30);
+        setCookie("attackhighscore",highscore,30);
       }
       gamestarted = false;
     }
