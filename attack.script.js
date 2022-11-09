@@ -87,6 +87,7 @@ function prepare() {
   enemysDead = [];
   lazers = [];
   difficulty = 0;
+  gameSpeed = 0;
   score = 0;
   misses = 0;
   damage = 0;
