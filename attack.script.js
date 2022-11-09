@@ -183,10 +183,10 @@ function draw() {
     }
     timer++;
     if (timer >= 200 - gameSpeed*60) {
-      if (difficulty >= 15 && Math.floor(Math.random()*40) === 0) {
+      if (difficulty >= 15 && Math.floor(Math.random()*50) === 0) {
         enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4});
       }
-      else if (difficulty >= 10 && Math.floor(Math.random()*20) === 0) {  
+      else if (difficulty >= 10 && Math.floor(Math.random()*15) === 0) {  
         enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:0});
       }
       else if (difficulty >= 5 && Math.floor(Math.random()*10) === 0) {  
