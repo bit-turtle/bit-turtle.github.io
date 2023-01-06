@@ -8,10 +8,10 @@
     <script>
       var changelog = function(mode) {
         if (mode === 0) {
-          document.getElementById("changelog").innerHTML = "<a onclick="changelog(1)">Hide Changelog</a><ul><li>Updated Keyboard Controls: Pressing "Down Arrow" or "S" now doubles the speed you move</li><li>Added Powerups:<ul><li>Speed Powerup: Lets you shoot faster</li><li>Sheild Powerup: Gives your health protection</li><li>Big Powerup: Makes you and you bullets bigger</li></ul><li>Added Sounds:<ul><li>Sound Toggle: Toggle sounds by clicking the speaker icon</li><li>Stereo Sound: Uses both speakers to make sounds seem to come from different parts of the screen</li></ul>"
+          document.getElementById("changelog").innerHTML = "<a onclick=\"changelog(1)\">Hide Changelog</a><ul><li>Updated Keyboard Controls: Pressing \"Down Arrow\" or \"S\" now doubles the speed you move</li><li>Added Powerups:<ul><li>Speed Powerup: Lets you shoot faster</li><li>Sheild Powerup: Gives your health protection</li><li>Big Powerup: Makes you and you bullets bigger</li></ul><li>Added Sounds:<ul><li>Sound Toggle: Toggle sounds by clicking the speaker icon</li><li>Stereo Sound: Uses both speakers to make sounds seem to come from different parts of the screen</li></ul>"
         }
         else {
-          document.getElementById("changelog").innerHTML = ""
+          document.getElementById("changelog").innerHTML = "<a onclick="changelog(0)">Show Changelog</a>"
         }
       }
     </script>
