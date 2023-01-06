@@ -26,6 +26,14 @@ canvas {
   border: 5px solid white;
   margin: 0 auto;
 }
+#changelog {
+  position: relative;
+  top: 80px;
+  width: 400px;
+  display: block;
+  border: 5px solid white;
+  margin: 0 auto;
+}
 div, a {
   color: white;
   font-size: 14px;
