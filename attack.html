@@ -17,16 +17,19 @@
     <div id="changelog"><a id="toggle">Show Changelog</a></div>
     <script>
       var toggle = false;
-      var changelogdiv = document.getElementById("toggle")
+      var changelogdiv = document.getElementById("changelog");
+      togglea = document.getElementById("toggle");
       var changelog = function() {
         if (toggle === false) {
-          changelogdiv.innerHTML = "<a onclick=\"changelog(1)\">Hide Changelog</a><ul><li>Updated Keyboard Controls: Pressing \"Down Arrow\" or \"S\" now doubles the speed you move</li><li>Added Powerups:<ul><li>Speed Powerup: Lets you shoot faster</li><li>Sheild Powerup: Gives your health protection</li><li>Big Powerup: Makes you and you bullets bigger</li></ul><li>Added Sounds:<ul><li>Sound Toggle: Toggle sounds by clicking the speaker icon</li><li>Stereo Sound: Uses both speakers to make sounds seem to come from different parts of the screen</li></ul>";
+          changelogdiv.innerHTML = "<a>Hide Changelog</a><ul><li>Updated Keyboard Controls: Pressing \"Down Arrow\" or \"S\" now doubles the speed you move</li><li>Added Powerups:<ul><li>Speed Powerup: Lets you shoot faster</li><li>Sheild Powerup: Gives your health protection</li><li>Big Powerup: Makes you and you bullets bigger</li></ul><li>Added Sounds:<ul><li>Sound Toggle: Toggle sounds by clicking the speaker icon</li><li>Stereo Sound: Uses both speakers to make sounds seem to come from different parts of the screen</li></ul>";
+          togglea.addEventListener("click",changelog);
         }
         else if (toggle === true) {
           changelogdiv.innerHTML = "<a onclick=\"changelog(0)\">Show Changelog</a>";
+          togglea.addEventListener("click",changelog);
         }
       }
-      changelogdiv.addEventListener("click",changelog);
+      togglea.addEventListener("click",changelog);
     </script>
   </body>
 </html>
