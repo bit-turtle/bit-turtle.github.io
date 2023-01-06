@@ -22,10 +22,12 @@
         if (toggle === false) {
           changelogdiv.innerHTML = "<a id=\"toggle\">Hide Changelog</a><ul><li>Updated Keyboard Controls: Pressing \"Down Arrow\" or \"S\" now doubles the speed you move</li><li>Added Powerups:<ul><li>Speed Powerup: Lets you shoot faster</li><li>Sheild Powerup: Gives your health protection</li><li>Big Powerup: Makes you and you bullets bigger</li></ul><li>Added Sounds:<ul><li>Sound Toggle: Toggle sounds by clicking the speaker icon</li><li>Stereo Sound: Uses both speakers to make sounds seem to come from different parts of the screen</li></ul>";
           document.getElementById("toggle").addEventListener("click",changelog);
+          toggle = true;
         }
         else if (toggle === true) {
           changelogdiv.innerHTML = "<a id=\"toggle\">Show Changelog</a>";
           document.getElementById("toggle").addEventListener("click",changelog);
+          toggle = false;
         }
       }
       document.getElementById("toggle").addEventListener("click",changelog);
