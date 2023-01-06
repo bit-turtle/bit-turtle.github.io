@@ -41,6 +41,7 @@ var controltoggle = 0;
 var playerX = 200;
 var playerMove = 0;
 var playerShoot = false;
+var autoShoot = false;
 var rightArrowPressed = false;
 var leftArrowPressed = false;
 var upArrowPressed = false;
@@ -125,6 +126,7 @@ function prepare() {
   poweruptimer = {speed:0,big:0};
   timer = 0;
   enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false});
+  autoShoot = true;
 }
 function keyPressed() {
   if (key === "ArrowRight") {
@@ -271,7 +273,7 @@ function draw() {
       }
       timer = 0;
     }
-    if (cooldown < 0 && playerShoot) {
+    if (cooldown < 0 && playerShoot || autoShoot) {
       poweruptimer.big--;
       poweruptimer.speed--;
       if (poweruptimer.big === 0) {powerups.big = false;}
@@ -281,6 +283,7 @@ function draw() {
       lazers.push({x:playerX,y:400});
       shootsound.pan(playerX/200-1);
       if(soundmuted===false){shootsound.play();}
+      autoShoot = false;
     }
     //lazersss
     for (i = 0; i < lazers.length; i++) {
