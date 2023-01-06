@@ -41,4 +41,5 @@ div, a {
 }
 a {
   text-decoration: underline;
+  cursor: pointer;
 }
