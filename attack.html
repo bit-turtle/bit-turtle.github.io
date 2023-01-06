@@ -5,16 +5,6 @@
     <script src="p5.js"></script>
     <script src="p5.sound.min.js"></script>
     <script src="attack.cookie.js"></script>
-    <script>
-      var changelog = function(mode) {
-        if (mode === 0) {
-          document.getElementById("changelog").innerHTML = "<a onclick=\"changelog(1)\">Hide Changelog</a><ul><li>Updated Keyboard Controls: Pressing \"Down Arrow\" or \"S\" now doubles the speed you move</li><li>Added Powerups:<ul><li>Speed Powerup: Lets you shoot faster</li><li>Sheild Powerup: Gives your health protection</li><li>Big Powerup: Makes you and you bullets bigger</li></ul><li>Added Sounds:<ul><li>Sound Toggle: Toggle sounds by clicking the speaker icon</li><li>Stereo Sound: Uses both speakers to make sounds seem to come from different parts of the screen</li></ul>"
-        }
-        else {
-          document.getElementById("changelog").innerHTML = "<a onclick="changelog(0)">Show Changelog</a>"
-        }
-      }
-    </script>
     <link rel="stylesheet" type="text/css" href="attack.style.css">
     <meta charset="utf-8" />
   </head>
@@ -24,6 +14,19 @@
     <script src="attack.script.js"></script>
     <div id="beta">Attack of the Cubes v1.7<br><a href="https://editor.p5js.org/mts18142027/sketches/YfuXCGsip">Link to beta version</a></div>
     <div id="extention"><a href="attackEXT.zip">Download extention version</a><br>To install, open the zip and copy all the files inside to a folder. <br> Then go to chrome://extensions and turn on developer mode. <br> Finally click "Load Unpacked" and select the folder you made earlier<br>Now the extention is installed</div>
-    <div id="changelog"><a onclick="changelog(0)">Show Changelog</a></div>
+    <div id="changelog"><a id="toggle">Show Changelog</a></div>
+    <script>
+      var toggle = false;
+      var changelogdiv = document.getElementById("toggle")
+      var changelog = function() {
+        if (toggle === false) {
+          changelogdiv.innerHTML = "<a onclick=\"changelog(1)\">Hide Changelog</a><ul><li>Updated Keyboard Controls: Pressing \"Down Arrow\" or \"S\" now doubles the speed you move</li><li>Added Powerups:<ul><li>Speed Powerup: Lets you shoot faster</li><li>Sheild Powerup: Gives your health protection</li><li>Big Powerup: Makes you and you bullets bigger</li></ul><li>Added Sounds:<ul><li>Sound Toggle: Toggle sounds by clicking the speaker icon</li><li>Stereo Sound: Uses both speakers to make sounds seem to come from different parts of the screen</li></ul>";
+        }
+        else if (toggle === true) {
+          changelogdiv.innerHTML = "<a onclick="changelog(0)">Show Changelog</a>";
+        }
+      }
+      changelogdiv.addEventListener("click",changelog);
+    </script>
   </body>
 </html>
