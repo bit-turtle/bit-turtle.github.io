@@ -1,5 +1,5 @@
 /*
-Attack of the Cubes v1.7 beta (The power of sound update)
+Attack of the Cubes v1.7 (The power of sound update)
 440+ lines of code!
 
 Changelog:
