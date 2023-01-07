@@ -504,10 +504,10 @@ function draw() {
     rect(130,130,140,140);
     fill(0);
     if (controltype === 0) {
-      image(mouseicon,25,5);
+      image(mouseicon,25,5,60,60);
     }
     else if (controltype === 1) {
-      image(keyboardicon,25,5);
+      image(keyboardicon,25,5,60,60);
     }
     if (mouseX >= 25 && mouseX <= 85 && mouseY >= 5 && mouseY <= 65) {
       if (mouseIsPressed && controltoggle === 0) {
@@ -526,10 +526,10 @@ function draw() {
       }
     }
     if (soundmuted) {
-      image(soundoff,330,5)
+      image(soundoff,330,5,60,60)
     }
     else {
-      image(soundon,330,5)
+      image(soundon,330,5,60,60)
     }
     if (mouseX >= 330 && mouseX <= 390 && mouseY >= 5 && mouseY <= 65) {
       if (mouseIsPressed && controltoggle === 0) {
