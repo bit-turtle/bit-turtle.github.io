@@ -526,10 +526,10 @@ function draw() {
       }
     }
     if (soundmuted) {
-      image(soundoff,330,5,60,60)
+      image(soundoff,328,5,60,60)
     }
     else {
-      image(soundon,330,5,60,60)
+      image(soundon,328,5,60,60)
     }
     if (mouseX >= 330 && mouseX <= 390 && mouseY >= 5 && mouseY <= 65) {
       if (mouseIsPressed && controltoggle === 0) {
