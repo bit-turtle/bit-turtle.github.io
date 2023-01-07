@@ -1,6 +1,6 @@
 /*
 Attack of the Cubes v1.7 (The power of sound update)
-440+ lines of code!
+562 lines of code!
 
 Changelog:
 *Update:Powerups now exist and are dropped by different enemys
