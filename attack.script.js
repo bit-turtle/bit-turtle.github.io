@@ -78,7 +78,7 @@ var mouseicon;
 var keyboardicon;
 var soundon;
 var soundoff;
-var soundmuted = false;
+var soundmuted = true;
 var clicksound;
 var damagesound;
 var sheildsound;
