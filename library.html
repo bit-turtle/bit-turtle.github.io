@@ -16,13 +16,21 @@
     </table>
     <script>
       $("#search").on("click",function(){Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vRo8TwPNwdVNRBJHfohvdK3DJdxPt9qCwv4oIyq64r617EpIZrKbRoe7WkpcGvfa76ipSU_3Jvst3j-/pub?output=csv",{delimiter: ",",newline: "\r\n",header: true,dynamicTyping: false,skipEmptyLines: true,preview: 0,step: undefined,encoding: "",worker: true,comments: false,complete: function(file){
+        var query = $("#query").val().toUpperCase();
+        var results = "";
         if($("#title").is(":checked")){
           //Search By Title
-          $("#results").html("<tr><td>Title Mode</td><td>"+file.data[0].title+"</td></tr>");
+          for (var i=0; i<file.data.length; i++) {
+            if (file.data[i].title.toUpperCase.indexOf(query)>-1){results+="<tr><td>"+file.data[i].title+"</td></tr>";}
+          }
+          $("#results").html("<tr><td>Title</td><td>Author</td><td>Image</td></tr>"+results);
         }
         else if($("#author").is(":checked")){
           //Search By Author
-          $("#results").html("<tr><td>Author Mode</td><td>"+file.data[0].title+"</td></tr>");
+          for (var i=0; i<file.data.length; i++) {
+            if (file.data[i].author.toUpperCase.indexOf(query)>-1){results+="<tr><td>"+file.data[i].title+"</td></tr>";}
+          }
+          $("#results").html("<tr><td>Title</td><td>Author</td><td>Image</td></tr>"+results);
       }},error: console.error,download: true});})
     </script>
   </body>
