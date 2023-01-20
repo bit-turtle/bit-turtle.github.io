@@ -2,10 +2,15 @@
 <html>
   <head>
     <title>Library System</title>
+    <script src="jquery.min.js"></script>
+    <script src="papapase.min.js"></script>
     <style>
     </style>
   </head>
   <body>
     <h1>Library System</h1>
+    <script>
+      data = Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vRo8TwPNwdVNRBJHfohvdK3DJdxPt9qCwv4oIyq64r617EpIZrKbRoe7WkpcGvfa76ipSU_3Jvst3j-/pub?output=csv",{delimiter: ",",newline: "\r\n",header: true,dynamicTyping: false,skipEmptyLines: true,preview: 0,step: undefined,encoding: "",worker: true,comments: false,complete: console.log,error: console.error,download: true});
+    </script>
   </body>
 </html>
