@@ -15,14 +15,14 @@
     <table id=results>
     </table>
     <script>
-      $("#search").on("click",function(){Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vRo8TwPNwdVNRBJHfohvdK3DJdxPt9qCwv4oIyq64r617EpIZrKbRoe7WkpcGvfa76ipSU_3Jvst3j-/pub?output=csv",{delimiter: ",",newline: "\r\n",header: true,dynamicTyping: false,skipEmptyLines: true,preview: 0,step: undefined,encoding: "",worker: true,comments: false,complete: function(data){
+      $("#search").on("click",function(){Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vRo8TwPNwdVNRBJHfohvdK3DJdxPt9qCwv4oIyq64r617EpIZrKbRoe7WkpcGvfa76ipSU_3Jvst3j-/pub?output=csv",{delimiter: ",",newline: "\r\n",header: true,dynamicTyping: false,skipEmptyLines: true,preview: 0,step: undefined,encoding: "",worker: true,comments: false,complete: function(file){
         if($("#title").is(":checked")){
           //Search By Title
-          $("#results").html("<tr><td>Title Mode</td><td>"+data.title[0]+"</td></tr>");
+          $("#results").html("<tr><td>Title Mode</td><td>"+file.data.title[0]+"</td></tr>");
         }
         else if($("#author").is(":checked")){
           //Search By Author
-          $("#results").html("<tr><td>Author Mode</td><td>"+data.title[0]+"</td></tr>");
+          $("#results").html("<tr><td>Author Mode</td><td>"+file.data.title[0]+"</td></tr>");
       }},error: console.error,download: true});})
     </script>
   </body>
