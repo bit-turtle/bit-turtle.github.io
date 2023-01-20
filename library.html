@@ -10,7 +10,7 @@
   <body>
     <h1>Library System</h1>
     <input type="text" id="query">Search</input>
-    <p>Settings:<br>Search by Title: <input type="radio" name="setting" id="title" checked="true"><br>Search by Author: <input type="radio" name="setting" id="author" checked="false"></p>
+    <p>Settings:<br>Search by Title: <input type="radio" name="setting" id="title" checked="false"><br>Search by Author: <input type="radio" name="setting" id="author" checked="true"></p>
     <button id="search">Search!</button>
     <table id=results>
     </table>
@@ -21,14 +21,14 @@
         if($("#title").is(":checked")){
           //Search By Title
           for (var i=0; i<file.data.length; i++) {
-            if (file.data[i].title.toUpperCase().indexOf(query)>-1){results+="<tr><td>"+file.data[i].title+"</td></tr>";}
+            if (file.data[i].title.toUpperCase().indexOf(query)>-1){results+="<tr><td>"+file.data[i].title+"</td><td>"+file.data[i].author+"</td><td><img src=\"https://drive.google.com/uc?export=view&id="+file.data[i].image+"\"></td></tr>";}
           }
           $("#results").html("<tr><td>Title</td><td>Author</td><td>Image</td></tr>"+results);
         }
         else if($("#author").is(":checked")){
           //Search By Author
           for (var i=0; i<file.data.length; i++) {
-            if (file.data[i].author.toUpperCase().indexOf(query)>-1){results+="<tr><td>"+file.data[i].title+"</td></tr>";}
+            if (file.data[i].author.toUpperCase().indexOf(query)>-1){results+="<tr><td>"+file.data[i].title+"</td><td>"+file.data[i].author+"</td><td><img src=\"https://drive.google.com/uc?export=view&id="+file.data[i].image+"\"></td></tr>";}
           }
           $("#results").html("<tr><td>Title</td><td>Author</td><td>Image</td></tr>"+results);
       }},error: console.error,download: true});})
