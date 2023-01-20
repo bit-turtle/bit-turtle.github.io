@@ -9,8 +9,15 @@
   </head>
   <body>
     <h1>Library System</h1>
+    <input type="text" id="query">Search</input>
+    <p>Settings:<br>Search by Title: <input type="radio" id="title"><br>Search by Author: <input type="radio", id="author"></p>
+    <button id="search">Search!</button>
+    <table id=results>
+    </table>
     <script>
-      data = Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vRo8TwPNwdVNRBJHfohvdK3DJdxPt9qCwv4oIyq64r617EpIZrKbRoe7WkpcGvfa76ipSU_3Jvst3j-/pub?output=csv",{delimiter: ",",newline: "\r\n",header: true,dynamicTyping: false,skipEmptyLines: true,preview: 0,step: undefined,encoding: "",worker: true,comments: false,complete: console.log,error: console.error,download: true});
+      var data;
+      function parse() {Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vRo8TwPNwdVNRBJHfohvdK3DJdxPt9qCwv4oIyq64r617EpIZrKbRoe7WkpcGvfa76ipSU_3Jvst3j-/pub?output=csv",{delimiter: ",",newline: "\r\n",header: true,dynamicTyping: false,skipEmptyLines: true,preview: 0,step: undefined,encoding: "",worker: true,comments: false,complete: function(e){data=e;},error: console.error,download: true});}
+      $("#search").on("click",function(){parse();})
     </script>
   </body>
 </html>
