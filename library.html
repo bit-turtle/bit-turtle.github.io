@@ -33,8 +33,8 @@
     <script>
       $("#search").on("click",function(){Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vRo8TwPNwdVNRBJHfohvdK3DJdxPt9qCwv4oIyq64r617EpIZrKbRoe7WkpcGvfa76ipSU_3Jvst3j-/pub?output=csv",{delimiter: ",",newline: "\r\n",header: true,dynamicTyping: false,skipEmptyLines: true,preview: 0,step: undefined,encoding: "",worker: true,comments: false,complete: function(file){
         var data;
-        if ($("#sort").is(":checked")&&$("#title").is(":checked")){data = file.data.sort(function(a,b){if(a.title.toUpperCase()<b.title.toUpperCase().toUpperCase()){return -1;}if(a.title.toUpperCase().toUpperCase().toUpperCase()>b.title.toUpperCase().toUpperCase().toUpperCase().toUpperCase()){return 1;}return 0;)});}
-        else if ($("#sort").is(":checked")&&$("#author").is(":checked")){data = file.data.sort(function(a,b){if(a.author.toUpperCase()<b.author.toUpperCase()){return -1;}if(a.author.toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase()>b.author.toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase()){return 1;}return 0;)});}
+        if ($("#sort").is(":checked")&&$("#title").is(":checked")){data = file.data.sort(function(a,b){if(a.title.toUpperCase()<b.title.toUpperCase().toUpperCase()){return -1;}if(a.title.toUpperCase().toUpperCase().toUpperCase()>b.title.toUpperCase().toUpperCase().toUpperCase().toUpperCase()){return 1;}return 0;});}
+        else if ($("#sort").is(":checked")&&$("#author").is(":checked")){data = file.data.sort(function(a,b){if(a.author.toUpperCase()<b.author.toUpperCase()){return -1;}if(a.author.toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase()>b.author.toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase()){return 1;}return 0;});}
         else {data = file.data;}
         var query = $("#query").val().toUpperCase();
         var results = "";
