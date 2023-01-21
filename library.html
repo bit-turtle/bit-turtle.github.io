@@ -27,23 +27,27 @@
   <body>
     <h1>Library System</h1>
     <p>Search: <input type="text" id="query"></p>
-    <p>Search By: <input type="radio" name="setting" id="title" checked="true"><label for="title">Title</label><input type="radio" name="setting" id="author"><label for="author">Author</label></p>
+    <p>Search By: <input type="radio" name="setting" id="title" checked="true"><label for="title">Title</label><input type="radio" name="setting" id="author"><label for="author">Author</label><br><input type="checkbox" id="sort" checked="true"><label for="sort">Sert Alphabeticaly</label></p>
     <button id="search">Search!</button><p></p>
     <table id=results><tbody><tr><td>Search For A Book</td></tr></tbody></table>
     <script>
       $("#search").on("click",function(){Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vRo8TwPNwdVNRBJHfohvdK3DJdxPt9qCwv4oIyq64r617EpIZrKbRoe7WkpcGvfa76ipSU_3Jvst3j-/pub?output=csv",{delimiter: ",",newline: "\r\n",header: true,dynamicTyping: false,skipEmptyLines: true,preview: 0,step: undefined,encoding: "",worker: true,comments: false,complete: function(file){
+        var data;
+        if ($("#sort").is(":checked"&&$("#title").is(":checked")) {data = file.data.sort(function(a,b){if(a.title.toUpperCase()<b.title.toUpperCase().toUpperCase()){return -1;}if(a.title.toUpperCase().toUpperCase().toUpperCase()>b.title.toUpperCase().toUpperCase().toUpperCase().toUpperCase()){return 1;}return 0;)});}
+        else if ($("#sort").is(":checked"&&$("#author").is(":checked")) {data = file.data.sort(function(a,b){if(a.author.toUpperCase()<b.author.toUpperCase()){return -1;}if(a.author.toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase()>b.author.toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase()){return 1;}return 0;)});}
+        else {data = file.data;}
         var query = $("#query").val().toUpperCase();
         var results = "";
         if($("#title").is(":checked")){
           //Search By Title
-          for (var i=0; i<file.data.length; i++) {
-            if (file.data[i].title.toUpperCase().indexOf(query)>-1){results+="<tr><td>"+file.data[i].title+"</td><td>"+file.data[i].author+"</td><td>"+file.data[i].location+"</td><td><img src=\"https://drive.google.com/uc?export=view&id="+file.data[i].image+"\"></td></tr>";}
+          for (var i=0; i<data.length; i++) {
+            if (data[i].title.toUpperCase().indexOf(query)>-1){results+="<tr><td>"+data[i].title+"</td><td>"+file.data[i].author+"</td><td>"+data[i].location+"</td><td><img src=\"https://drive.google.com/uc?export=view&id="+data[i].image+"\"></td></tr>";}
           }
         }
         else if($("#author").is(":checked")){
           //Search By Author
-          for (var i=0; i<file.data.length; i++) {
-            if (file.data[i].author.toUpperCase().indexOf(query)>-1){results+="<tr><td>"+file.data[i].title+"</td><td>"+file.data[i].author+"</td><td>+"+file.data[i].location+"+</td><td><img src=\"https://drive.google.com/uc?export=view&id="+file.data[i].image+"\"></td></tr>";}
+          for (var i=0; i<data.length; i++) {
+            if (file.data[i].author.toUpperCase().indexOf(query)>-1){results+="<tr><td>"+data[i].title+"</td><td>"+data[i].author+"</td><td>+"+data[i].location+"+</td><td><img src=\"https://drive.google.com/uc?export=view&id="+data[i].image+"\"></td></tr>";}
           }}
         if (results === "") {
           $("#results").html("<tbody><tr><td>No Results :(</td></tr></tbody>");
