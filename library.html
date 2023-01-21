@@ -5,6 +5,16 @@
     <script src="jquery.min.js"></script>
     <script src="papaparse.min.js"></script>
     <style>
+      body {
+        text-align: center;
+      }
+      table {
+        margin: auto;
+      }
+      td {
+        width: 100px;
+        padding: 0px;
+      }
       img {
         width: 100px;
       }
@@ -13,7 +23,7 @@
   <body>
     <h1>Library System</h1>
     <p>Search: <input type="text" id="query"></p>
-    <p>Search By:<br><input type="radio" name="setting" id="title" checked="true"><label for="title">Title</label><br><input type="radio" name="setting" id="author"><label for="author">Author</label></p>
+    <p>Search By: <input type="radio" name="setting" id="title" checked="true"><label for="title">Title</label><input type="radio" name="setting" id="author"><label for="author">Author</label></p>
     <button id="search">Search!</button>
     <table id=results>
     </table>
