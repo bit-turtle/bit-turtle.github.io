@@ -47,7 +47,7 @@
         else if($("#author").is(":checked")){
           //Search By Author
           for (var i=0; i<data.length; i++) {
-            if (file.data[i].author.toUpperCase().indexOf(query)>-1){results+="<tr><td>"+data[i].title+"</td><td>"+data[i].author+"</td><td>"+data[i].location+"</td><td><img src=\"https://drive.google.com/uc?export=view&id="+data[i].image+"\"></td></tr>";}
+            if (file.data[i].author.toUpperCase().indexOf(query)>-1){results+="<tr><td>"+data[i].title+"</td><td>"+file.data[i].author+"</td><td>"+data[i].location+"</td><td><img src=\"https://drive.google.com/uc?export=view&id="+data[i].image+"\"></td></tr>";}
           }}
         if (results === "") {
           $("#results").html("<tbody><tr><td>No Results :(</td></tr></tbody>");
