@@ -31,7 +31,7 @@
     <button id="search">Search!</button><p></p>
     <table id=results><tbody><tr><td>Search For A Book</td></tr></tbody></table>
     <script>
-      $("#search").on("click",function(){try{Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vRo8TwPNwdVNRBJHfohvdK3DJdxPt9qCwv4oIyq64r617EpIZrKbRoe7WkpcGvfa76ipSU_3Jvst3j-/pub?output=csv",{delimiter: ",",newline: "\r\n",header: true,dynamicTyping: false,skipEmptyLines: true,preview: 0,step: undefined,encoding: "",worker: false,comments: false,complete: function(file){
+      $("#search").on("click",function(){if(window.navigator.onLine){Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vRo8TwPNwdVNRBJHfohvdK3DJdxPt9qCwv4oIyq64r617EpIZrKbRoe7WkpcGvfa76ipSU_3Jvst3j-/pub?output=csv",{delimiter: ",",newline: "\r\n",header: true,dynamicTyping: false,skipEmptyLines: true,preview: 0,step: undefined,encoding: "",worker: false,comments: false,complete: function(file){
         var data;
         if ($("#sort").is(":checked")&&$("#title").is(":checked")){data = file.data.sort(function(a,b){if(a.title.toUpperCase()<b.title.toUpperCase().toUpperCase()){return -1;}if(a.title.toUpperCase().toUpperCase().toUpperCase()>b.title.toUpperCase().toUpperCase().toUpperCase().toUpperCase()){return 1;}return 0;});}
         else if ($("#sort").is(":checked")&&$("#author").is(":checked")){data = file.data.sort(function(a,b){if(a.author.toUpperCase()<b.author.toUpperCase()){return -1;}if(a.author.toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase()>b.author.toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase().toUpperCase()){return 1;}return 0;});}
@@ -55,7 +55,7 @@
         else {
           $("#results").html("<thead><tr><th>Title</th><th>Author</th><th>Location</th><th>Image</th></tr></thead><tbody>"+results+"</tbody>");
         }
-      },error: console.error,download: true});}catch(error){$("#results").html("<tbody><tr><td>Error!</td></tr><tr><td>Try Checking Your Internet Conection</td></tr></tbody>");}});
+      },error: console.error,download: true});}else{$("#results").html("<tbody><tr><td>No Internet!</td></tr></tbody>");}});
     </script>
   </body>
 </html>
