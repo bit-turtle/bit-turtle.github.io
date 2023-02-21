@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Firebase Test</title>
+	</head>
+	<body>
+		<h1>Firebase Test</h1>
+		<textarea id="test">Test</textarea><br>
+		<button onclick="test()">Click Me To Save Data</button><button onclick="test3()">Click Me To Delete All Data</button><br>
+		<p><b>Most Recent Data: </b><span id="data">Data will appear here</span></p>
+		<button onclick="test2()">Click Me To Retrive Data</button>
+		<pre id="list"></pre>
+		<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+		<script>
+			var config = {
+				  apiKey: "AIzaSyAk1xtfMwxr_0SvkO0T3gt9pBLgC8VwPw4",
+				  authDomain: "test-bce65.firebaseapp.com",
+				  projectId: "test-bce65",
+				  storageBucket: "test-bce65.appspot.com",
+				  messagingSenderId: "824485396922",
+				  appId: "1:824485396922:web:2417bbf2f8a98277281d83"
+			};
+			var app = firebase.initializeApp(config);
+			const db = app.firestore(app);
+			const ref = {
+				one : db.collection("test"),
+				two : db.collection("test2")
+			}
+			function test() {
+				var txt = document.getElementById("test");
+				ref.one.add({test: txt.value});
+				ref.two.doc("test").update({test: txt.value});
+			}
+			function test2() {
+				ref.two
+			  .get()
+			  .then((querySnapshot) => {
+				 querySnapshot.forEach((doc) => {
+					var txt = document.getElementById("data");
+					txt.textContent = doc.data().test;
+				 });
+			  })
+			  .catch((error) => {
+				 console.log("Error getting documents: ", error);
+			  });
+			  ref.one
+			  .get()
+			  .then((querySnapshot) => {
+				 var txt = document.getElementById("list");
+				 txt.textContent = "";
+				 querySnapshot.forEach((doc) => {
+					txt.textContent += doc.data().test+"\n";
+				 });
+			  })
+			  .catch((error) => {
+				 console.log("Error getting documents: ", error);
+			  });
+			}
+			function test3() {
+				ref.one
+			  .get()
+			  .then((querySnapshot) => {
+				 querySnapshot.forEach((doc) => {
+					ref.one.doc(doc.id).delete();
+				 });
+			  })
+			  .catch((error) => {
+				 console.log("Error getting documents: ", error);
+			  });
+			  ref.two.doc("test").update({test: ""});
+			}
+		</script>
+	</body>
+</html>
