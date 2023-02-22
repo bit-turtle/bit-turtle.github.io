@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bit-Turtle Chat</title>
+		<style>
+			html, body {
+				padding: 0px;
+				padding-left: 5%;
+				padding-right: 5%;
+				background-color: black;
+				font-family: monospace;
+				font-size: 15px;
+				height: 100%;
+			}
+			#title {
+				text-align: center;
+				color: white;
+			}
+			table, tr {
+				height: 100%;
+			}
+			div#messages {
+				height: 80%;
+				overflow: scroll;
+				display: flex;
+				flex-direction: column-reverse;
+			}
+			div.message {
+				margin: 0px;
+				margin-bottom: 10px;
+				padding: 2px;
+				border: 5px solid white;
+				color: white;
+			}
+			div#message {
+				width: 85%;
+				float: left;
+				margin: 0px;
+				margin-top: 10px;
+				padding: 2px;
+				border: 5px solid white;
+				color: white;
+				bottom: 5px;
+			}
+			div#send {
+				width: 8%;
+				float: right;
+				margin: 0px;
+				margin-top: 10px;
+				padding: 2px;
+				border: 5px solid white;
+				color: white;
+				text-align: center;
+				cursor: pointer;
+				bottom: 5px;
+			}
+			.chat {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<h1 id="title">Bit-Turtle Chat</h1>
+		<div id="messages" class="chat">
+		</div>
+		<div id="message" contenteditable="true">What Would You Like To Be Known As?</div><div id="send">Ok</div>
+		<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+		<script>
+			"use-strict";
+			var config = {
+			  apiKey: "AIzaSyDRah_sdEx1wrMtyElWNG4gwPc9oaQqTko",
+			  authDomain: "chat-11510.firebaseapp.com",
+			  projectId: "chat-11510",
+			  storageBucket: "chat-11510.appspot.com",
+			  messagingSenderId: "346876634374",
+			  appId: "1:346876634374:web:1f63c2031b81301413ea87"
+			};
+			const app = firebase.initializeApp(config);
+			const db = app.firestore(app);
+			var ref = db.collection("chat");
+			var dat = db.collection("data");
+			var username = "";
+			var currentid = 0;
+			var messagebuffer = [];
+			function getMessages() {
+				document.getElementById("messages").innerHTML = "Loading Messages...";
+				ref.get().then((querySnapshot) => {
+					currentid = -1;
+					messagebuffer = [];
+					querySnapshot.forEach((doc) => {
+						var data = doc.data();
+						if (data.id > parseInt(currentid)) {
+							currentid = parseInt(data.id);
+						}
+						messagebuffer.push(data);
+				 });
+			  })
+			  .catch((error) => {
+				 console.log("Error getting documents: ", error);
+			  });
+			  messagebuffer.sort(function (a,b) {if (a.id<b.id) {return -1}if (a.id > b.id) {return 1} return 0;});
+			  var messages = document.getElementById("messages");
+			  messages.innerHTML = "";
+			  for (var i = 0; i<messagebuffer.length;i++) {
+			  	var user = document.createTextNode(messagebuffer[i].username+": ");
+				var message = document.createTextNode(messagebuffer[i].message);
+				var bold = document.createElement("b");
+				bold.appendChild(user);
+				var div = document.createElement("div");
+				div.appendChild(bold);
+				div.appendChild(message);
+				div.classList.add("message");
+				messages.appendChild(div);
+			  }
+			  return currentid+=1;
+			}
+			function sendMessage() {
+				var message = document.getElementById("message").textContent;
+				ref.add({id: getMessages(),username: username,message: message});
+				getMessages();
+			}
+			function setName() {
+				getMessages();
+				username = document.getElementById("message").textContent;
+				if (username !== "") {
+					var chat = document.getElementsByClassName("chat");
+					for (var i = 0;i<chat.length;i++){
+						chat[i].style.display = "block";
+					}
+					document.getElementById("send").textContent = "Send";
+				}
+			}
+			function sendButton() {
+				if (username === "") {
+					setName();
+				}
+				else {
+					sendMessage();
+				}
+			}
+			document.getElementById("send").addEventListener("click",sendButton);
+			window.setInterval(getMessages,5000);
+		</script>
+	</body>
+</html>
