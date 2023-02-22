@@ -5,22 +5,24 @@
 		<style>
 			html, body {
 				padding: 0px;
+				margin: 0px;
 				padding-left: 5%;
 				padding-right: 5%;
 				background-color: black;
 				font-family: monospace;
 				font-size: 15px;
-				height: 100%;
+				height: 95%;
 			}
 			#title {
 				text-align: center;
+				font-size: 40px;
 				color: white;
 			}
 			table, tr {
 				height: 100%;
 			}
 			div#messages {
-				height: 80%;
+				height: 85%;
 				overflow: scroll;
 				display: flex;
 				flex-direction: column-reverse;
@@ -53,9 +55,17 @@
 				text-align: center;
 				cursor: pointer;
 				bottom: 5px;
+				font-weight: bold;
 			}
 			.chat {
 				display: none;
+			}
+			div.error {
+				margin: 0px;
+				margin-bottom: 10px;
+				padding: 2px;
+				border: 5px solid red;
+				color: red;
 			}
 		</style>
 	</head>
@@ -85,40 +95,55 @@
 			var messagebuffer = [];
 			function getMessages() {
 				document.getElementById("messages").innerHTML = "Loading Messages...";
-				ref.get().then((querySnapshot) => {
-					currentid = -1;
-					messagebuffer = [];
-					querySnapshot.forEach((doc) => {
-						var data = doc.data();
-						if (data.id > parseInt(currentid)) {
-							currentid = parseInt(data.id);
-						}
-						messagebuffer.push(data);
-				 });
-			  })
-			  .catch((error) => {
-				 console.log("Error getting documents: ", error);
-			  });
-			  messagebuffer.sort(function (a,b) {if (a.id<b.id) {return -1}if (a.id > b.id) {return 1} return 0;});
-			  var messages = document.getElementById("messages");
-			  messages.innerHTML = "";
-			  for (var i = 0; i<messagebuffer.length;i++) {
-			  	var user = document.createTextNode(messagebuffer[i].username+": ");
-				var message = document.createTextNode(messagebuffer[i].message);
-				var bold = document.createElement("b");
-				bold.appendChild(user);
-				var div = document.createElement("div");
-				div.appendChild(bold);
-				div.appendChild(message);
-				div.classList.add("message");
-				messages.appendChild(div);
-			  }
-			  return currentid+=1;
+				if (navigator.onLine) {
+					ref.get().then((querySnapshot) => {
+						currentid = -1;
+						messagebuffer = [];
+						querySnapshot.forEach((doc) => {
+							var data = doc.data();
+							if (data.id > parseInt(currentid)) {
+								currentid = parseInt(data.id);
+							}
+							messagebuffer.push(data);
+					 });
+				  })
+				  .catch((error) => {
+					 console.log("Error getting documents: ", error);
+				  });
+				  messagebuffer.sort(function (a,b) {if (a.id<b.id) {return -1}if (a.id > b.id) {return 1} return 0;});
+				  var messages = document.getElementById("messages");
+				  messages.innerHTML = "";
+				  for (var i = 0; i<messagebuffer.length;i++) {
+					var user = document.createTextNode(messagebuffer[i].username+": ");
+					var message = document.createTextNode(messagebuffer[i].message);
+					var bold = document.createElement("b");
+					bold.appendChild(user);
+					var div = document.createElement("div");
+					div.appendChild(bold);
+					div.appendChild(message);
+					div.classList.add("message");
+					messages.appendChild(div);
+				  }
+				  return currentid+=1;
+				}
+				else {
+					if (username === "") {
+						document.getElementById("messages").innerHTML = "<div class=\"error chat\"><b>Failed To Get Messages:</b> Internet Disconected!</div>";
+					}
+					else {
+						document.getElementById("messages").innerHTML = "<div class=\"error\"><b>Failed To Fet Messages:</b> Internet Disconected!</div>";
+					}
+				}
 			}
 			function sendMessage() {
-				var message = document.getElementById("message").textContent;
-				ref.add({id: getMessages(),username: username,message: message});
-				getMessages();
+				if (navigator.onLine) {
+					var message = document.getElementById("message").textContent;
+					ref.add({id: getMessages(),username: username,message: message});
+					getMessages();
+				}
+				else {
+					document.getElementById("messages").innerHTML = "<div class=\"error\"><b>Failed To Send Message:</b> Internet Disconected!</div>";
+				}
 			}
 			function setName() {
 				getMessages();
@@ -140,7 +165,7 @@
 				}
 			}
 			document.getElementById("send").addEventListener("click",sendButton);
-			window.setInterval(getMessages,5000);
+			window.setInterval(getMessages,3000);
 		</script>
 	</body>
 </html>
