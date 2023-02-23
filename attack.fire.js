@@ -26,7 +26,7 @@ function getScoreboard() {
 }
 function newScore(highscore){
 	getScoreboard();
-	if (scoreboard.some(function(e){return e<highscore})) {
+	if (scoreboard.some(function(e){return e.score<highscore})) {
 		var name = window.prompt("You Are On The Scoreboard!\nEnter The Name You Want To Use Below:");
 		if (highscore>scoreboard[0].score) {
 			ref.doc("5").update({name: scoreboard[3].name,score: scoreboard[3].score});
