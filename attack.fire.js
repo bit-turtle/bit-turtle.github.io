@@ -6,7 +6,7 @@ var config = {
     messagingSenderId: "908280368156",
     appId: "1:908280368156:web:35571219fbb5a2934663d9"
 };
-const app = initalizeApp(config);
+const app = firebase.initalizeApp(config);
 const db = app.firestore(app);
 const ref = db.collection("scoreboard")
 var scoreboard = [];
