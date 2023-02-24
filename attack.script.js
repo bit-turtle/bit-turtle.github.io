@@ -715,7 +715,7 @@ function draw() {
       textSize(30);
       text("Scoreboard:",140,160);
       textSize(20);
-      if (scoreboard_loading) {
+      if (scoreboards_loaded !== 3) {
         text("Loading...",140,180);
       }
       else {
