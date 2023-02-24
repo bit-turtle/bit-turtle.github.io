@@ -11,7 +11,7 @@ const db = app.firestore(app);
 const ref = [db.collection("easy"),db.collection("medi"),db.collection("hard")];
 var scoreboard = [];
 var scoreboards_loaded = 0;
-async function getScoreboard() {
+function getScoreboard() {
 	scoreboard = [[],[],[]];
 	scoreboards_loaded = 0;
 	ref[0].get().then((querySnapshot) => {
@@ -45,7 +45,7 @@ async function getScoreboard() {
 		console.log("Error getting scoreboard");
 	});
 }
-async addScore(highscore,diff){
+async function addScore(highscore,diff){
 	while (true) {if(scoreboards_loaded === 3){return;}await null;}
 		if (scoreboard[diff].some(function(e){return e.score<highscore})) {
 		if (diff === 0) {
