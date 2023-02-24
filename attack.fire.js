@@ -45,7 +45,7 @@ function getScoreboard() {
 		console.log("Error getting scoreboard");
 	});
 }
-function addScore(highscore,diff){
+function addScore(score,diff){
 	if (scoreboards_loaded === 3) {
 		if (scoreboard[diff].some(function(e){return e.score<highscore})) {
 			if (diff === 0) {
@@ -62,38 +62,38 @@ function addScore(highscore,diff){
 				ref[diff].doc("4").update({name: scoreboard[diff][2].name,score: scoreboard[diff][2].score});
 				ref[diff].doc("3").update({name: scoreboard[diff][1].name,score: scoreboard[diff][1].score});
 				ref[diff].doc("2").update({name: scoreboard[diff][0].name,score: scoreboard[diff][0].score});
-				ref[diff].doc("1").update({name: name,score: highscore});
+				ref[diff].doc("1").update({name: name,score: score});
 				window.alert("#1st Place!\nScoreboard Updated.");
 			}
 			else if (highscore>scoreboard[diff][1].score) {
-				ref[diff].doc("5").update({name: scoreboard[3].name,score: scoreboard[diff][3].score});
-				ref[diff].doc("4").update({name: scoreboard[2].name,score: scoreboard[diff][2].score});
-				ref[diff].doc("3").update({name: scoreboard[1].name,score: scoreboard[diff][1].score});
-				ref[diff].doc("2").update({name: name,score: highscore});
+				ref[diff].doc("5").update({name: scoreboard[diff][3].name,score: scoreboard[diff][3].score});
+				ref[diff].doc("4").update({name: scoreboard[diff][2].name,score: scoreboard[diff][2].score});
+				ref[diff].doc("3").update({name: scoreboard[diff][1].name,score: scoreboard[diff][1].score});
+				ref[diff].doc("2").update({name: name,score: score});
 				window.alert("#2nd Place!\nScoreboard Updated.");
 			}
 			else if (highscore>scoreboard[diff][2].score) {
-				ref[diff].doc("5").update({name: scoreboard[3].name,score: scoreboard[diff][3].score});
-				ref[diff].doc("4").update({name: scoreboard[2].name,score: scoreboard[diff][2].score});
-				ref[diff].doc("3").update({name: name,score: highscore});
+				ref[diff].doc("5").update({name: scoreboard[diff][3].name,score: scoreboard[diff][3].score});
+				ref[diff].doc("4").update({name: scoreboard[diff][2].name,score: scoreboard[diff][2].score});
+				ref[diff].doc("3").update({name: name,score: score});
 				window.alert("#3rd Place!\nScoreboard Updated.");
 			}
 			else if (highscore>scoreboard[diff][3].score) {
-				ref[diff].doc("5").update({name: scoreboard[3].name,score: scoreboard[diff][3].score});
-				ref[diff].doc("4").update({name: name,score: highscore});
+				ref[diff].doc("5").update({name: scoreboard[diff][3].name,score: scoreboard[diff][3].score});
+				ref[diff].doc("4").update({name: name,score: score});
 				window.alert("#4th Place!\nScoreboard Updated.");
 			}
 			else if (highscore>scoreboard[diff][4].score) {
-				ref[diff].doc("5").update({name: name,score: highscore});
+				ref[diff].doc("5").update({name: name,score: score});
 				window.alert("#5th Place!\nScoreboard Updated.");
 			}
 		}
 	}
 	else {
-		window.setTimeout(function(){addScore(highscore,diff)},100);
+		window.setTimeout(function(){addScore(score,diff)},100);
 	}
 }
-function newScore(highscore,diff){
+function newScore(score,diff){
 	getScoreboard();
-	addScore(highscore,diff);
+	addScore(score,diff);
 }
