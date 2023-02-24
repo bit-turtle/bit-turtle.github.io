@@ -32,18 +32,6 @@ Sound From "https://pixabay.com"
 Icons by Me :)
 
 */
-//For testing only attack.fire.js will do this in final release of 1.8
-var scoreboard_loading = false;
-var scoreboard = [[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}],[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}],[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}]];
-function getScoreboard() {
-  scoreboard = [[{name:"Easy",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}],[{name:"Medi",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}],[{name:"Hard",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}]];
-  scoreboard_loading = false;
-}
-function newScore(score,difficulty) {
-  //stuff happens
-}
-//Also I will delete this because attack.cookie.js does this job
-var highscore = 0;
 //All else will be the same in 1.8
 var version = "v1.8";
 
