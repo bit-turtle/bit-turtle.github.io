@@ -1,16 +1,13 @@
 /*
-Attack of the Cubes v1.7 (The power of sound update)
-562 lines of code!
+Attack of the Cubes v1.8 beta (A difficulty to survive)
+740+ lines of code!
 
 Changelog:
-*Update:Powerups now exist and are dropped by different enemys
--Update:Added speed powerup that lets you shoot faster (dodger)
--Update:Added sheild powerup that gives you more health (spawner) 
--Update:Added big powerup which makes your bullets bigger (spliter)
-*Update:Sound exists now
--Update:Added toggle sound option
--Update:Sound uses stereo to indicate where the sound came from
--
+*Buttons Now hvae proper hitboxes
+*Added difficulty selector
+*Harder difficulty makes harder cubes appear faster and cubes appear faster and move faster\
+*Added sccoreboards for easy medium and hard
+* Created attack.fire.js to have the scoreboard hosted on firebase
 
 Controls:
 Mouse:
@@ -32,12 +29,29 @@ https://bit-turtle.github.io/attack.html
 Font from "https://fontesk.com/square-typeface"
 Sound From "https://pixabay.com"
 
-*/
+Icons by Me :)
 
-var version = "v1.7";
+*/
+//For testing only attack.fire.js will do this in final release of 1.8
+var scoreboard_loading = false;
+var scoreboard = [[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}],[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}],[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}]];
+function getScoreboard() {
+  scoreboard = [[{name:"Easy",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}],[{name:"Medi",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}],[{name:"Hard",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}]];
+  scoreboard_loading = false;
+}
+function newScore(score,difficulty) {
+  //stuff happens
+}
+//Also I will delete this because attack.cookie.js does this job
+var highscore = 0;
+//All else will be the same in 1.8
+var version = "v1.8";
 
 var controltype = 0;
-var controltoggle = 0;
+var difficulty_level = 0;
+var scoreboard_open = false;
+var mouseWasPressed = false;
+var clicked = false;
 var playerX = 200;
 var playerMove = 0;
 var playerShoot = false;
@@ -63,6 +77,7 @@ var hitbox = 10;
 var spliteroffset = [{x:-10,y:-10},{x:10,y:-10},{x:10,y:10},{x:-10,y:10}];
 var cooldown = 0;
 var difficulty = 0;
+var spawn = 0;
 var damage = 0;
 var sheild = 0;
 var lives = 3;
@@ -78,6 +93,7 @@ var mouseicon;
 var keyboardicon;
 var soundon;
 var soundoff;
+var trophy;
 var soundmuted = true;
 var clicksound;
 var damagesound;
@@ -91,13 +107,14 @@ function preload() {
   keyboardicon = loadImage('https://bit-turtle.github.io/keyboard.png');
   soundon = loadImage('https://bit-turtle.github.io/soundnotmuted.png')
   soundoff = loadImage('https://bit-turtle.github.io/soundmuted.png')
+  trophy = loadImage('https://bit-turtle.github.io/scoreboard.png');
   font = loadFont('https://bit-turtle.github.io/square.otf');
   soundFormats('mp3');
-  clicksound = loadSound('https://bit-turtle.github.io/click')
-  damagesound = loadSound('https://bit-turtle.github.io/damage')
-  sheildsound = loadSound('https://bit-turtle.github.io/sheild')
-  shootsound = loadSound('https://bit-turtle.github.io/shoot')
-  squishsound = loadSound('https://bit-turtle.github.io/squish')
+  clicksound = loadSound('https://bit-turtle.github.io/click');
+  damagesound = loadSound('https://bit-turtle.github.io/damage');
+  sheildsound = loadSound('https://bit-turtle.github.io/sheild');
+  shootsound = loadSound('https://bit-turtle.github.io/shoot');
+  squishsound = loadSound('https://bit-turtle.github.io/squish');
 }
 
 function setup() {
@@ -188,6 +205,17 @@ function keyReleased() {
 }
 
 function draw() {
+  if (mouseWasPressed && mouseIsPressed) {
+    click = false;
+  }
+  else if (!mouseWasPressed && mouseIsPressed) {
+    click = true;
+    mouseWasPressed = true;
+  }
+  else {
+    click = false;
+    mouseWasPressed = false;
+  }
   if (gamestarted) {
       if (controltype === 0) {
       playerX = mouseX;
@@ -244,33 +272,91 @@ function draw() {
     sheild-=0.6;
     cooldown-=1;
     if (lives <= 0 && damage < 0 && sheild < 0) {
-      if (score > highscore) {highscore = score;setCookie("attackhighscore",highscore,100)}
+      if (score > highscore) {highscore = score;}
+      newScore(highscore,difficulty_level);
       gamestarted = false;
     }
     timer++;
-    if (timer >= 200 - gameSpeed*60) {
-      if (difficulty >= 15 && Math.floor(Math.random()*50) === 0) {
-        enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4,split:false});
+    gameSpeed++;
+    if (timer >= 200 - gameSpeed/(400 - difficulty_level * 100)) {
+      if (gameSpeed/200 < 8) {
+        spawn = 0;
       }
-      else if (difficulty >= 10 && Math.floor(Math.random()*40) === 0) {  
-        enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:0,split:false});
+      else if (gameSpeed/(400 - difficulty_level * 100) <= 16) {
+        spawn = Math.floor(Math.random()*2);
       }
-      else if (difficulty >= 5 && Math.floor(Math.random()*10) === 0) {  
-        enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:2,split:false});
+      else if (gameSpeed/(400 - difficulty_level * 100) <= 32) {
+        spawn = Math.floor(Math.random()*3);
       }
-      else if (difficulty >= 1 && Math.floor(Math.random()*5) === 0) {  
-        enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:1,split:false});
+      else if (gameSpeed/(400 - difficulty_level * 100) <= 64) {
+        spawn = Math.floor(Math.random()*4);       
+      }
+      else if (gameSpeed/(400 - difficulty_level * 100) <= 128) {
+        spawn = Math.floor(Math.random()*5);
+      }
+      if (spawn === 4 && Math.floor(Math.random()*(16-difficulty_level/3)) != 0) {
+        spawn = 3;
+      }
+      if (spawn === 3 && Math.floor(Math.random()*(8-difficulty_level/3)) != 0) {
+        spawn = 2;
+      }
+      if (spawn === 2 && Math.floor(Math.random()*(4-difficulty_level/3)) != 0) {
+        spawn = 1;
+      }
+      if (spawn === 1 && Math.floor(Math.random()*(2-difficulty_level/3)) == 0) {
+        spawn = 0;
+      }
+      if (gameSpeed/(400 - difficulty_level * 100) >= 512) {
+        if (spawn === 4) {
+          enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4,split:false,invis:{strength:1,timer:10,invisible:true}});
+        }
+        else if (spawn === 3) {  
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:Math.floor(Math.random()*2),split:false,invis:{strength:1,timer:10,invisible:true}});
+        }
+        else if (spawn === 2) {  
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:2,split:false,invis:{strength:1,timer:10,invisible:true}});
+        }
+        else if (spawn === 1) {  
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:1,split:false,invis:{strength:1,timer:10,invisible:true}});
+        }
+        else {
+            enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,invis:{strength:1,timer:10,invisible:true}}); 
+        }
+      }
+      else if (gameSpeed/(400 - difficulty_level * 100) >= 256) {
+        if (spawn === 4) {
+          enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4,split:false,invis:{strength:2,timer:0,invisible:false}});
+        }
+        else if (spawn === 3) {  
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:Math.floor(Math.random()*2),split:false,invis:{strength:2,timer:0,invisible:false}});
+        }
+        else if (spawn === 2) {  
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:2,split:false,invis:{strength:2,timer:0,invisible:false}});
+        }
+        else if (spawn === 1) {  
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:1,split:false,invis:{strength:2,timer:0,invisible:false}});
+        }
+        else {
+            enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,invis:{strength:2,timer:0,invisible:false}}); 
+        }
       }
       else {
-          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false}); 
-      }
-      difficulty+=0.25;
-      if (difficulty === 8) {
-        gameSpeed = 1;
-      }
-      else if (difficulty === 16) {
-        gameSpeed = 2;
-      }
+        if (spawn === 4) {
+          enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4,split:false,invis:{strength:0,timer:0,invisible:false}});
+        }
+        else if (spawn === 3) {  
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:Math.floor(Math.random()*2),split:false,invis:{strength:0,timer:0,invisible:false}});
+        }
+        else if (spawn === 2) {  
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:2,split:false,invis:{strength:0,timer:0,invisible:false}});
+        }
+        else if (spawn === 1) {  
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:1,split:false,invis:{strength:0,timer:0,invisible:false}});
+        }
+        else {
+            enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,invis:{strength:0,timer:0,invisible:false}}); 
+        }
+      }  
       timer = 0;
     }
     if (cooldown < 0 && playerShoot || autoShoot) {
@@ -299,31 +385,18 @@ function draw() {
     }
     for (i = 0; i < enemys.length; i++) {
       if (enemys[i].type === 0) {
-        if (difficulty > 8) {
-          enemys[i].y+=2;
-        }
-        else {
-          enemys[i].y+=1;
-        }
+        enemys[i].y+=Math.floor(2+gameSpeed/(400000-difficulty_level*100000));
         fill(255,0,0);
         rect(enemys[i].x-10,enemys[i].y-10,20,20);
       }
       else if (enemys[i].type === 1) {
-        if (difficulty > 12) {
-          enemys[i].y+=4;
-        }
-        else if (difficulty > 8) {
-          enemys[i].y+=3;
-        }
-        else {
-          enemys[i].y+=2;
-        }
+        enemys[i].y+=Math.floor(4+gameSpeed/(400000-difficulty_level*100000));
         fill(210,0,0);
         rect(enemys[i].x-10,enemys[i].y-10,20,20);
       }
       else if (enemys[i].type === 2) {
-        enemys[i].y+=2;
-        enemys[i].x+=Math.floor(Math.random()*10-5);
+        enemys[i].y+=Math.floor(2+gameSpeed/(400000-difficulty_level*100000));
+        enemys[i].x+=Math.floor(Math.random()*11-6);
         if (enemys[i].x < 0) {enemys[i].x = 0}
         if (enemys[i].x > 400) {enemys[i].x = 400}
         fill(180,0,0);
@@ -488,20 +561,131 @@ function draw() {
   }
   //main menu
   else if (gamestarted === false) {
-    textAlign(LEFT);
-    //textSize(40);
     background(0);
-    if (mouseX < 280 && mouseX > 130 && mouseY < 280 && mouseY > 130) {
-      fill(200,0,0);
-      if (mouseIsPressed) {
-        prepare();
-        gamestarted = true;
+    if (!scoreboard_open) {
+      if (mouseX < 275 && mouseX > 135 && mouseY < 275 && mouseY > 135) {
+        fill(200,0,0);
+        if (click) {
+          prepare();
+          gamestarted = true;
+        }
+      }
+      else {
+        fill(220,0,0);
+      }
+      rect(130,130,140,140);
+      //difficulty select
+      textAlign(CENTER);
+      textSize(35);
+      //strokeWeight(2);
+      if (difficulty_level === 0) {
+        fill(220,0,0);
+        rect(290,130,35,70);
+        noFill();
+        if (mouseX > 295 && mouseX < 330 && mouseY > 205 && mouseY < 240) {
+          fill(180,0,0);
+          if (click) {
+            difficulty_level = 1;
+          }
+        }
+        else {
+          noFill();
+        }
+        rect(290,200,35,35);
+        if (mouseX > 295 && mouseX < 330 && mouseY > 240 && mouseY < 275) {
+          fill(180,0,0);
+          if (click) {
+            difficulty_level = 2;
+          }
+        }
+        else {
+          noFill();
+        }
+        rect(290,235,35,35);
+        fill(0);
+        text("E",308,175);
+      }
+      else if (difficulty_level === 1) {
+        if (mouseX > 295 && mouseX < 330 && mouseY > 135 && mouseY < 175) {
+          fill(180,0,0);
+          if (click) {
+            difficulty_level = 0;
+          }
+        }
+        else {
+          noFill();
+        }
+        rect(290,130,35);
+        fill(220,0,0);
+        rect(290,165,35,70);
+        if (mouseX > 295 && mouseX < 330 && mouseY > 240 && mouseY < 275) {
+          fill(180,0,0);
+          if (click) {
+            difficulty_level = 2;
+          }
+        }
+        else {
+          noFill();
+        }
+        rect(290,235,35,35);
+        fill(0);
+        text("M",308,210);
+      }
+      else if (difficulty_level === 2) {
+        if (mouseX > 295 && mouseX < 330 && mouseY > 135 && mouseY < 170) {
+          fill(180,0,0);
+          if (click) {
+            difficulty_level = 0;
+          }
+        }
+        else {
+          noFill();
+        }
+        rect(290,130,35,35);
+        if (mouseX > 295 && mouseX < 330 && mouseY > 170 && mouseY < 205) {
+          fill(180,0,0);
+          if (click) {
+            difficulty_level = 1;
+          }
+        }
+        else {
+          noFill();
+        }
+        rect(290,165,35,35);
+        fill(220,0,0);
+        rect(290,200,35,70);
+        fill(0);
+        text("H",308,245);
       }
     }
     else {
-      fill(220,0,0);
+      noFill();
+      rect(130,130,195,140);
     }
-    rect(130,130,140,140);
+    if (mouseX > 80 && mouseX < 115 && mouseY > 135 && mouseY < 275) {
+      fill(180,0,0)
+      if (click) {
+        if (scoreboard_open) {
+          scoreboard_open = false;
+        }
+        else {
+          scoreboard_open = true;
+          scoreboard_loaded = false;
+          getScoreboard();
+        }
+      }
+    }
+    else {
+      if (scoreboard_open) {
+        fill(220,0,0);
+      }
+      else {
+        noFill();
+      }
+    }
+    rect(75,130,35,140);
+    image(trophy,80,160,55,55);
+    //
     fill(0);
     if (controltype === 0) {
       image(mouseicon,25,5,60,60);
@@ -509,21 +693,14 @@ function draw() {
     else if (controltype === 1) {
       image(keyboardicon,25,5,60,60);
     }
-    if (mouseX >= 25 && mouseX <= 85 && mouseY >= 5 && mouseY <= 65) {
-      if (mouseIsPressed && controltoggle === 0) {
-        if (controltype === 0) {
-          controltype = 1;
-          controltoggle = 1;
-        }
-        else if (controltype === 1) {
-          controltype = 0;
-          controltoggle = 1;
-        }
-        if (soundmuted!==true){clicksound.play();}
+    if (mouseX >= 30 && mouseX <= 90 && mouseY >= 10 && mouseY <= 70 && click) {
+      if (controltype === 0) {
+        controltype = 1;
       }
-      else if (mouseIsPressed === false && controltoggle === 1) {
-        controltoggle = 0;
+      else if (controltype === 1) {
+        controltype = 0;
       }
+      if (soundmuted!==true){clicksound.play();}
     }
     if (soundmuted) {
       image(soundoff,328,5,60,60)
@@ -531,28 +708,40 @@ function draw() {
     else {
       image(soundon,328,5,60,60)
     }
-    if (mouseX >= 330 && mouseX <= 390 && mouseY >= 5 && mouseY <= 65) {
-      if (mouseIsPressed && controltoggle === 0) {
-        if (soundmuted) {
-          soundmuted = false;
-          controltoggle = 1;
-        }
-        else {
-          soundmuted = true;
-          controltoggle = 1;
-        }
-        if (soundmuted!==true){clicksound.play();}
+    if (mouseX >= 335 && mouseX <= 395 && mouseY >= 10 && mouseY <= 70 && click) {
+      if (soundmuted) {
+        soundmuted = false;
       }
-      else if (mouseIsPressed === false && controltoggle === 1) {
-        controltoggle = 0;
+      else {
+        soundmuted = true;
       }
+      if (soundmuted!==true){clicksound.play();}
     }
     textSize(40);
+    textAlign(LEFT);
+    strokeWeight(3);
     text("Attack of the Cubes",25,100);
     text("Highscore: "+highscore,15,380);
-    text("Start",150,210);
     text(version,320,380);
-    
+    if (scoreboard_open) {
+      textSize(30);
+      text("Scoreboard:",140,160);
+      textSize(20);
+      if (scoreboard_loading) {
+        text("Loading...",140,180);
+      }
+      else {
+        text("#1: "+scoreboard[difficulty_level][0].name+" ( "+scoreboard[difficulty_level][0].score+" )",140,180);
+        text("#2: "+scoreboard[difficulty_level][1].name+" ( "+scoreboard[difficulty_level][1].score+" )",140,200);
+        text("#3: "+scoreboard[difficulty_level][2].name+" ( "+scoreboard[difficulty_level][2].score+" )",140,220);
+        text("#4: "+scoreboard[difficulty_level][3].name+" ( "+scoreboard[difficulty_level][3].score+" )",140,240);
+        text("#5: "+scoreboard[difficulty_level][4].name+" ( "+scoreboard[difficulty_level][4].score+" )",140,260);
+      }
+    }
+    else {
+      text("Start",150,210);
+    }
+    textSize(40);
     if (gameplayed && gamestarted !== true) {
       text("Score: " + score,15,320);
       fill(240,0,0);
