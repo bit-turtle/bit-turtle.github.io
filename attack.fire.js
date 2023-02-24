@@ -10,14 +10,17 @@ const app = firebase.initializeApp(config);
 const db = app.firestore(app);
 const ref = [db.collection("easy"),db.collection("medi"),db.collection("hard")];
 var scoreboard = [];
+var scoreboards_loaded = 0;
 var scoreboard_loading = false;
 function getScoreboard() {
 	scoreboard = [[],[],[]];
+	scoreboards_loaded = 0;
 	ref[0].get().then((querySnapshot) => {
 		querySnapshot.forEach((doc) => {
 			scoreboard[0].push(doc.data());
 		});
 		scoreboard[0].sort(function(a,b){if(a.id<b.id){return -1}if(a.id > b.id){return 1}return 0;});
+		scoreboards_loaded++;
 	})
 	.catch((error) => {
 		console.log("Error getting scoreboard");
@@ -27,6 +30,7 @@ function getScoreboard() {
 			scoreboard[1].push(doc.data());
 		});
 		scoreboard[1].sort(function(a,b){if(a.id<b.id){return -1}if(a.id > b.id){return 1}return 0;});
+		scoreboards_loaded++;
 	})
 	.catch((error) => {
 		console.log("Error getting scoreboard");
@@ -36,10 +40,12 @@ function getScoreboard() {
 			scoreboard[2].push(doc.data());
 		});
 		scoreboard[2].sort(function(a,b){if(a.id<b.id){return -1}if(a.id > b.id){return 1}return 0;});
+		scoreboards_loaded++;
 	})
 	.catch((error) => {
 		console.log("Error getting scoreboard");
 	});
+	while (scoreboards_loaded !== 3) {}
 	scoreboard_loading = false;
 }
 function newScore(highscore,diff){
