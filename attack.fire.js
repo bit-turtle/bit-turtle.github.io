@@ -46,7 +46,7 @@ function getScoreboard() {
 	});
 }
 async function addScore(highscore,diff){
-	while (true) {if(scoreboards_loaded === 3){return;}await null;}
+	while (scoreboards_loaded !== 3) {await null;}
 		if (scoreboard[diff].some(function(e){return e.score<highscore})) {
 		if (diff === 0) {
 			var name = window.prompt("You Are On The [Easy] Scoreboard!\nEnter The Name You Want To Use Below:");
