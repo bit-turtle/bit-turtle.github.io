@@ -1,5 +1,5 @@
 /*
-Attack of the Cubes v1.8 beta (A difficulty to survive)
+Attack of the Cubes v1.8 (A difficulty to survive)
 740+ lines of code!
 
 Changelog:
@@ -261,7 +261,7 @@ function draw() {
     cooldown-=1;
     if (lives <= 0 && damage < 0 && sheild < 0) {
       if (score > highscore) {highscore = score;}
-      newScore(highscore,difficulty_level);
+      newScore(score,difficulty_level);
       gamestarted = false;
     }
     timer++;
