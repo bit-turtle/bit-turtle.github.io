@@ -45,8 +45,6 @@ function getScoreboard() {
 	.catch((error) => {
 		console.log("Error getting scoreboard");
 	});
-	while (scoreboards_loaded !== 3) {}
-	scoreboard_loading = false;
 }
 function newScore(highscore,diff){
 	getScoreboard();
