@@ -8,54 +8,80 @@ var config = {
 };
 const app = firebase.initializeApp(config);
 const db = app.firestore(app);
-const ref = db.collection("scoreboard")
+const ref = [db.collection("easy"),db.collection("medi"),db.collection("hard")];
 var scoreboard = [];
 var scoreboard_loading = false;
 function getScoreboard() {
-	ref.get().then((querySnapshot) => {
-		scoreboard = [];
+	scoreboard = [[],[],[]];
+	ref[0].get().then((querySnapshot) => {
 		querySnapshot.forEach((doc) => {
-			scoreboard.push(doc.data());
+			scoreboard[0].push(doc.data());
 		});
-		scoreboard.sort(function(a,b){if(a.id<b.id){return -1}if(a.id > b.id){return 1}return 0;});
-		scoreboard_loading = false;
+		scoreboard[0].sort(function(a,b){if(a.id<b.id){return -1}if(a.id > b.id){return 1}return 0;});
 	})
 	.catch((error) => {
 		console.log("Error getting scoreboard");
 	});
+	ref[1].get().then((querySnapshot) => {
+		querySnapshot.forEach((doc) => {
+			scoreboard[1].push(doc.data());
+		});
+		scoreboard[1].sort(function(a,b){if(a.id<b.id){return -1}if(a.id > b.id){return 1}return 0;});
+	})
+	.catch((error) => {
+		console.log("Error getting scoreboard");
+	});
+	ref[2].get().then((querySnapshot) => {
+		querySnapshot.forEach((doc) => {
+			scoreboard[2].push(doc.data());
+		});
+		scoreboard[2].sort(function(a,b){if(a.id<b.id){return -1}if(a.id > b.id){return 1}return 0;});
+	})
+	.catch((error) => {
+		console.log("Error getting scoreboard");
+	});
+	scoreboard_loading = false;
 }
-function newScore(highscore){
+function newScore(highscore,diff){
 	getScoreboard();
-	if (scoreboard.some(function(e){return e.score<highscore})) {
-		var name = window.prompt("You Are On The Scoreboard!\nEnter The Name You Want To Use Below:");
-		if (highscore>scoreboard[0].score) {
-			ref.doc("5").update({name: scoreboard[3].name,score: scoreboard[3].score});
-			ref.doc("4").update({name: scoreboard[2].name,score: scoreboard[2].score});
-			ref.doc("3").update({name: scoreboard[1].name,score: scoreboard[1].score});
-			ref.doc("2").update({name: scoreboard[0].name,score: scoreboard[0].score});
-			ref.doc("1").update({name: name,score: highscore});
+	if (scoreboard[diff].some(function(e){return e.score<highscore})) {
+		if (diff === 0) {
+			var name = window.prompt("You Are On The [Easy] Scoreboard!\nEnter The Name You Want To Use Below:");
+		}
+		else if (diff === 1) {
+			var name = window.prompt("You Are On The [Medium] Scoreboard!\nEnter The Name You Want To Use Below:");
+		}
+		else if (diff === 2) {
+			var name = window.prompt("You Are On The [Hard] Scoreboard!\nEnter The Name You Want To Use Below:");
+		}
+		if (highscore>scoreboard[diff][0].score) {
+			ref[diff].doc("5").update({name: scoreboard[diff][3].name,score: scoreboard[diff][3].score});
+			ref[diff].doc("4").update({name: scoreboard[diff][2].name,score: scoreboard[diff][2].score});
+			ref[diff].doc("3").update({name: scoreboard[diff][1].name,score: scoreboard[diff][1].score});
+			ref[diff].doc("2").update({name: scoreboard[diff][0].name,score: scoreboard[diff][0].score});
+			ref[diff].doc("1").update({name: name,score: highscore});
 			window.alert("#1st Place!\nScoreboard Updated.");
 		}
-		else if (highscore>scoreboard[1].score) {
-			ref.doc("5").update({name: scoreboard[3].name,score: scoreboard[3].score});
-			ref.doc("4").update({name: scoreboard[2].name,score: scoreboard[2].score});
-			ref.doc("3").update({name: scoreboard[1].name,score: scoreboard[1].score});
-			ref.doc("2").update({name: name,score: highscore});
+		else if (highscore>scoreboard[diff][1].score) {
+			ref[diff].doc("5").update({name: scoreboard[3].name,score: scoreboard[diff][3].score});
+			ref[diff].doc("4").update({name: scoreboard[2].name,score: scoreboard[diff][2].score});
+			ref[diff].doc("3").update({name: scoreboard[1].name,score: scoreboard[diff][1].score});
+			ref[diff].doc("2").update({name: name,score: highscore});
 			window.alert("#2nd Place!\nScoreboard Updated.");
 		}
-		else if (highscore>scoreboard[2].score) {
-			ref.doc("5").update({name: scoreboard[3].name,score: scoreboard[3].score});
-			ref.doc("4").update({name: scoreboard[2].name,score: scoreboard[2].score});
-			ref.doc("3").update({name: name,score: highscore});
+		else if (highscore>scoreboard[diff][2].score) {
+			ref[diff].doc("5").update({name: scoreboard[3].name,score: scoreboard[diff][3].score});
+			ref[diff].doc("4").update({name: scoreboard[2].name,score: scoreboard[diff][2].score});
+			ref[diff].doc("3").update({name: name,score: highscore});
 			window.alert("#3rd Place!\nScoreboard Updated.");
 		}
-		else if (highscore>scoreboard[3].score) {
-			ref.doc("5").update({name: scoreboard[3].name,score: scoreboard[3].score});
-			ref.doc("4").update({name: name,score: highscore});
+		else if (highscore>scoreboard[diff][3].score) {
+			ref[diff].doc("5").update({name: scoreboard[3].name,score: scoreboard[diff][3].score});
+			ref[diff].doc("4").update({name: name,score: highscore});
 			window.alert("#4th Place!\nScoreboard Updated.");
 		}
-		else if (highscore>scoreboard[4].score) {
-			ref.doc("5").update({name: name,score: highscore});
+		else if (highscore>scoreboard[diff][4].score) {
+			ref[diff].doc("5").update({name: name,score: highscore});
 			window.alert("#5th Place!\nScoreboard Updated.");
 		}
 	}
