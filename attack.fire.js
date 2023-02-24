@@ -11,8 +11,7 @@ const db = app.firestore(app);
 const ref = [db.collection("easy"),db.collection("medi"),db.collection("hard")];
 var scoreboard = [];
 var scoreboards_loaded = 0;
-var scoreboard_loading = false;
-function getScoreboard() {
+async function getScoreboard() {
 	scoreboard = [[],[],[]];
 	scoreboards_loaded = 0;
 	ref[0].get().then((querySnapshot) => {
@@ -46,9 +45,9 @@ function getScoreboard() {
 		console.log("Error getting scoreboard");
 	});
 }
-function newScore(highscore,diff){
-	getScoreboard();
-	if (scoreboard[diff].some(function(e){return e.score<highscore})) {
+async addScore(highscore,diff){
+	while (true) {if(scoreboards_loaded === 3){return;}await null;}
+		if (scoreboard[diff].some(function(e){return e.score<highscore})) {
 		if (diff === 0) {
 			var name = window.prompt("You Are On The [Easy] Scoreboard!\nEnter The Name You Want To Use Below:");
 		}
@@ -89,4 +88,8 @@ function newScore(highscore,diff){
 			window.alert("#5th Place!\nScoreboard Updated.");
 		}
 	}
+}
+function newScore(highscore,diff){
+	getScoreboard();
+	addScore(highscore,diff);
 }
