@@ -11,13 +11,14 @@ const db = app.firestore(app);
 const ref = [db.collection("easy"),db.collection("medi"),db.collection("hard")];
 var scoreboard = [];
 var scoreboards_loaded = 0;
+const limit = 10;
 function getScoreboard() {
 	scoreboard = [[],[],[]];
 	scoreboards_loaded = 0;
 	ref[0].get().then((querySnapshot) => {
 		querySnapshot.forEach((doc) => {
 			scoreboard[0].push(doc.data());
-			if(scoreboard[0][scoreboard[0].length-1].name.length>8){scoreboard[0][scoreboard[0].length-1].name=scoreboard[0][scoreboard[0].length-1].name.slice(0,7);scoreboard[0][scoreboard[0].length-1].name+="...";}
+			if(scoreboard[0][scoreboard[0].length-1].name.length>limit){scoreboard[0][scoreboard[0].length-1].name=scoreboard[0][scoreboard[0].length-1].name.slice(0,7);scoreboard[0][scoreboard[0].length-1].name+="...";}
 		});
 		scoreboard[0].sort(function(a,b){if(a.id<b.id){return -1}if(a.id > b.id){return 1}return 0;});
 		scoreboards_loaded++;
@@ -28,7 +29,7 @@ function getScoreboard() {
 	ref[1].get().then((querySnapshot) => {
 		querySnapshot.forEach((doc) => {
 			scoreboard[1].push(doc.data());
-			if(scoreboard[1][scoreboard[1].length-1].name.length>8){scoreboard[1][scoreboard[1].length-1].name=scoreboard[1][scoreboard[1].length-1].name.slice(0,7);scoreboard[1][scoreboard[1].length-1].name+="...";}
+			if(scoreboard[1][scoreboard[1].length-1].name.length>limit){scoreboard[1][scoreboard[1].length-1].name=scoreboard[1][scoreboard[1].length-1].name.slice(0,7);scoreboard[1][scoreboard[1].length-1].name+="...";}
 		});
 		scoreboard[1].sort(function(a,b){if(a.id<b.id){return -1}if(a.id > b.id){return 1}return 0;});
 		scoreboards_loaded++;
@@ -39,7 +40,7 @@ function getScoreboard() {
 	ref[2].get().then((querySnapshot) => {
 		querySnapshot.forEach((doc) => {
 			scoreboard[2].push(doc.data());
-			if(scoreboard[2][scoreboard[2].length-1].name.length>8){scoreboard[2][scoreboard[2].length-1].name=scoreboard[2][scoreboard[2].length-1].name.slice(0,7);scoreboard[2][scoreboard[2].length-1].name+="...";}
+			if(scoreboard[2][scoreboard[2].length-1].name.length>limit){scoreboard[2][scoreboard[2].length-1].name=scoreboard[2][scoreboard[2].length-1].name.slice(0,7);scoreboard[2][scoreboard[2].length-1].name+="...";}
 		});
 		scoreboard[2].sort(function(a,b){if(a.id<b.id){return -1}if(a.id > b.id){return 1}return 0;});
 		scoreboards_loaded++;
