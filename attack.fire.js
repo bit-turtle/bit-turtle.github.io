@@ -47,7 +47,7 @@ function getScoreboard() {
 }
 function addScore(score,diff){
 	if (scoreboards_loaded === 3) {
-		if (scoreboard[diff].some(function(e){return e.score<highscore})) {
+		if (scoreboard[diff].some(function(e){return e.score<score})) {
 			if (diff === 0) {
 				var name = window.prompt("You Are On The [Easy] Scoreboard!\nEnter The Name You Want To Use Below:");
 			}
@@ -57,7 +57,7 @@ function addScore(score,diff){
 			else if (diff === 2) {
 				var name = window.prompt("You Are On The [Hard] Scoreboard!\nEnter The Name You Want To Use Below:");
 			}
-			if (highscore>scoreboard[diff][0].score) {
+			if (score>scoreboard[diff][0].score) {
 				ref[diff].doc("5").update({name: scoreboard[diff][3].name,score: scoreboard[diff][3].score});
 				ref[diff].doc("4").update({name: scoreboard[diff][2].name,score: scoreboard[diff][2].score});
 				ref[diff].doc("3").update({name: scoreboard[diff][1].name,score: scoreboard[diff][1].score});
@@ -65,25 +65,25 @@ function addScore(score,diff){
 				ref[diff].doc("1").update({name: name,score: score});
 				window.alert("#1st Place!\nScoreboard Updated.");
 			}
-			else if (highscore>scoreboard[diff][1].score) {
+			else if (score>scoreboard[diff][1].score) {
 				ref[diff].doc("5").update({name: scoreboard[diff][3].name,score: scoreboard[diff][3].score});
 				ref[diff].doc("4").update({name: scoreboard[diff][2].name,score: scoreboard[diff][2].score});
 				ref[diff].doc("3").update({name: scoreboard[diff][1].name,score: scoreboard[diff][1].score});
 				ref[diff].doc("2").update({name: name,score: score});
 				window.alert("#2nd Place!\nScoreboard Updated.");
 			}
-			else if (highscore>scoreboard[diff][2].score) {
+			else if (score>scoreboard[diff][2].score) {
 				ref[diff].doc("5").update({name: scoreboard[diff][3].name,score: scoreboard[diff][3].score});
 				ref[diff].doc("4").update({name: scoreboard[diff][2].name,score: scoreboard[diff][2].score});
 				ref[diff].doc("3").update({name: name,score: score});
 				window.alert("#3rd Place!\nScoreboard Updated.");
 			}
-			else if (highscore>scoreboard[diff][3].score) {
+			else if (score>scoreboard[diff][3].score) {
 				ref[diff].doc("5").update({name: scoreboard[diff][3].name,score: scoreboard[diff][3].score});
 				ref[diff].doc("4").update({name: name,score: score});
 				window.alert("#4th Place!\nScoreboard Updated.");
 			}
-			else if (highscore>scoreboard[diff][4].score) {
+			else if (score>scoreboard[diff][4].score) {
 				ref[diff].doc("5").update({name: name,score: score});
 				window.alert("#5th Place!\nScoreboard Updated.");
 			}
