@@ -35,7 +35,7 @@ function draw() {
       text("Ultimate",300,110);
       rect(115,50,370,8);
       //Main Animation
-      if (animation.main <= 60) {
+      if (animation.main <= 60 && animation.main > 10) {
         rect(175-animation.main,120,250+2*animation.main,470);
       }
       else {
