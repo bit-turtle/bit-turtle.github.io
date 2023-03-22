@@ -41,7 +41,7 @@ function draw() {
       else {
         rect(115,120,370,470);
       }
-      mainanimation+=1;
+      animation.main++;
       break;
     case 1:
       //Play Screen
