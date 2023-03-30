@@ -17,19 +17,24 @@
     <main>
     </main>
     <script src="attack.script.js"></script>
-    <div id="beta">Attack of the Cubes v1.8<br><a href="https://editor.p5js.org/mts18142027/sketches/YfuXCGsip">Link to beta version</a></div>
+    <div id="beta">Attack of the Cubes v1.8<br><a href="https://codepen.io/bit-turtle/pen/wvENXve">Link to beta version</a></div>
     <div id="extention"><a href="attackEXT.zip">Download extention version</a><br>To install, open the zip and copy all the files inside to a folder. <br> Then go to chrome://extensions and turn on developer mode. <br> Finally click "Load Unpacked" and select the folder you made earlier<br>Now the extention is installed</div>
     <div id="changelog"><a id="toggle" href="#">Show Changelog</a></div>
     <script>
-      var toggle = false;
+      var extentiontoggle = false;
+      var extentiondiv = document.getElementById("extention")
+      var extention = function() {
+        //extention toggle will go here
+      }
+      var changelogtoggle = false;
       var changelogdiv = document.getElementById("changelog");
       var changelog = function() {
-        if (toggle === false) {
+        if (changelogtoggle === false) {
           changelogdiv.innerHTML = "<a id=\"toggle\">Hide Changelog</a><ul><li>Added Difficulties: Difficulties affect the rate cules appear, the speed cubes move, when difficult cubes can appear</li><li>Added Difficulty Selector: You can select Easy, Medium, or Hard</li><li>Added Scoreboard: One for each difficulty</li><li>Added Scoreboard Button: It is on the main menu and shows the scoreboard for the currently selected difficulty</li></ul>";
           document.getElementById("toggle").addEventListener("click",changelog);
           toggle = true;
         }
-        else if (toggle === true) {
+        else if (changelogtoggle === true) {
           changelogdiv.innerHTML = "<a id=\"toggle\">Show Changelog</a>";
           document.getElementById("toggle").addEventListener("click",changelog);
           toggle = false;
