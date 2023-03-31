@@ -59,6 +59,9 @@
           $("#results").html("<thead><tr><th>Title</th><th>Author</th><th>Location</th><th>Image</th></tr></thead><tbody>"+results+"</tbody>");
         }
       },error: console.error,download: true});}else{$("#results").html("<tbody><tr><td>No Internet!</td></tr></tbody>");}});
+      $("#query").on("keypress",function(e){
+        if(e.key === "Enter"){e.preventDefault();$("#search").trigger("click")}
+      });
     </script>
   </body>
 </html>
