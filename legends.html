@@ -5,13 +5,13 @@
     <style>
       #image {
         z-index: -1;
+        margin-left: auto;
+        margin-right: auto;
       }
       #countdown {
         font-family: monospace;
-        font-size: 10px;
+        font-size: 2em;
         -webkit-text-stroke: 2px white;
-      }
-      .center {
         margin: 0;
         position: absolute;
         top: 50%;
@@ -23,8 +23,8 @@
     <script src="jquery.min.js"></script>
   </head>
   <body>
-    <img src="legends.png" alt="Minecraft Legends" id="image" class="center">
-    <h1 id="countdown" class="center">Loading...</h1>
+    <img src="legends.png" alt="Minecraft Legends" id="image">
+    <h1 id="countdown">Loading...</h1>
     <script>
       var releaseDate = new Date("April 18, 2023 16:00:00");
       var updateCountdown = setInterval(function(){
