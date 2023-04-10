@@ -8,6 +8,7 @@
       }
       #countdown {
         font-family: monospace;
+        -webkit-text-stroke: 2px white;
       }
       .center {
         margin: 0;
@@ -32,7 +33,7 @@
         var hoursUntil = Math.floor((timeUntil % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutesUntil = Math.floor((timeUntil % (1000 * 60 * 60)) / (1000 * 60));
         var secondsUntil = Math.floor((timeUntil % (1000 * 60)) / 1000);
-        if (timeUntil > 0) { $("#countdown").text(daysUntil + "d " + hoursUntil + " h" + minutesUntil + " m" + secondsUntil + "s\nUntil Minecraft Legends Is Released"); }
+        if (timeUntil > 0) { $("#countdown").text(daysUntil + "d " + hoursUntil + "h " + minutesUntil + "m " + secondsUntil + "s\nUntil Minecraft Legends Is Released"); }
         else { $("countdown").text("Minecraft Legends Has Released!"); clearInterval(updateCountdown); }
       },1000);
     </script>
