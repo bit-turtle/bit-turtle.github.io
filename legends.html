@@ -3,14 +3,18 @@
   <head>
     <title>Minecraft Legends Countdown</title>
     <style>
-      #image {
-        z-index: -1;
-        margin-left: auto;
-        margin-right: auto;
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-image: url("legends.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
       }
       #countdown {
         font-family: monospace;
-        font-size: 2em;
+        font-size: 3em;
+        text-align: center;
         -webkit-text-stroke: 2px white;
         margin: 0;
         position: absolute;
@@ -23,7 +27,6 @@
     <script src="jquery.min.js"></script>
   </head>
   <body>
-    <img src="legends.png" alt="Minecraft Legends" id="image">
     <h1 id="countdown">Loading...</h1>
     <script>
       var releaseDate = new Date("April 18, 2023 16:00:00");
