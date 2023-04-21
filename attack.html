@@ -27,10 +27,12 @@
         if (!extentiontoggle) {
           extentiondiv.innerHTML = "<a id=\"toggle2\">Hide Extension Version Instructions</a><br><a href=\"attackEXT.zip\">Download extension version</a><br>To install, open the zip and copy all the files inside into a folder. <br> Then go to chrome://extensions and turn on developer mode. <br> Finally click \"Load Unpacked\" and select the folder you made earlier that has the files from the zip<br>Now the extention is installed <br> If it didn't work, make sure you selected the right folder";
           document.getElementById("toggle2").addEventListener("click",extention);
+          extentiontoggle = true;
         }
         else {
           extentiondiv.innerHTML = "<a id=\"toggle2\">Show Extension Version Instructions</a>"
           document.getElementById("toggle2").addEventListener("click",extention);
+          extentiontoggle = false;
         }
       }
       var changelogtoggle = false;
