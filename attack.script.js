@@ -274,7 +274,7 @@ function draw() {
     sheild-=0.6;
     cooldown-=1;
     if (lives <= 0 && damage < 0 && sheild < 0) {
-      if (score > highscore) {highscore = score;}
+      if (score > highscore) {highscore[start_difficulty] = score; setCookie("attackhighscore", JSON.stringify(highscore), 30);}
       newScore(score,difficulty_level);
       gamestarted = false;
     }
