@@ -1,4 +1,5 @@
-		var highscore = 0;
+		var highscore = [0,0,0];
+
 		function setCookie(cname,cvalue,exdays) {
  		const d = new Date();
   		d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -23,12 +24,12 @@
 		}
 
 		function checkCookie() {
-  		let high = getCookie("attackhighscore");
+  		let high = JSON.parse(getCookie("attackhighscore"));
   		if (high != "") {
     		highscore = high;
   		} else {
      		if (high != "" && high != null) {
-       		setCookie("attackhighscore", 0, 30);
+       		setCookie("attackhighscore", JSON.stringify(highscore), 30);
      		}
   		}
 		}
