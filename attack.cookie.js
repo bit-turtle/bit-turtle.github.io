@@ -32,5 +32,4 @@
        		setCookie("attackhighscore", JSON.stringify(highscore), 30);
      		}
   		}
-		}
 		checkCookie();
