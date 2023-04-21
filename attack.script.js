@@ -541,7 +541,7 @@ function draw() {
       if (lazersDisabled[i].bounce && lazersDisabled[i].x > playerX - (10+hitbox*1.5) && lazersDisabled[i].x < playerX + (10+hitbox*1.5) && lazersDisabled[i].y >= 390 && lazersDisabled[i].y <= 400) {
         //Bounce Back Damage
         damage = 20;
-        lives -= 1;
+        lives -= 0.5;
         damagesound.pan(lazersDisabled[i].x/200-1);
         if(soundmuted===false){damagesound.play();}
         lazersDisabled.splice(i,1);
