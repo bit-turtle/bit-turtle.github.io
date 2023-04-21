@@ -17,14 +17,21 @@
     <main>
     </main>
     <script src="attack.script.js"></script>
-    <div id="beta">Attack of the Cubes v1.8<br><a href="https://codepen.io/bit-turtle/pen/wvENXve">Link to beta version</a></div>
-    <div id="extention"><a href="attackEXT.zip">Download extention version</a><br>To install, open the zip and copy all the files inside to a folder. <br> Then go to chrome://extensions and turn on developer mode. <br> Finally click "Load Unpacked" and select the folder you made earlier<br>Now the extention is installed</div>
+    <div id="beta">Attack of the Cubes v1.8<br><a href="https://codepen.io/bit-turtle/pen/wvENXve">Check out the beta version! [b1.9]</a></div>
+    <div id="extention"><a id="toggle2">Show Extension Version Instructions</a></div>
     <div id="changelog"><a id="toggle" href="#">Show Changelog</a></div>
     <script>
       var extentiontoggle = false;
       var extentiondiv = document.getElementById("extention")
       var extention = function() {
-        //extention toggle will go here
+        if (!extentiontoggle) {
+          extentiondiv.innerHTML = "<a id=\"toggle2\">Hide Extension Version Instructions</a><br><a href=\"attackEXT.zip\">Download extension version</a><br>To install, open the zip and copy all the files inside into a folder. <br> Then go to chrome://extensions and turn on developer mode. <br> Finally click \"Load Unpacked\" and select the folder you made earlier that has the files from the zip<br>Now the extention is installed <br> If it didn't work, make sure you selected the right folder";
+          document.getElementById("toggle2").addEventListener("click",extention);
+        }
+        else if (extentiontoggle) {
+          extentiondiv.innerHTML = "<a id=\"toggle2\">Show Extension Version Instructions</a>"
+          document.getElementById("toggle2").addEventListener("click",extention);
+        }
       }
       var changelogtoggle = false;
       var changelogdiv = document.getElementById("changelog");
@@ -32,15 +39,16 @@
         if (changelogtoggle === false) {
           changelogdiv.innerHTML = "<a id=\"toggle\">Hide Changelog</a><ul><li>Added Difficulties: Difficulties affect the rate cules appear, the speed cubes move, when difficult cubes can appear</li><li>Added Difficulty Selector: You can select Easy, Medium, or Hard</li><li>Added Scoreboard: One for each difficulty</li><li>Added Scoreboard Button: It is on the main menu and shows the scoreboard for the currently selected difficulty</li></ul>";
           document.getElementById("toggle").addEventListener("click",changelog);
-          toggle = true;
+          changelogtoggle = true;
         }
         else if (changelogtoggle === true) {
           changelogdiv.innerHTML = "<a id=\"toggle\">Show Changelog</a>";
           document.getElementById("toggle").addEventListener("click",changelog);
-          toggle = false;
+          changelogtoggle = false;
         }
       }
       document.getElementById("toggle").addEventListener("click",changelog);
+      document.getElementById("toggle2").addEventListener("click",extention);
     </script>
   </body>
 </html>
