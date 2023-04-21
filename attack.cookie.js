@@ -24,11 +24,11 @@
 		}
 
 		function checkCookie() {
-  		let high = JSON.parse(getCookie("attackhighscore"));
-  		if (high != "") {
+  		try {
+		let high = JSON.parse(getCookie("attackhighscore"));
     		highscore = high;
-  		} else {
-     		if (high != "" && high != null) {
+  		}
+     		catch {
        		setCookie("attackhighscore", JSON.stringify(highscore), 30);
      		}
   		}
