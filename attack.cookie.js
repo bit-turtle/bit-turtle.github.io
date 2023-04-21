@@ -28,8 +28,8 @@
 		let high = JSON.parse(getCookie("attackhighscore"));
     		highscore = high;
   		}
-     		catch {
+     		catch (e) {
        		setCookie("attackhighscore", JSON.stringify(highscore), 30);
      		}
-  		}
+		}
 		checkCookie();
