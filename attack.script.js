@@ -1,13 +1,20 @@
 /*
-Attack of the Cubes v1.8 (A difficulty to survive)
-740+ lines of code!
+Attack of the Cubes v1.9 (A Returning Difficulty)
+850+ lines of code!
+Last update on: April 21 2023
 
 Changelog:
-*Buttons Now hvae proper hitboxes
-*Added difficulty selector
-*Harder difficulty makes harder cubes appear faster and cubes appear faster and move faster\
-*Added sccoreboards for easy medium and hard
-* Created attack.fire.js to have the scoreboard hosted on firebase
+*Adds click sounds to scoreboard button, and difficulty selector
+*Fixes difficulty scaling bug
+*Highscores For Each Difficulty
+*Indicator nesxt to most recent score that shows which difficulty it was done in
+*New text on start button that shows current difficulty
+*Lazers Updated:
+**Lazers now have a smoother animation after hitting an enemy cube
+**Lazers now bounce back after hitting a boss cube such as the Spawner and the Splitter
+**Lazers that bounce back and hit the player now do damage
+**Lazers bounce back off of non-boss cubes half the time in hard difficulty, a quarter of the time in medium difficulty, and none of the time in easy difficulty
+*Added April Fools Easter Egg
 
 Controls:
 Mouse:
@@ -19,12 +26,12 @@ Use Up Arrow or W Key to shoot
 Use Down Arrow or S mo move faster
 
 Sugestions
-mspears.27@acsamman.edu.jo
-Give me sugestions :)
+I am making sigestion and bug tracker
 
 Website:
 Check out my website: bit-turtle.github.io
 https://bit-turtle.github.io/attack.html
+You probably found this game there anyway
 
 Font from "https://fontesk.com/square-typeface"
 Sound From "https://pixabay.com"
@@ -32,11 +39,11 @@ Sound From "https://pixabay.com"
 Icons by Me :)
 
 */
-//All else will be the same in 1.8
-var version = "v1.8";
+var version = "v1.9"
 
 var controltype = 0;
 var difficulty_level = 0;
+var start_difficulty = 0;
 var scoreboard_open = false;
 var mouseWasPressed = false;
 var clicked = false;
@@ -59,6 +66,7 @@ var score = 0;
 var enemys = [];
 var enemysDead = [];
 var lazers = [];
+var lazersDisabled = [];
 var powerups = {speed:false,sheild:false,big:false};
 var poweruptimer = {speed:0,big:0};
 var hitbox = 10;
@@ -96,7 +104,12 @@ function preload() {
   soundon = loadImage('https://bit-turtle.github.io/soundnotmuted.png')
   soundoff = loadImage('https://bit-turtle.github.io/soundmuted.png')
   trophy = loadImage('https://bit-turtle.github.io/scoreboard.png');
-  font = loadFont('https://bit-turtle.github.io/square.otf');
+  if (month() === 4 && day() === 1) {
+    font = loadFont('https://bit-turtle.github.io/aurebesh.otf');
+  }
+  else {
+    font = loadFont('https://bit-turtle.github.io/square.otf');
+  }
   soundFormats('mp3');
   clicksound = loadSound('https://bit-turtle.github.io/click');
   damagesound = loadSound('https://bit-turtle.github.io/damage');
@@ -126,12 +139,13 @@ function prepare() {
   damage = 0;
   lives = 3;
   gameSpeed = 0;
-  splitsHit= 0;
+  splitsHit = 0;
   powerups = {speed:false,sheild:false,big:false};
   poweruptimer = {speed:0,big:0};
   timer = 0;
   enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false});
   autoShoot = true;
+  start_difficulty = difficulty_level;
 }
 function keyPressed() {
   if (key === "ArrowRight") {
@@ -267,13 +281,14 @@ function draw() {
     timer++;
     gameSpeed++;
     if (timer >= 200 - gameSpeed/(400 - difficulty_level * 100)) {
+      //Cube Spawn Code
       if (gameSpeed/200 < 8) {
         spawn = 0;
       }
-      else if (gameSpeed/(400 - difficulty_level * 100) <= 16) {
+      else if (gameSpeed/(400-difficulty_level*100) <= 16) {
         spawn = Math.floor(Math.random()*2);
       }
-      else if (gameSpeed/(400 - difficulty_level * 100) <= 32) {
+      else if (gameSpeed/(400-difficulty_level*100) <= 32) {
         spawn = Math.floor(Math.random()*3);
       }
       else if (gameSpeed/(400 - difficulty_level * 100) <= 64) {
@@ -281,6 +296,9 @@ function draw() {
       }
       else if (gameSpeed/(400 - difficulty_level * 100) <= 128) {
         spawn = Math.floor(Math.random()*5);
+      }
+      else {
+        spawn = Math.floor(Math.random()*4+1);
       }
       if (spawn === 4 && Math.floor(Math.random()*(16-difficulty_level/3)) != 0) {
         spawn = 3;
@@ -440,6 +458,15 @@ function draw() {
             }
             if (enemys[i].split) {splitsHit++;}
             enemyDelete = true;
+            if (difficulty_level === 2 && Math.random() < 0.5) {
+              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true});
+            }
+            else if (difficulty_level === 1 && Math.random() < 0.25) {
+              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true});
+            }
+            else {
+              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: false});
+            }
             lazers.splice(i2,1);
             score++;
             break;
@@ -455,6 +482,7 @@ function draw() {
               powerups.sheild = true;
               score+=2;
             }
+            lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true});
             lazers.splice(i2,1);
             break;
           }
@@ -473,6 +501,7 @@ function draw() {
               }
             }
             enemys.splice(i,1);
+            lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true});
             lazers.splice(i2,1);
             if(soundmuted===false){squishsound.play();}
           }
@@ -496,12 +525,33 @@ function draw() {
         else {
           damage = 20;
           lives -= 1;
-          damagesound.pan(enemys[i].x/200-1)
+          damagesound.pan(enemys[i].x/200-1);
           if(soundmuted===false){damagesound.play();}
         }
         enemys.splice(i,1);
       }
     }
+    //Lazers Disabled (ALready Hit Something)
+    for (i = 0; i < lazersDisabled.length; i++) {
+      if (lazersDisabled[i].bounce) {lazersDisabled[i].y+=2;}
+      else {lazersDisabled[i].y-=2;}
+      lazersDisabled[i].timer++;
+      fill(0,0,200);
+      rect(lazersDisabled[i].x-(2.5+hitbox),lazersDisabled[i].y-(5+hitbox),5+(hitbox*2),10+(hitbox*2));
+      if (lazersDisabled[i].bounce && lazersDisabled[i].x > playerX - (10+hitbox*1.5) && lazersDisabled[i].x < playerX + (10+hitbox*1.5) && lazersDisabled[i].y >= 390 && lazersDisabled[i].y <= 400) {
+        //Bounce Back Damage
+        damage = 20;
+        lives -= 1;
+        damagesound.pan(lazersDisabled[i].x/200-1);
+        if(soundmuted===false){damagesound.play();}
+        lazersDisabled.splice(i,1);
+      }
+      else if (lazersDisabled[i].y >= 410 || lazersDisabled.y <= -10 && lazersDisabled[i].bounce) {
+        lazersDisabled.splice(i,1);
+      }
+      
+    }
+    //Squish
     for (i = 0; i < enemysDead.length; i++) {
       enemysDead[i].squish++;
       if (enemysDead[i].type === 0) {
@@ -565,7 +615,6 @@ function draw() {
       //difficulty select
       textAlign(CENTER);
       textSize(35);
-      //strokeWeight(2);
       if (difficulty_level === 0) {
         fill(220,0,0);
         rect(290,130,35,70);
@@ -574,6 +623,9 @@ function draw() {
           fill(180,0,0);
           if (click) {
             difficulty_level = 1;
+            if (!soundmuted) {
+              clicksound.play();
+            }
           }
         }
         else {
@@ -584,6 +636,9 @@ function draw() {
           fill(180,0,0);
           if (click) {
             difficulty_level = 2;
+            if (!soundmuted) {
+              clicksound.play();
+            }
           }
         }
         else {
@@ -598,6 +653,9 @@ function draw() {
           fill(180,0,0);
           if (click) {
             difficulty_level = 0;
+            if (!soundmuted) {
+              clicksound.play();
+            }
           }
         }
         else {
@@ -610,6 +668,9 @@ function draw() {
           fill(180,0,0);
           if (click) {
             difficulty_level = 2;
+            if (!soundmuted) {
+              clicksound.play();
+            }
           }
         }
         else {
@@ -624,6 +685,9 @@ function draw() {
           fill(180,0,0);
           if (click) {
             difficulty_level = 0;
+            if (!soundmuted) {
+              clicksound.play();
+            }
           }
         }
         else {
@@ -634,6 +698,9 @@ function draw() {
           fill(180,0,0);
           if (click) {
             difficulty_level = 1;
+            if (!soundmuted) {
+              clicksound.play();
+            }
           }
         }
         else {
@@ -661,6 +728,9 @@ function draw() {
           scoreboard_loaded = false;
           getScoreboard();
         }
+        if (!soundmuted) {
+          clicksound.play();
+        }
       }
     }
     else {
@@ -673,7 +743,7 @@ function draw() {
     }
     rect(75,130,35,140);
     image(trophy,80,160,55,55);
-    //
+    //Settings
     fill(0);
     if (controltype === 0) {
       image(mouseicon,25,5,60,60);
@@ -709,7 +779,7 @@ function draw() {
     textAlign(LEFT);
     strokeWeight(3);
     text("Attack of the Cubes",25,100);
-    text("Highscore: "+highscore,15,380);
+    text("Highscore: "+highscore[difficulty_level],15,380);
     text(version,320,380);
     if (scoreboard_open) {
       textSize(30);
@@ -728,10 +798,37 @@ function draw() {
     }
     else {
       text("Start",150,210);
+      textSize(25);
+      text("Attack",160,165);
+      switch(difficulty_level) {
+        case 0:
+          text("[Easy]",165,245);
+          break;
+        case 1:
+          text("[Medium]",155,245);
+          break;
+        case 2:
+          text("[Hard]",165,245);
+          break;
+        default:
+          text("[Error]",160,245);
+      }
     }
     textSize(40);
     if (gameplayed && gamestarted !== true) {
-      text("Score: " + score,15,320);
+      switch(start_difficulty) {
+        case 0:
+          text("Score: " + score + " [Easy]",15,320);
+          break;
+        case 1:
+          text("Score: " + score + " [Medium]",15,320);
+          break;
+        case 2:
+          text("Score: " + score + " [Hard]",15,320);
+          break;
+        default:
+          text("Score: " + score,15,320);
+      }
       fill(240,0,0);
       text("Game Over!",108,50);
     }
