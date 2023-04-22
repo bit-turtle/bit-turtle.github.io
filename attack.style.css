@@ -10,6 +10,7 @@ canvas {
   border: 5px solid white;
   margin: 0 auto;
 }
+
 #beta {
   position: relative;
   top: 40px;
@@ -18,7 +19,7 @@ canvas {
   border: 5px solid white;
   margin: 0 auto;
 }
-#extention {
+#notification {
   position: relative;
   top: 60px;
   width: 400px;
@@ -26,9 +27,17 @@ canvas {
   border: 5px solid white;
   margin: 0 auto;
 }
-#changelog {
+#extention {
   position: relative;
   top: 80px;
+  width: 400px;
+  display: block;
+  border: 5px solid white;
+  margin: 0 auto;
+}
+#changelog {
+  position: relative;
+  top: 100px;
   width: 400px;
   display: block;
   border: 5px solid white;
