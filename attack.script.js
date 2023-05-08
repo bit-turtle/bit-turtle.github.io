@@ -1,7 +1,7 @@
 /*
-Attack of the Cubes v1.9 (A Returning Difficulty)
+Attack of the Cubes v1.9 beta (A Returning Difficulty)
 850+ lines of code!
-Last update on: April 21 2023
+Last update on: May 8 2023
 
 Changelog:
 *Adds click sounds to scoreboard button, and difficulty selector
@@ -15,6 +15,9 @@ Changelog:
 **Lazers that bounce back and hit the player now do damage
 **Lazers bounce back off of non-boss cubes half the time in hard difficulty, a quarter of the time in medium difficulty, and none of the time in easy difficulty
 *Added April Fools Easter Egg
+1.9b:
+* Fixed A Crash With the scoreboard when offline
+
 
 Controls:
 Mouse:
@@ -40,6 +43,27 @@ Icons by Me :)
 
 */
 var version = "v1.9"
+//REMEMBER TO REMOVE THIS IN FINAL RELEASE!!!
+//Attack.fire.js and Attack.cookie.js are not included in beta meaning the scoreboard is nonfunctional while in beta
+var scoreboards_loaded = 0;
+var scoreboard = [[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}],[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}],[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}]];
+function getScoreboard() {
+  scoreboards_loaded = 0;
+  scoreboard = [[{name:"Easy",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}],[{name:"Medi",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}],[{name:"Hard",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}]];
+  scoreboards_loaded = 3;
+}
+function newScore(score,difficulty) {
+  //stuff happens
+}
+function setCookie(a,a,a) {
+  //more stuff happens
+}
+//Also I will delete this because attack.cookie.js does this job
+var highscore = [0,0,0];
+//beta version will be removed in final release
+version = "b1.9";
+//All else will be in final releases
+
 
 var controltype = 0;
 var difficulty_level = 0;
@@ -726,7 +750,13 @@ function draw() {
         else {
           scoreboard_open = true;
           scoreboard_loaded = false;
-          getScoreboard();
+          if (navigator.onLine) {
+            scorboards_loaded = 0;
+            getScoreboard();
+          }
+          else {
+            scoreboards_loaded = -1;
+          }
         }
         if (!soundmuted) {
           clicksound.play();
@@ -785,7 +815,10 @@ function draw() {
       textSize(30);
       text("Scoreboard:",140,160);
       textSize(20);
-      if (scoreboards_loaded !== 3) {
+      if (scoreboards_loaded === -1) {
+        text("No Internet !",140,180);
+      }
+      else if (scoreboards_loaded !== 3) {
         text("Loading...",140,180);
       }
       else {
