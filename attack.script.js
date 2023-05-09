@@ -1,9 +1,10 @@
 /*
 Attack of the Cubes v1.9 beta (A Returning Difficulty)
 850+ lines of code!
-Last update on: May 8 2023
+Last update on: April 21 2023
 
 Changelog:
+1.9:
 *Adds click sounds to scoreboard button, and difficulty selector
 *Fixes difficulty scaling bug
 *Highscores For Each Difficulty
@@ -18,6 +19,8 @@ Changelog:
 1.9b:
 * Fixed A Crash With the scoreboard when offline
 * Made text on this page unselectable
+1.9c:
+* Updated Lazer Animations
 
 
 Controls:
@@ -71,6 +74,7 @@ var enemys = [];
 var enemysDead = [];
 var lazers = [];
 var lazersDisabled = [];
+var deleteOffset = 0;
 var powerups = {speed:false,sheild:false,big:false};
 var poweruptimer = {speed:0,big:0};
 var hitbox = 10;
@@ -381,6 +385,54 @@ function draw() {
       if(soundmuted===false){shootsound.play();}
       autoShoot = false;
     }
+    //Lazers Disabled (ALready Hit Something)
+    deleteOffset = 0;
+    for (i = 0; i < lazersDisabled.length; i++) {
+      if (lazersDisabled[i-deleteOffset].bounce) {lazersDisabled[i-deleteOffset].y+=2;}
+      else {lazersDisabled[i-deleteOffset].y-=2;lazersDisabled[i-deleteOffset].time++;}
+      lazersDisabled[i-deleteOffset].timer++;
+      fill(0,0,200-lazersDisabled[i-deleteOffset].time);
+      stroke(240-lazersDisabled[i-deleteOffset].time*1.2);
+      rect(lazersDisabled[i-deleteOffset].x-(2.5+hitbox),lazersDisabled[i-deleteOffset].y-(5+hitbox),5+(hitbox*2),10+(hitbox*2));
+      if (lazersDisabled[i-deleteOffset].bounce && lazersDisabled[i-deleteOffset].x > playerX - (10+hitbox*1.5) && lazersDisabled[i-deleteOffset].x < playerX + (10+hitbox*1.5) && lazersDisabled[i-deleteOffset].y >= 390 && lazersDisabled[i-deleteOffset].y <= 400) {
+        //Bounce Back Damage
+        damage = 20;
+        lives -= 0.5;
+        damagesound.pan(lazersDisabled[i-deleteOffset].x/200-1);
+        if(soundmuted===false){damagesound.play();}
+        lazersDisabled.splice(i-deleteOffset,1);
+        deleteOffset++;
+      }
+      else if (lazersDisabled[i-deleteOffset].y >= 410 || lazersDisabled[i-deleteOffset].y <= -10 && lazersDisabled[i-deleteOffset].bounce || 200 - lazersDisabled[i-deleteOffset].time <= 0) {
+        lazersDisabled.splice(i-deleteOffset,1);
+        deleteOffset++;
+      }
+      
+    }
+    stroke(240);
+    //Squish
+    for (i = 0; i < enemysDead.length; i++) {
+      enemysDead[i].squish++;
+      if (enemysDead[i].type === 0) {
+        fill(255,0,0);
+        rect(enemysDead[i].x-10-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,20+enemysDead[i].squish*2,20-enemysDead[i].squish);
+      }
+      else if (enemysDead[i].type === 1) {
+        fill(210,0,0);
+        rect(enemysDead[i].x-10-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,20+enemysDead[i].squish*2,20-enemysDead[i].squish);
+      }
+      else if (enemysDead[i].type === 2) {
+        fill(180,0,0);
+        rect(enemysDead[i].x-10-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,20+enemysDead[i].squish*2,20-enemysDead[i].squish);
+      }
+      else if (enemysDead[i].type === 3) {
+        fill(255,0,0);
+        rect(enemysDead[i].x-15-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,30+enemysDead[i].squish*2,20-enemysDead[i].squish);
+      }
+      if (enemysDead[i].squish > 20) {
+        enemysDead.splice(i,1);
+      }
+    }
     //lazersss
     for (i = 0; i < lazers.length; i++) {
       lazers[i].y-=4;
@@ -393,6 +445,7 @@ function draw() {
         lazers.splice(i,1);
       }
     }
+    //Enemys
     for (i = 0; i < enemys.length; i++) {
       if (enemys[i].type === 0) {
         enemys[i].y+=Math.floor(2+gameSpeed/(400000-difficulty_level*100000));
@@ -463,13 +516,13 @@ function draw() {
             if (enemys[i].split) {splitsHit++;}
             enemyDelete = true;
             if (difficulty_level === 2 && Math.random() < 0.5) {
-              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true});
+              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true, time: 0});
             }
             else if (difficulty_level === 1 && Math.random() < 0.25) {
-              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true});
+              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true, time: 0});
             }
             else {
-              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: false});
+              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: false, time: 0});
             }
             lazers.splice(i2,1);
             score++;
@@ -486,7 +539,7 @@ function draw() {
               powerups.sheild = true;
               score+=2;
             }
-            lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true});
+            lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true, time: 0});
             lazers.splice(i2,1);
             break;
           }
@@ -505,7 +558,7 @@ function draw() {
               }
             }
             enemys.splice(i,1);
-            lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true});
+            lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true, time: 0});
             lazers.splice(i2,1);
             if(soundmuted===false){squishsound.play();}
           }
@@ -533,49 +586,6 @@ function draw() {
           if(soundmuted===false){damagesound.play();}
         }
         enemys.splice(i,1);
-      }
-    }
-    //Lazers Disabled (ALready Hit Something)
-    for (i = 0; i < lazersDisabled.length; i++) {
-      if (lazersDisabled[i].bounce) {lazersDisabled[i].y+=2;}
-      else {lazersDisabled[i].y-=2;}
-      lazersDisabled[i].timer++;
-      fill(0,0,200);
-      rect(lazersDisabled[i].x-(2.5+hitbox),lazersDisabled[i].y-(5+hitbox),5+(hitbox*2),10+(hitbox*2));
-      if (lazersDisabled[i].bounce && lazersDisabled[i].x > playerX - (10+hitbox*1.5) && lazersDisabled[i].x < playerX + (10+hitbox*1.5) && lazersDisabled[i].y >= 390 && lazersDisabled[i].y <= 400) {
-        //Bounce Back Damage
-        damage = 20;
-        lives -= 0.5;
-        damagesound.pan(lazersDisabled[i].x/200-1);
-        if(soundmuted===false){damagesound.play();}
-        lazersDisabled.splice(i,1);
-      }
-      else if (lazersDisabled[i].y >= 410 || lazersDisabled.y <= -10 && lazersDisabled[i].bounce) {
-        lazersDisabled.splice(i,1);
-      }
-      
-    }
-    //Squish
-    for (i = 0; i < enemysDead.length; i++) {
-      enemysDead[i].squish++;
-      if (enemysDead[i].type === 0) {
-        fill(255,0,0);
-        rect(enemysDead[i].x-10-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,20+enemysDead[i].squish*2,20-enemysDead[i].squish);
-      }
-      else if (enemysDead[i].type === 1) {
-        fill(210,0,0);
-        rect(enemysDead[i].x-10-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,20+enemysDead[i].squish*2,20-enemysDead[i].squish);
-      }
-      else if (enemysDead[i].type === 2) {
-        fill(180,0,0);
-        rect(enemysDead[i].x-10-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,20+enemysDead[i].squish*2,20-enemysDead[i].squish);
-      }
-      else if (enemysDead[i].type === 3) {
-        fill(255,0,0);
-        rect(enemysDead[i].x-15-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,30+enemysDead[i].squish*2,20-enemysDead[i].squish);
-      }
-      if (enemysDead[i].squish > 20) {
-        enemysDead.splice(i,1);
       }
     }
     //player
