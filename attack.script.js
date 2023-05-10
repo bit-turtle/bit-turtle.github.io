@@ -1,5 +1,5 @@
 /*
-Attack of the Cubes v1.9d (A Returning Difficulty)
+Attack of the Cubes v1.9 (A Returning Difficulty)
 888+ lines of code!
 Last update on: May 10 2023
 
@@ -75,6 +75,7 @@ var controltype = 0;
 var difficulty_level = 0;
 var start_difficulty = 0;
 var scoreboard_open = false;
+var screenMillis = 0;
 var mouseWasPressed = false;
 var clicked = false;
 var playerX = 200;
@@ -303,9 +304,10 @@ function draw() {
     else {
       background(0+damage*8,0,0);
     }
-    damage-=0.6;
-    sheild-=0.6;
-    cooldown-=1;
+    damage-=(millis()-screenMillis)*0.036;
+    sheild-=(millis()-screenMillis)*0.036;
+    cooldown-=(millis()-screenMillis)*0.06;
+    screenMillis=millis();
     if (lives <= 0 && damage < 0 && sheild < 0) {
       if (score > highscore[start_difficulty]) {highscore[start_difficulty] = score; setCookie("attackhighscore", JSON.stringify(highscore), 30);}
       newScore(score,difficulty_level);
