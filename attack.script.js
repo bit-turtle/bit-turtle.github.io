@@ -1,7 +1,7 @@
 /*
-Attack of the Cubes v1.9 beta (A Returning Difficulty)
-850+ lines of code!
-Last update on: April 21 2023
+Attack of the Cubes v1.9d (A Returning Difficulty)
+888+ lines of code!
+Last update on: May 10 2023
 
 Changelog:
 1.9:
@@ -21,7 +21,9 @@ Changelog:
 * Made text on this page unselectable
 1.9c:
 * Updated Lazer Animations
-
+1.9d:
+* Fixes lazer animations
+* Makes movement constant regardless of the framerate
 
 Controls:
 Mouse:
@@ -47,6 +49,27 @@ Icons by Me :)
 
 */
 var version = "v1.9"
+//REMEMBER TO REMOVE THIS IN FINAL RELEASE!!!
+//Attack.fire.js and Attack.cookie.js are not included in beta meaning the scoreboard is nonfunctional while in beta
+var scoreboards_loaded = 0;
+var scoreboard = [[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}],[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}],[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}]];
+function getScoreboard() {
+  scoreboards_loaded = 0;
+  scoreboard = [[{name:"Easy",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}],[{name:"Medi",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}],[{name:"Hard",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}]];
+  scoreboards_loaded = 3;
+}
+function newScore(score,difficulty) {
+  //stuff happens
+}
+function setCookie(a,a,a) {
+  //more stuff happens
+}
+//Also I will delete this because attack.cookie.js does this job
+var highscore = [0,0,0];
+//beta version will be removed in final release
+version = "b1.9";
+//All else will be in final releases
+
 
 var controltype = 0;
 var difficulty_level = 0;
@@ -55,6 +78,7 @@ var scoreboard_open = false;
 var mouseWasPressed = false;
 var clicked = false;
 var playerX = 200;
+var playerMillis = 0;
 var playerMove = 0;
 var playerShoot = false;
 var autoShoot = false;
@@ -151,7 +175,7 @@ function prepare() {
   powerups = {speed:false,sheild:false,big:false};
   poweruptimer = {speed:0,big:0};
   timer = 0;
-  enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false});
+  enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,millis:millis()});
   autoShoot = true;
   start_difficulty = difficulty_level;
 }
@@ -241,20 +265,21 @@ function draw() {
     else if (controltype === 1) {
       if (rightArrowPressed||keyDPressed&&leftArrowPressed === false && keyAPressed === false) {
         if (downArrowPressed||keySPressed) {
-          playerX+=6;
+          playerX+=(millis()-playerMillis)*0.36;
         }
         else {
-          playerX+=3;
+          playerX+=(millis()-playerMillis)*0.18;
         }
       }
       if (leftArrowPressed||keyAPressed&&rightArrowPressed === false && keyDPressed === false) {
         if (downArrowPressed||keySPressed) {
-          playerX-=6;
+          playerX-=(millis()-playerMillis)*0.36;
         }
         else {
-          playerX-=3;
+          playerX-=(millis()-playerMillis)*0.18;
         }
       }
+      playerMillis=millis();
       if (playerX < 0) {playerX = 0;}
       else if (playerX > 400) {playerX = 400;}
       if (spacebarPressed||upArrowPressed||keyWPressed) {
@@ -322,53 +347,53 @@ function draw() {
       }
       if (gameSpeed/(400 - difficulty_level * 100) >= 512) {
         if (spawn === 4) {
-          enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4,split:false,invis:{strength:1,timer:10,invisible:true}});
+          enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4,split:false,invis:{strength:1,timer:10,invisible:true,millis:millis()}});
         }
         else if (spawn === 3) {  
-          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:Math.floor(Math.random()*2),split:false,invis:{strength:1,timer:10,invisible:true}});
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:Math.floor(Math.random()*2),split:false,invis:{strength:1,timer:10,invisible:true},millis:millis()});
         }
         else if (spawn === 2) {  
-          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:2,split:false,invis:{strength:1,timer:10,invisible:true}});
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:2,split:false,invis:{strength:1,timer:10,invisible:true},millis:millis()});
         }
         else if (spawn === 1) {  
-          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:1,split:false,invis:{strength:1,timer:10,invisible:true}});
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:1,split:false,invis:{strength:1,timer:10,invisible:true},millis:millis()});
         }
         else {
-            enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,invis:{strength:1,timer:10,invisible:true}}); 
+            enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,invis:{strength:1,timer:10,invisible:true},millis:millis()}); 
         }
       }
       else if (gameSpeed/(400 - difficulty_level * 100) >= 256) {
         if (spawn === 4) {
-          enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4,split:false,invis:{strength:2,timer:0,invisible:false}});
+          enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4,split:false,invis:{strength:2,timer:0,invisible:false,millis:millis()}});
         }
         else if (spawn === 3) {  
-          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:Math.floor(Math.random()*2),split:false,invis:{strength:2,timer:0,invisible:false}});
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:Math.floor(Math.random()*2),split:false,invis:{strength:2,timer:0,invisible:false},millis:millis()});
         }
         else if (spawn === 2) {  
-          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:2,split:false,invis:{strength:2,timer:0,invisible:false}});
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:2,split:false,invis:{strength:2,timer:0,invisible:false},millis:millis()});
         }
         else if (spawn === 1) {  
-          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:1,split:false,invis:{strength:2,timer:0,invisible:false}});
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:1,split:false,invis:{strength:2,timer:0,invisible:false},millis:millis()});
         }
         else {
-            enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,invis:{strength:2,timer:0,invisible:false}}); 
+            enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,invis:{strength:2,timer:0,invisible:false},millis:millis()}); 
         }
       }
       else {
         if (spawn === 4) {
-          enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4,split:false,invis:{strength:0,timer:0,invisible:false}});
+          enemys.push({x:Math.floor(Math.random()*300 + 50),y:-20,type:4,split:false,invis:{strength:0,timer:0,invisible:false},millis:millis()});
         }
         else if (spawn === 3) {  
-          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:Math.floor(Math.random()*2),split:false,invis:{strength:0,timer:0,invisible:false}});
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:3,sheild:1,cooldown:0,data:Math.floor(Math.random()*2),split:false,invis:{strength:0,timer:0,invisible:false},millis:millis()});
         }
         else if (spawn === 2) {  
-          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:2,split:false,invis:{strength:0,timer:0,invisible:false}});
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:2,split:false,invis:{strength:0,timer:0,invisible:false},millis:millis()});
         }
         else if (spawn === 1) {  
-          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:1,split:false,invis:{strength:0,timer:0,invisible:false}});
+          enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:1,split:false,invis:{strength:0,timer:0,invisible:false},millis:millis()});
         }
         else {
-            enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,invis:{strength:0,timer:0,invisible:false}}); 
+            enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,invis:{strength:0,timer:0,invisible:false},millis:millis()}); 
         }
       }  
       timer = 0;
@@ -380,20 +405,24 @@ function draw() {
       if (poweruptimer.speed === 0) {powerups.speed = false;}
       if (powerups.speed) {cooldown = 10;}
       else {cooldown = 25;}
-      lazers.push({x:playerX,y:400});
+      lazers.push({x:playerX,y:400,millis:millis()});
       shootsound.pan(playerX/200-1);
       if(soundmuted===false){shootsound.play();}
       autoShoot = false;
     }
-    //Lazers Disabled (ALready Hit Something)
-    deleteOffset = 0;
+    //lazers disabled rendermove (already hit something)
     for (i = 0; i < lazersDisabled.length; i++) {
-      if (lazersDisabled[i-deleteOffset].bounce) {lazersDisabled[i-deleteOffset].y+=2;}
-      else {lazersDisabled[i-deleteOffset].y-=2;lazersDisabled[i-deleteOffset].time++;}
-      lazersDisabled[i-deleteOffset].timer++;
-      fill(0,0,200-lazersDisabled[i-deleteOffset].time);
-      stroke(240-lazersDisabled[i-deleteOffset].time*1.2);
-      rect(lazersDisabled[i-deleteOffset].x-(2.5+hitbox),lazersDisabled[i-deleteOffset].y-(5+hitbox),5+(hitbox*2),10+(hitbox*2));
+      if (lazersDisabled[i].bounce) {lazersDisabled[i].y+=(millis()-lazersDisabled[i].millis)*0.12;}
+      else {lazersDisabled[i].y-=(millis()-lazersDisabled[i].millis)*0.12;lazersDisabled[i].time+=(millis()-lazersDisabled[i].millis)*0.06;}
+      lazersDisabled[i].timer+=(millis()-lazersDisabled[i].millis)*0.12;
+      lazersDisabled[i].millis=millis();
+      fill(0,0,200-lazersDisabled[i].time);
+      stroke(240-lazersDisabled[i].time*1.2);
+      rect(lazersDisabled[i].x-(2.5+hitbox),lazersDisabled[i].y-(5+hitbox),5+(hitbox*2),10+(hitbox*2));
+    }
+    //Lazers Disabled delete (ALready Hit Something)
+    deleteOffset = 0;
+    for (i = 0; i < lazersDisabled.length-deleteOffset; i++) {
       if (lazersDisabled[i-deleteOffset].bounce && lazersDisabled[i-deleteOffset].x > playerX - (10+hitbox*1.5) && lazersDisabled[i-deleteOffset].x < playerX + (10+hitbox*1.5) && lazersDisabled[i-deleteOffset].y >= 390 && lazersDisabled[i-deleteOffset].y <= 400) {
         //Bounce Back Damage
         damage = 20;
@@ -407,12 +436,12 @@ function draw() {
         lazersDisabled.splice(i-deleteOffset,1);
         deleteOffset++;
       }
-      
     }
     stroke(240);
     //Squish
     for (i = 0; i < enemysDead.length; i++) {
-      enemysDead[i].squish++;
+      enemysDead[i].squish+=(millis()-enemysDead[i].millis)*0.06;
+      enemysDead[i].millis=millis();
       if (enemysDead[i].type === 0) {
         fill(255,0,0);
         rect(enemysDead[i].x-10-enemysDead[i].squish,enemysDead[i].y-10+enemysDead[i].squish,20+enemysDead[i].squish*2,20-enemysDead[i].squish);
@@ -435,7 +464,8 @@ function draw() {
     }
     //lazersss
     for (i = 0; i < lazers.length; i++) {
-      lazers[i].y-=4;
+      lazers[i].y-=(millis()-lazers[i].millis)*0.24;
+      lazers[i].millis=millis();
       fill(0,0,200);
       rect(lazers[i].x-(2.5+hitbox),lazers[i].y-(5+hitbox),5+(hitbox*2),10+(hitbox*2));
     }
@@ -448,18 +478,18 @@ function draw() {
     //Enemys
     for (i = 0; i < enemys.length; i++) {
       if (enemys[i].type === 0) {
-        enemys[i].y+=Math.floor(2+gameSpeed/(400000-difficulty_level*100000));
+        enemys[i].y+=(millis()-enemys[i].millis)*((Math.floor(2+gameSpeed/(400000-difficulty_level*100000)))*60/1000);
         fill(255,0,0);
         rect(enemys[i].x-10,enemys[i].y-10,20,20);
       }
       else if (enemys[i].type === 1) {
-        enemys[i].y+=Math.floor(4+gameSpeed/(400000-difficulty_level*100000));
+        enemys[i].y+=(millis()-enemys[i].millis)*((Math.floor(4+gameSpeed/(400000-difficulty_level*100000)))*60/1000);
         fill(210,0,0);
         rect(enemys[i].x-10,enemys[i].y-10,20,20);
       }
       else if (enemys[i].type === 2) {
-        enemys[i].y+=Math.floor(2+gameSpeed/(400000-difficulty_level*100000));
-        enemys[i].x+=Math.floor(Math.random()*11-6);
+        enemys[i].y+=(millis()-enemys[i].millis)*((Math.floor(2+gameSpeed/(400000-difficulty_level*100000))*60/1000));
+        enemys[i].x+=(millis()-enemys[i].millis)*((Math.floor(Math.random()*11-6))/1000);
         if (enemys[i].x < 0) {enemys[i].x = 0}
         if (enemys[i].x > 400) {enemys[i].x = 400}
         fill(180,0,0);
@@ -469,13 +499,13 @@ function draw() {
         if (enemys[i].y !== 100) {enemys[i].y+=1}
         else {
           if(enemys[i].data === 0){
-            enemys[i].x+=1;
+            enemys[i].x+=(millis()-enemys[i].millis)*0.06;
             if (enemys[i].x >= 400) {
                enemys[i].data = 1;
             }
           }
           if(enemys[i].data === 1){
-            enemys[i].x-=1;
+            enemys[i].x-=(millis()-enemys[i].millis)*0.06;
             if (enemys[i].x <= 0) {
                enemys[i].data = 0;
             }
@@ -502,6 +532,7 @@ function draw() {
         fill(255,0,0);
         rect(enemys[i].x-20,enemys[i].y-20,40,40);
       }
+      enemys[i].millis=millis();
     }
     for(i = 0; i < enemys.length; i++) {
       var enemyDelete = false;
@@ -516,13 +547,13 @@ function draw() {
             if (enemys[i].split) {splitsHit++;}
             enemyDelete = true;
             if (difficulty_level === 2 && Math.random() < 0.5) {
-              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true, time: 0});
+              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true, time: 0,millis:millis()});
             }
             else if (difficulty_level === 1 && Math.random() < 0.25) {
-              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true, time: 0});
+              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: true, time: 0,millis:millis()});
             }
             else {
-              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: false, time: 0});
+              lazersDisabled.push({x: lazers[i2].x, y: lazers[i2].y, timer: 0, bounce: false, time: 0,millis:millis()});
             }
             lazers.splice(i2,1);
             score++;
@@ -565,7 +596,7 @@ function draw() {
         }
       }
       if (enemyDelete) {
-        enemysDead.push({x:enemys[i].x,y:enemys[i].y,type:enemys[i].type,squish:0});
+        enemysDead.push({x:enemys[i].x,y:enemys[i].y,type:enemys[i].type,squish:0,millis:millis()});
         enemys.splice(i,1);
         if(soundmuted===false){squishsound.play();}
       }
