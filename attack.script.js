@@ -1,6 +1,6 @@
 /*
 Attack of the Cubes v1.9 (A Returning Difficulty)
-888+ lines of code!
+893 lines of code!
 Last update on: May 10 2023
 
 Changelog:
@@ -24,6 +24,7 @@ Changelog:
 1.9d:
 * Fixes lazer animations
 * Makes movement constant regardless of the framerate
+* Fixes Game Over requierments
 
 Controls:
 Mouse:
@@ -173,7 +174,7 @@ function prepare() {
   lives = 3;
   gameSpeed = 0;
   splitsHit = 0;
-  powerups = {speed:false,sheild:false,big:false};
+  powerups = {speed:false,sheild:true,big:false};
   poweruptimer = {speed:0,big:0};
   timer = 0;
   enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,millis:millis()});
@@ -308,7 +309,7 @@ function draw() {
     sheild-=(millis()-screenMillis)*0.036;
     cooldown-=(millis()-screenMillis)*0.06;
     screenMillis=millis();
-    if (lives <= 0 && damage < 0 && sheild < 0) {
+    if (lives <= 0 && !powerups.sheild && damage < 0 && sheild < 0) {
       if (score > highscore[start_difficulty]) {highscore[start_difficulty] = score; setCookie("attackhighscore", JSON.stringify(highscore), 30);}
       newScore(score,difficulty_level);
       gamestarted = false;
