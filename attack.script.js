@@ -50,27 +50,6 @@ Icons by Me :)
 
 */
 var version = "v1.9"
-//REMEMBER TO REMOVE THIS IN FINAL RELEASE!!!
-//Attack.fire.js and Attack.cookie.js are not included in beta meaning the scoreboard is nonfunctional while in beta
-var scoreboards_loaded = 0;
-var scoreboard = [[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}],[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}],[{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0},{name:"",score:0}]];
-function getScoreboard() {
-  scoreboards_loaded = 0;
-  scoreboard = [[{name:"Easy",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}],[{name:"Medi",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}],[{name:"Hard",score:2274},{name:"Boaatyaa",score:1845},{name:"Boaatyaa",score:1621},{name:"Boaatyaa",score:1111},{name:"Boaatyaa",score:503}]];
-  scoreboards_loaded = 3;
-}
-function newScore(score,difficulty) {
-  //stuff happens
-}
-function setCookie(a,a,a) {
-  //more stuff happens
-}
-//Also I will delete this because attack.cookie.js does this job
-var highscore = [0,0,0];
-//beta version will be removed in final release
-version = "b1.9";
-//All else will be in final releases
-
 
 var controltype = 0;
 var difficulty_level = 0;
@@ -174,7 +153,7 @@ function prepare() {
   lives = 3;
   gameSpeed = 0;
   splitsHit = 0;
-  powerups = {speed:false,sheild:true,big:false};
+  powerups = {speed:false,sheild:false,big:false};
   poweruptimer = {speed:0,big:0};
   timer = 0;
   enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,millis:millis()});
