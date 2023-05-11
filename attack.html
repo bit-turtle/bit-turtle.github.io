@@ -40,33 +40,8 @@
       var changelogdiv = document.getElementById("changelog");
       var changelog = function() {
         if (changelogtoggle === false) {
-          changelogdiv.innerHTML = "<a id=\"toggle\">Hide Changelog</a>
-          <ul>
-            <li>v1.9:</li>
-          <ul>
-              <li>Added click sounds to the scoreboard and difficulty buttons</li>
-          <li>Fixes a difficulty scaling bug that would cause only basic cubes to appear after a certain point</li>
-          <li>Added text to the Start button that says \"Attack\" and shows the current difficulty selected</li>
-          <li>Updated Lazers</li><ul><li>Lazers will now no longer dissapear after hitting an enemy cube and will keep moving but a bit slower</li>
-            <li>Lazers will bounce off boss cubes and will return to the bottom of the screen</li>
-          <li>Lazers have a 0% chance in easy, a 25% chance in medium, and a 50% chance in hard to bounce off non-boss cubes</li>
-          <li>If a lazer that is bounced back hits the player, the player takes 0.5 damage from the lazer</li>
-          </ul>
-          </ul>
-          <li>v1.9b</li>
-          <ul>
-            <li>Fixed a crash when trying to access the scoreboard when offline</li>
-          <li>Made text on this page unselectable</li></ul><li>v1.9c</li>
-          <ul>
-            <li>Updated Lazer Amimations</li>
-          </ul>
-          <li>v1.9d</li>
-          <ul>
-            <li>Fixed flickering in lazer animation</li>
-            <li>Made the game run at a constant speed regardless of framerate</li>
-          <li>Fixed Game Over Requierments</li>
-          </ul>
-          </ul>";
+          changelogdiv.innerHTML = "<a id=\"toggle\">Hide Changelog</a><ul>  <li>v1.9:</li><ul>    <li>Added click sounds to the scoreboard and difficulty buttons</li><li>Fixes a difficulty scaling bug that would cause only basic cubes to appear after a certain point</li><li>Added text to the Start button that says \"Attack\" and shows the current difficulty selected</li><li>Updated Lazers</li><ul><li>Lazers will now no longer dissapear after hitting an enemy cube and will keep moving but a bit slower</li>  <li>Lazers will bounce off boss cubes and will return to the bottom of the screen</li><li>Lazers have a 0% chance in easy, a 25% chance in medium, and a 50% chance in hard to bounce off non-boss cubes</li><li>If a lazer that is bounced back hits the player, the player takes 0.5 damage from the lazer</li></ul></ul><li>v1.9b</li><ul>  <li>Fixed a crash when trying to access the scoreboard when offline</li><li>Made text on this page unselectable</li></ul><li>v1.9c</li><ul>  <li>Updated Lazer Amimations</li></ul><li>v1.9d</li>
+          <ul>  <li>Fixed flickering in lazer animation</li>  <li>Made the game run at a constant speed regardless of framerate</li><li>Fixed Game Over Requierments</li></ul></ul>";
           document.getElementById("toggle").addEventListener("click",changelog);
           changelogtoggle = true;
         }
