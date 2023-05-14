@@ -1,6 +1,6 @@
 /*
-Attack of the Cubes v1.9 (A Returning Difficulty)
-893 lines of code!
+Attack of the Cubes v1.9 beta (A Returning Difficulty)
+888+ lines of code!
 Last update on: May 10 2023
 
 Changelog:
@@ -25,6 +25,8 @@ Changelog:
 * Fixes lazer animations
 * Makes movement constant regardless of the framerate
 * Fixes Game Over requierments
+1.9e:
+* Fixes the Jiggler, Spawner, and Splitter cubes as they broke in 1.9d
 
 Controls:
 Mouse:
@@ -156,7 +158,7 @@ function prepare() {
   powerups = {speed:false,sheild:false,big:false};
   poweruptimer = {speed:0,big:0};
   timer = 0;
-  enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,millis:millis()});
+  enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:4,cooldown:0,data:0,split:false,millis:millis()});
   autoShoot = true;
   start_difficulty = difficulty_level;
 }
@@ -471,7 +473,7 @@ function draw() {
       }
       else if (enemys[i].type === 2) {
         enemys[i].y+=(millis()-enemys[i].millis)*((Math.floor(2+gameSpeed/(400000-difficulty_level*100000))*60/1000));
-        enemys[i].x+=(millis()-enemys[i].millis)*((Math.floor(Math.random()*11-6))/1000);
+        enemys[i].x+=(millis()-enemys[i].millis)*(Math.floor(Math.random()*11-6)/10);
         if (enemys[i].x < 0) {enemys[i].x = 0}
         if (enemys[i].x > 400) {enemys[i].x = 400}
         fill(180,0,0);
@@ -480,23 +482,24 @@ function draw() {
       else if (enemys[i].type === 3) {
         if (enemys[i].y !== 100) {enemys[i].y+=1}
         else {
-          if(enemys[i].data === 0){
+          if(enemys[i].data === 0) {
             enemys[i].x+=(millis()-enemys[i].millis)*0.06;
             if (enemys[i].x >= 400) {
                enemys[i].data = 1;
             }
           }
-          if(enemys[i].data === 1){
+          if (enemys[i].data === 1) {
             enemys[i].x-=(millis()-enemys[i].millis)*0.06;
             if (enemys[i].x <= 0) {
                enemys[i].data = 0;
             }
           }
-          enemys[i].cooldown-=1;
+          enemys[i].cooldown-=(millis()-enemys[i].millis)*0.06;
           if (enemys[i].cooldown < 0) {
             if (Math.floor(Math.random()*5) === 0) {  enemys.push({x:enemys[i].x,y:enemys[i].y,type:1});
             }
-            else {  enemys.push({x:enemys[i].x,y:enemys[i].y,type:0});
+            else {  
+              enemys.push({x:enemys[i].x,y:enemys[i].y,type:0,millis:millis()});
             }
             enemys[i].cooldown = 200;
           }
@@ -510,7 +513,7 @@ function draw() {
         rect(enemys[i].x-15,enemys[i].y-10,30,20);
       }
       else if (enemys[i].type === 4) {
-        enemys[i].y+=1;
+        enemys[i].y+=(millis()-enemys[i].millis)*0.06;
         fill(255,0,0);
         rect(enemys[i].x-20,enemys[i].y-20,40,40);
       }
@@ -561,13 +564,13 @@ function draw() {
           if (lazers[i2].x > enemys[i].x - (25+hitbox) && lazers[i2].x < enemys[i].x + (25+hitbox) && lazers[i2].y > enemys[i].y - (25+hitbox) && lazers[i2].y < enemys[i].y + (25+hitbox)) {
             for (i3 = 0; i3 < 4; i3++) {
               if (Math.floor(Math.random()*10) === 0) {
-                enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:2,split:true});
+                enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:2,split:true,millis:millis()});
               }
               else if (Math.floor(Math.random()*5) === 0) {
-                enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:1,split:true});
+                enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:1,split:true,millis:millis()});
               }
               else {
-                enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:0,split:true});
+                enemys.push({x:enemys[i].x+spliteroffset[i3].x,y:enemys[i].y+spliteroffset[i3].y,type:0,split:true,millis:millis()});
               }
             }
             enemys.splice(i,1);
