@@ -146,6 +146,7 @@ function prepare() {
   enemys = [];
   enemysDead = [];
   lazers = [];
+  lazersDisabled = [];
   points = [];
   difficulty = 0;
   gameSpeed = 0;
@@ -158,7 +159,7 @@ function prepare() {
   powerups = {speed:false,sheild:false,big:false};
   poweruptimer = {speed:0,big:0};
   timer = 0;
-  enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,cooldown:0,data:0,split:false,millis:millis()});
+  enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,millis:millis()});
   autoShoot = true;
   start_difficulty = difficulty_level;
 }
