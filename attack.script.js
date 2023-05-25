@@ -27,6 +27,8 @@ Changelog:
 * Fixes Game Over requierments
 1.9e:
 * Fixes the Jiggler, Spawner, and Splitter cubes as they broke in 1.9d
+1.9f:
+* Fixes the jiggler again so it doesn't perfer left only
 
 Controls:
 Mouse:
@@ -159,7 +161,7 @@ function prepare() {
   powerups = {speed:false,sheild:false,big:false};
   poweruptimer = {speed:0,big:0};
   timer = 0;
-  enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,split:false,millis:millis()});
+  enemys.push({x:Math.floor(Math.random()*380 + 10),y:-10,type:0,cooldown:0,data:0,split:false,millis:millis()});
   autoShoot = true;
   start_difficulty = difficulty_level;
 }
@@ -474,7 +476,7 @@ function draw() {
       }
       else if (enemys[i].type === 2) {
         enemys[i].y+=(millis()-enemys[i].millis)*((Math.floor(2+gameSpeed/(400000-difficulty_level*100000))*60/1000));
-        enemys[i].x+=(millis()-enemys[i].millis)*(Math.floor(Math.random()*11-6)/10);
+        enemys[i].x+=(millis()-enemys[i].millis)*(Math.floor(Math.random()*12-6)/10);
         if (enemys[i].x < 0) {enemys[i].x = 0}
         if (enemys[i].x > 400) {enemys[i].x = 400}
         fill(180,0,0);
