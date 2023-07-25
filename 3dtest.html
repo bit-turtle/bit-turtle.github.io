@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>3D Camera Test</title>
+    <script src="p5.js"></script>
+    <style>
+		html, body {
+		  margin: 0;
+		  padding: 0;
+		}
+		canvas {
+		  display: block;
+		}
+	 </style>
+  </head>
+  <body>
+    <main>
+    </main>
+    <p>
+      <b>3D</b> Camera Test<br><br>
+      Move with <b>WASD[Space][Shift]</b><br>
+      <i>Currently The Movement is not affected by Camera Angle</i>
+    </p>
+    <script>
+      var cam;
+      
+      var speedSlider;
+      var playerspeed = 1;
+      
+      var x = 0;
+      var y = 0;
+      var z = 200;
+      var cx = 0;
+      var cy = 0;
+      var cz = 0;
+      
+      var pressedkeys = {
+        w: false,
+        a: false,
+        s: false,
+        d: false,
+        Shift: false,
+        " ": false,
+      }
+      
+      function keyPressed(key) {
+        pressedkeys[key.key] = true;
+      }
+      
+      function keyReleased(key) {
+        pressedkeys[key.key] = false;
+      }
+      
+      function setup() {
+        createCanvas(710, 400, WEBGL);
+        cam = createCamera();
+        speedSlider = createSlider(1,10,5);
+        background(0);
+      }
+      
+      function mousePressed() {
+          requestPointerLock();
+      }
+      
+      function draw() {
+        background(100);
+        playerspeed = speedSlider.value();
+        if (pressedkeys.w && !pressedkeys.s) { x-=playerspeed; }
+        else if (pressedkeys.s && !pressedkeys.w) { x+=playerspeed; }
+        if (pressedkeys.a && !pressedkeys.d) { z+=playerspeed; }
+        else if (pressedkeys.d && !pressedkeys.a) { z-=playerspeed; }
+        if (pressedkeys[" "] && !pressedkeys.Shift) y-=playerspeed;
+        else if (pressedkeys.Shift && !pressedkeys[" "]) y+=playerspeed;
+        cam.setPosition(x,y,z);
+        cam.pan(-movedX * 0.001);
+        cam.tilt(movedY * 0.001);
+        stroke(255);
+        fill(50);
+        for(var i = 0;i < 10;i++) {
+          push();
+          translate(cos(frameCount/50-i*20)*100-i*20,sin(frameCount/50-i*20)*100-i*20);
+          rotateX(frameCount/100-i*20);
+          rotateY(frameCount/200-i*20);
+          box(50,50,50);
+          pop();
+        }
+        push();
+        translate(0,0,200);
+        rotateX(300);
+        plane(20,20);
+        pop();
+      }
+	 </script>
+  </body>
+</html>
