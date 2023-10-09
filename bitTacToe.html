@@ -137,7 +137,7 @@
 				 }
 				 else {
 						//Says who won and adds a play again button
-					 cache.innerHTML = "<h1>"+winbit + " won!"+"</h1><button onclick=\"reset()\">Play Again</button>";
+					 cache.innerHTML = winbit !== "!" ? "<h1>"+winbit + " won!"+"</h1>" : "<h1>Draw</h1>" +"<button onclick=\"reset()\">Play Again</button>";
 				 }
 			 };
 			 
