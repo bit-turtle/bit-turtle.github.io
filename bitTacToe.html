@@ -56,7 +56,12 @@
 				 }
 				 else {
 						//Says who won and adds a play again button
-					 cache.innerHTML = winbit !== "!" ? "<h1>"+winbit + " won!"+"</h1>" : "<h1>Draw</h1>" +"<button onclick=\"reset()\">Play Again</button>";
+						if (winbit !== "!") {
+							cache.innerHTML = "<h1>"+winbit + " won!"+"</h1><button onclick=\"reset()\">Play Again</button>";
+						}
+						else {
+							cache.innerHTML = "<h1>Draw</h1><button onclick=\"reset()\">Play Again</button>";
+						}
 				 }
 			 };
 				var restart = function() {
