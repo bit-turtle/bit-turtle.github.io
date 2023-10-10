@@ -48,6 +48,13 @@
 			 var bits = ["!","!","!","!","!","!","!","!","!"];
 			 
 			 var bitloc = [[],[]];
+				
+				var reset = function() {
+					turn = 0;
+					bits = ["!","!","!","!","!","!","!","!","!"];
+					bitloc = [[],[]];
+				}
+				
 			 function render() {
 				  if (win === 0) {
 							//Creates the board and says whose turn it is
@@ -60,6 +67,7 @@
 							cache.innerHTML = "<h1>"+winbit + " won!"+"</h1><button onclick=\"reset()\">Play Again</button>";
 						}
 						else {
+							//Draw
 							cache.innerHTML = "<h1>Draw</h1><button onclick=\"reset()\">Play Again</button>";
 						}
 				 }
@@ -67,6 +75,7 @@
 				var restart = function() {
 					win = 0;
 					winbit = "!";
+					reset();
 					render();
 				}
 				
