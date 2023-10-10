@@ -56,19 +56,19 @@
 				}
 				
 			 function render() {
+					checkForWin();
 				  if (win === 0) {
 							//Creates the board and says whose turn it is
 			     cache.innerHTML = "<p>It is "+turn+"'s turn</p><table id=\"buttonbox\"><tr></tr><tr><td><button onclick=\"click0()\">"+bits[0]+"</button></td><td><button onclick=\"click1()\">"+bits[1]+"</button></td><td><button onclick=\"click2()\">"+bits[2]+"</button></td></tr><tr><td><button onclick=\"click3()\">"+bits[3]+"</button></td><td><button onclick=\"click4()\">"+bits[4]+"</button></td><td><button onclick=\"click5()\">"+bits[5]+"</button></td></tr><tr><td><button onclick=\"click6()\">"+bits[6]+"</button></td><td><button onclick=\"click7()\">"+bits[7]+"</button></td><td><button onclick=\"click8()\">"+bits[8]+"</button></td></tr></table>";
-					 checkForWin();
 				 }
 				 else {
 						//Says who won and adds a play again button
 						if (winbit !== "!") {
-							cache.innerHTML = "<h1>"+winbit + " won!"+"</h1><button onclick=\"reset()\">Play Again</button>";
+							cache.innerHTML = "<h1>"+winbit + " won!"+"</h1><button onclick=\"restart()\">Play Again</button>";
 						}
 						else {
 							//Draw
-							cache.innerHTML = "<h1>Draw</h1><button onclick=\"reset()\">Play Again</button>";
+							cache.innerHTML = "<h1>Draw</h1><button onclick=\"restart()\">Play Again</button>";
 						}
 				 }
 			 };
