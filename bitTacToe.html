@@ -34,11 +34,11 @@
     </head>
     <body>
 		 <h1>Bit Tac Toe</h1>
-		 <div id="box">
+		 <div id=box>
 		 </div>
 		 <script>
 			 var win = 0;
-			 var winbit = "!";
+			 var winbit = "";
 			 
 			 var cache = document.getElementById("box");
 			 console.log(cache);
@@ -48,100 +48,7 @@
 			 var bits = ["!","!","!","!","!","!","!","!","!"];
 			 
 			 var bitloc = [[],[]];
-				
-				var reset = function() {
-					turn = 0;
-					bits = ["!","!","!","!","!","!","!","!","!"];
-					bitloc = [[],[]];
-				}
-				var checkForWin = function() {
-				 for (var i = 0; i < 2; i++) {
-					 if (bitloc[i][0] === "a" && bitloc[i][3] === "a" && bitloc[i][6] === "a") {
-						 win = 1;
-						 winbit = i;
-					 }
-					 else if (bitloc[i][1] === "a" && bitloc[i][4] === "a" && bitloc[i][7] === "a") {
-						 win = 1;
-						 winbit = i;
-					 }
-					 else if (bitloc[i][2] === "a" && bitloc[i][5] === "a" && bitloc[i][8] === "a") {
-						 win = 1;
-						 winbit = i;
-					 }
-					 else if (bitloc[i][6] === "a" && bitloc[i][7] === "a" && bitloc[i][8] === "a") {
-						 win = 1;
-						 winbit = i;
-					 }
-					 else if (bitloc[i][3] === "a" && bitloc[i][4] === "a" && bitloc[i][5] === "a") {
-						 win = 1;
-						 winbit = i;
-					 }
-					 else if (bitloc[i][0] === "a" && bitloc[i][1] === "a" && bitloc[i][2] === "a") {
-						 win = 1;
-						 winbit = i;
-					 }
-					 else if (bitloc[i][2] === "a" && bitloc[i][4] === "a" && bitloc[i][6] === "a") {
-						 win = 1;
-						 winbit = i;
-					 }
-					 else if (bitloc[i][0] === "a" && bitloc[i][4] === "a" && bitloc[i][8] === "a") {
-						 win = 1;
-						 winbit = i;
-					 }
-				 }
-				 if (win === 1) {
-					 render();
-				 }
-					var draw = true;
-					for (var col = 0;col < 3;col++) {
-						for (var row = 0;row < 3;row++) {
-							if (bitloc[col][row] !== "a") {
-								draw = false;
-							}
-						}
-					}
-					if (draw) {
-						win = 1;
-						winbit = "!";
-					}
-			 }
-			 function render() {
-					checkForWin();
-				  if (win === 0) {
-							//Creates the board and says whose turn it is
-			     cache.innerHTML = "<p>It is "+turn+"'s turn</p><table id=\"buttonbox\"><tr></tr><tr><td><button onclick=\"click0()\">"+bits[0]+"</button></td><td><button onclick=\"click1()\">"+bits[1]+"</button></td><td><button onclick=\"click2()\">"+bits[2]+"</button></td></tr><tr><td><button onclick=\"click3()\">"+bits[3]+"</button></td><td><button onclick=\"click4()\">"+bits[4]+"</button></td><td><button onclick=\"click5()\">"+bits[5]+"</button></td></tr><tr><td><button onclick=\"click6()\">"+bits[6]+"</button></td><td><button onclick=\"click7()\">"+bits[7]+"</button></td><td><button onclick=\"click8()\">"+bits[8]+"</button></td></tr></table>";
-				 }
-				 else {
-						//Says who won and adds a play again button
-						if (winbit !== "!") {
-							cache.innerHTML = "<h1>"+winbit + " won!"+"</h1><button onclick=\"restart()\">Play Again</button>";
-						}
-						else {
-							//Draw
-							cache.innerHTML = "<h1>Draw</h1><button onclick=\"restart()\">Play Again</button>";
-						}
-				 }
-			 };
-				var restart = function() {
-					win = 0;
-					winbit = "!";
-					reset();
-					render();
-				}
-				
-				function click(buttonid) {
-				 bits[buttonid] = turn;
-				 bitloc[turn][buttonid] = "a";
-					 if (turn === 0) {
-					 turn = 1;
-					 }
-					 else {
-				    turn = 0; 
-					 }
-				    render();
-			 }
 			 
-				
 			 //button functions
 			 var click0 = function() {
 				 if (bits[0] === "!") {
@@ -216,6 +123,70 @@
 				 }
 			 }
 			 //buttons
+			 
+			 function render() {
+				  if (win === 0) {
+			     cache.innerHTML = "<p>It is "+turn+"'s turn</p><table id=\"buttonbox\"><tr></tr><tr><td><button onclick=\"click0()\">"+bits[0]+"</button></td><td><button onclick=\"click1()\">"+bits[1]+"</button></td><td><button onclick=\"click2()\">"+bits[2]+"</button></td></tr><tr><td><button onclick=\"click3()\">"+bits[3]+"</button></td><td><button onclick=\"click4()\">"+bits[4]+"</button></td><td><button onclick=\"click5()\">"+bits[5]+"</button></td></tr><tr><td><button onclick=\"click6()\">"+bits[6]+"</button></td><td><button onclick=\"click7()\">"+bits[7]+"</button></td><td><button onclick=\"click8()\">"+bits[8]+"</button></td></tr></table>";
+				 checkForWin();
+				 }
+				 else {
+					 cache.innerHTML = "";
+					 var winMessage = document.createElement("h1");
+					 winMessage.textContent = winbit + " won!";
+					 document.getElementById("box").appendChild(winMessage);
+				 }
+			 };
+			 
+			 function click(buttonid) {
+				 bits[buttonid] = turn;
+				 bitloc[turn][buttonid] = "a";
+					 if (turn === 0) {
+					 turn = 1;
+					 }
+					 else {
+				    turn = 0; 
+					 }
+				    render();
+			 };
+			 var checkForWin = function() {
+				 for (var i = 0; i < 2; i++) {
+					 if (bitloc[i][0] === "a" && bitloc[i][3] === "a" && bitloc[i][6] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][1] === "a" && bitloc[i][4] === "a" && bitloc[i][7] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][2] === "a" && bitloc[i][5] === "a" && bitloc[i][8] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][6] === "a" && bitloc[i][7] === "a" && bitloc[i][8] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][3] === "a" && bitloc[i][4] === "a" && bitloc[i][5] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][0] === "a" && bitloc[i][1] === "a" && bitloc[i][2] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][2] === "a" && bitloc[i][4] === "a" && bitloc[i][6] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+					 else if (bitloc[i][0] === "a" && bitloc[i][4] === "a" && bitloc[i][8] === "a") {
+						 win = 1;
+						 winbit = i;
+					 }
+				 }
+				 if (win === 1) {
+					 render();
+				 }
+			 }
 			 
 			 //render board for the first time
 			 render();
