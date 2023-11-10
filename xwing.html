@@ -1,13 +1,19 @@
 var player = {
     settings: {
-      speed: 0.5,
-      accel: 0.0001,
+      spin: 0.1, 
+      speed: 2,
+      slow: 0.0015,
+      accel: 0.0220,
       multi: 0.1,
       limits: {
         top: 200,
         bottom: -200,
         left: -200,
-        right: 200
+        right: 200,
+        spin: {
+          max: 45,
+          min: -45
+        }
       }
     },
     position: {
@@ -43,15 +49,30 @@ var player = {
       else return false;
       return true;
     },
+  limitSpin: function() {
+    if (this.position.r > this.settings.limits.spin.max) this.position.r = this.settings.limits.spin.max;
+      else if (this.position.r < this.settings.limits.spin.min) this.position.r = this.settings.limits.spin.min;
+      else return false;
+      return true;
+},
     update: function() {
       if (Math.abs(this.movement.x) < this.settings.speed) this.movement.x += this.direction.x * (deltaTime * this.settings.accel);
       if (Math.abs(this.movement.y) < this.settings.speed) this.movement.y += this.direction.y * (deltaTime * this.settings.accel);
       this.position.x += this.movement.x * (deltaTime * this.settings.multi);
-      if (!this.limitX()) this.movement.r += this.movement.x * (deltaTime * this.settings.multi);
+      if (!this.limitX()) this.movement.r += this.movement.x * (deltaTime * this.settings.multi) * this.settings.spin; //Spin
       this.position.y += this.movement.y * (deltaTime * this.settings.multi);
       this.limitY();
       this.position.r += this.movement.r * (deltaTime * this.settings.multi);
+      this.limitSpin();
       this.render();
+      //Slowing
+      if (this.movement.x > 0) this.movement.x -= this.settings.slow * deltaTime;
+      if (this.movement.x < 0) this.movement.x += this.settings.slow * deltaTime;
+      if (this.movement.y > 0) this.movement.y -= this.settings.slow * deltaTime;
+      if (this.movement.y < 0) this.movement.y += this.settings.slow * deltaTime;
+      if (this.movement.r > 0) this.movement.r -= this.settings.slow * deltaTime;
+      if (this.movement.r < 0) this.movement.r += this.settings.slow/10 * deltaTime;
+      this.movement.r = 0; //Fix Spinning
     }
   }
   
