@@ -1,7 +1,7 @@
 var player = {
     settings: {
-      speed: 2,
-      accel: 1,
+      speed: 0.5,
+      accel: 0.01,
       multi: 0.5,
       limits: {
         top: 200,
@@ -18,11 +18,18 @@ var player = {
     movement: {
       x: 0,
       y: 0,
-      z: 0
+      r: 0
     },
     direction: {
       x: 0,
       y: 0
+    },
+    render: function() {
+      push();
+      translate(this.position.x,this.position.y,0);
+      rotate(this.position.r);
+      box(40);
+      pop();
     },
     limitX: function() {
       if (this.position.x > this.settings.limits.right) this.position.x = this.settings.limits.right;
@@ -36,19 +43,58 @@ var player = {
       else return false;
       return true;
     },
-    updatePlayer: function() {
-      this.position.x += this.movement.x * (deltaTime * this.multi);
-      if (this.limitX()) this.movement.r += 2;
-      this.position.y += this.movement.y * (deltaTime * this.multi);
+    update: function() {
+      if (Math.abs(this.movement.x) < this.settings.speed) this.movement.x += this.direction.x * (deltaTime * this.settings.accel);
+      if (Math.abs(this.movement.y) < this.settings.speed) this.movement.y += this.direction.y * (deltaTime * this.settings.accel);
+      this.position.x += this.movement.x * (deltaTime * this.settings.multi);
+      if (this.limitX()) this.movement.r += this.movement.x * (deltaTime * this.settings.multi);
+      this.position.y += this.movement.y * (deltaTime * this.settings.multi);
       this.limitY();
-      this.position.r += this.movement.r * (deltaTime * this.multi);
-    },
+      this.position.r += this.movement.r * (deltaTime * this.settings.multi);
+      this.render();
+    }
+  }
+  
+  //Controls
+  function keyPressed() {
+    switch (keyCode) {
+      case LEFT_ARROW:
+        player.direction.x -= 1;
+        break;
+      case RIGHT_ARROW:
+        player.direction.x += 1;
+        break;
+      case UP_ARROW:
+        player.direction.y -= 1;
+        break;
+      case DOWN_ARROW:
+        player.direction.y += 1;
+        break;
+    }
+  }
+  function keyReleased() {
+    switch (keyCode) {
+      case LEFT_ARROW:
+        player.direction.x += 1;
+        break;
+      case RIGHT_ARROW:
+        player.direction.x -= 1;
+        break;
+      case UP_ARROW:
+        player.direction.y += 1;
+        break;
+      case DOWN_ARROW:
+        player.direction.y -= 1;
+        break;
+    }
   }
   
   function setup() {
-    createCanvas(400, 400);
+    createCanvas(400, 400, WEBGL);
+    angleMode(DEGREES);
   }
   
   function draw() {
     background(220);
+    player.update();
   }
