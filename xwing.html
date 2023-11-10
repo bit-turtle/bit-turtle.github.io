@@ -1,0 +1,54 @@
+var player = {
+    settings: {
+      speed: 2,
+      accel: 1,
+      multi: 0.5,
+      limits: {
+        top: 200,
+        bottom: -200,
+        left: -200,
+        right: 200
+      }
+    },
+    position: {
+      x: 0,
+      y: 0,
+      r: 0
+    },
+    movement: {
+      x: 0,
+      y: 0,
+      z: 0
+    },
+    direction: {
+      x: 0,
+      y: 0
+    },
+    limitX: function() {
+      if (this.position.x > this.settings.limits.right) this.position.x = this.settings.limits.right;
+      else if (this.position.x < this.settings.limits.left) this.position.x = this.settings.limits.left;
+      else return false;
+      return true;
+    },
+    limitY: function() {
+      if (this.position.y > this.settings.limits.top) this.position.y = this.settings.limits.top;
+      else if (this.position.y < this.settings.limits.bottom) this.position.y = this.settings.limits.bottom;
+      else return false;
+      return true;
+    },
+    updatePlayer: function() {
+      this.position.x += this.movement.x * (deltaTime * this.multi);
+      if (this.limitX()) this.movement.r += 2;
+      this.position.y += this.movement.y * (deltaTime * this.multi);
+      this.limitY();
+      this.position.r += this.movement.r * (deltaTime * this.multi);
+    },
+  }
+  
+  function setup() {
+    createCanvas(400, 400);
+  }
+  
+  function draw() {
+    background(220);
+  }
