@@ -75,6 +75,12 @@ limitSpin: function() {
     this.movement.r = 0; //Fix Spinning
     if (Math.abs(this.movement.x) < 0.1) this.movement.x = 0; //Stop drift
     if (Math.abs(this.movement.y) < 0.1) this.movement.y = 0; //Stop drift
+    //Spin Back
+    if (this.movement.r == 0) {
+      if (this.position.r > 0) this.position.r-=deltaTime * 0.01;
+      if (this.position.r < 0) this.position.r+=deltaTime * 0.01;
+  
+    }
   }
 }
 
@@ -112,6 +118,20 @@ function keyReleased() {
   }
 }
 
+var world = {
+  level: [0,0,0,0,0,0],
+  load: function() {
+    this.level.shift();
+    this.level.push(Math.round(Math.random()*5))
+  },
+  time: 0,
+  update: function() {
+    this.time += deltaTime;
+    if (this.time > 1000) { this.time = 0; this.load(); console.log(this.level)}
+  }
+}
+
+
 function setup() {
   createCanvas(400, 400, WEBGL);
   angleMode(DEGREES);
@@ -120,4 +140,5 @@ function setup() {
 function draw() {
   background(220);
   player.update();
+  world.update();
 }
