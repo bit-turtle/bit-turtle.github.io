@@ -124,10 +124,46 @@ var world = {
     this.level.shift();
     this.level.push(Math.round(Math.random()*5))
   },
-  time: 0,
+  location: 0,
+  render: function() {
+    push();
+    translate(0,0,this.location-500);
+    for (var i in this.level) {
+      switch(this.level[i]) {
+        case 0:
+          box(100);
+          break;
+        case 1:
+          box(200);
+          break;
+        case 2:
+          box(300);
+          break;
+        case 3:
+          box(400);
+          break;
+        case 4:
+          box(500);
+          break;
+        case 5:
+          box(600);
+          break;
+        default:
+          box(1);
+      }
+      translate(0,0,-50);
+    }
+    pop();
+  },
+  speed: 0.01,
   update: function() {
-    this.time += deltaTime;
-    if (this.time > 1000) { this.time = 0; this.load(); console.log(this.level)}
+    this.speed += deltaTime * 0.0001;
+    this.location += this.speed * deltaTime;
+    if (this.location > 500) {
+      this.location = 0;
+      this.load();
+    }
+    this.render();
   }
 }
 
@@ -139,6 +175,6 @@ function setup() {
 
 function draw() {
   background(220);
-  player.update();
   world.update();
+  player.update();
 }
