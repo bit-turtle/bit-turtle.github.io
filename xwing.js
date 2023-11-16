@@ -129,7 +129,7 @@ class ClassList {
   }
   remove() {
     for (var i in this.list) {
-      if (this.list[i].z > 100) this.list.splice(i,1);
+      if (this.list[i].z > 500) this.list.splice(i,1);
     }
   }
   move(distance) {
