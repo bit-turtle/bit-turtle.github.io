@@ -153,6 +153,12 @@ class ClassList {
       this.list[i].render();
     }
   }
+  collision() {
+    for (var i in this.list) {
+      if (this.list[i].collision()) return true;
+    }
+    return false;
+  }
 }
 
 class Wall {
@@ -202,12 +208,14 @@ class Wall {
   }
   collision(x,y) {
     switch (this.type) { 
+      case 0:
+        return collisionBox(x,y,200,200,-200,100); 
       case 1:
-        return collisionBox(x,y,-200,-200,200,-100); 
+        return collisionBox(x,y,-200,-200,-100,200);
       case 2:
-        return collisionBox(x,y,-200,-200,200,-100); 
+        return collisionBox(x,y,200,200,100,-200);
       case 3:
-        return collisionBox(x,y,-200,-25,200,25); 
+        return collisionBox(x,y,-200,-200,200,-100); 
       case 4:
         return collisionBox(x,y,-200,-25,200,25); 
     }
@@ -233,9 +241,9 @@ var world = {
     this.speed += deltaTime * 0.000001;
     this.level.move(this.speed * deltaTime);
     this.level.remove();
-    while (this.level.load()) this.load();
+    if (Math.round(Math.random()*10) == 0) if (this.level.load()) this.load();
     this.render();
-    this.level.collision();
+    if (this.level.collision()) console.log("c");
   }
 }
 
