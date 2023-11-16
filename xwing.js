@@ -1,3 +1,4 @@
+
 var player = {
   settings: {
     spin: 0.05, 
@@ -118,52 +119,85 @@ function keyReleased() {
   }
 }
 
+class ClassList {
+  constructor() {
+    this.list = [];
+  }
+  add(thing) {
+    this.list.push(thing);
+    return this.list.length-1;
+  }
+  remove() {
+    for (var i in this.list) {
+      if (this.list[i].z > 100) this.list.splice(i,1);
+    }
+  }
+  move(distance) {
+    for (var i in this.list) {
+      this.list[i].move(distance);
+    }
+  }
+  render() {
+    for (var i in this.list) {
+      this.list[i].render();
+    }
+  }
+}
+
+class Wall {
+  constructor(list,type,z = -500) {
+    this.type = type;
+    this.z = z;
+    this.id = list.add(this);
+  }
+  move(distance) {
+    this.z += distance;
+  }
+  render() {
+    push();
+    switch(this.type) {
+      case 0:
+        translate(0,150,this.z);
+        box(400,150);
+        break;
+      case 1:
+        translate(-150,0,this.z);
+        box(150,300);
+        break;
+      case 2:
+        translate(150,0,this.z);
+        box(150,400);
+        break;
+    }
+    pop();
+  }
+}
+
 var world = {
-  level: [0,0,0,0,0,0],
+  level: new ClassList(),
+  start() {
+    for (var i = 0;i < 5;i++) {
+      new Wall(this.level,Math.round(Math.random()*5),i*100-500);
+    }
+  },
   load: function() {
-    this.level.shift();
-    this.level.push(Math.round(Math.random()*5))
+      new Wall(this.level,Math.round(Math.random()*5));
   },
   location: 0,
   render: function() {
-    push();
-    translate(0,0,this.location-500);
-    for (var i in this.level) {
-      switch(this.level[i]) {
-        case 0:
-          box(100);
-          break;
-        case 1:
-          box(200);
-          break;
-        case 2:
-          box(300);
-          break;
-        case 3:
-          box(400);
-          break;
-        case 4:
-          box(500);
-          break;
-        case 5:
-          box(600);
-          break;
-        default:
-          box(1);
-      }
-      translate(0,0,-50);
-    }
-    pop();
+    this.level.render();
   },
-  speed: 0.01,
+  speed: 0.1,
   update: function() {
-    this.speed += deltaTime * 0.0001;
+    this.speed += deltaTime * 0.00000000000001;
     this.location += this.speed * deltaTime;
+    this.level.move(this.speed * deltaTime);
     if (this.location > 500) {
       this.location = 0;
       this.load();
     }
     this.render();
+    this.level.remove();
   }
 }
 
