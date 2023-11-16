@@ -192,7 +192,7 @@ var world = {
   },
   speed: 0.1,
   update: function() {
-    this.speed += deltaTime * 0.00000000000001;
+    this.speed += deltaTime * 0.0000000001;
     this.location += this.speed * deltaTime;
     this.level.move(this.speed * deltaTime);
     if (this.location > 500) {
