@@ -166,6 +166,7 @@ class Wall {
     this.type = type;
     this.z = z;
     this.id = list.add(this);
+    this.hit = false;
   }
   move(distance) {
     this.z += distance;
@@ -199,7 +200,8 @@ class Wall {
   collisionBox(x,y,x1,y1,x2,y2) {
     if (x >= x1 && x <= x2) {
       if (y >= y1 && y <= y2) {
-        if (this.z+40 <= 40 && this.z-40 >= -40) {
+        if (this.z >= 0 && !this.hit) {
+          this.hit = false;
           return true;
         }
       }
@@ -209,15 +211,15 @@ class Wall {
   collision(x,y) {
     switch (this.type) { 
       case 0:
-        return collisionBox(x,y,200,200,-200,100); 
+        return this.collisionBox(x,y,200,200,-200,100); 
       case 1:
-        return collisionBox(x,y,-200,-200,-100,200);
+        return this.collisionBox(x,y,-200,-200,-100,200);
       case 2:
-        return collisionBox(x,y,200,200,100,-200);
+        return this.collisionBox(x,y,200,200,100,-200);
       case 3:
-        return collisionBox(x,y,-200,-200,200,-100); 
+        return this.collisionBox(x,y,-200,-200,200,-100); 
       case 4:
-        return collisionBox(x,y,-200,-25,200,25); 
+        return this.collisionBox(x,y,-200,-25,200,25); 
     }
   }
 }
