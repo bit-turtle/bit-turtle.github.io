@@ -122,6 +122,14 @@ function keyReleased() {
 class ClassList {
   constructor() {
     this.list = [];
+    this.create = 0;
+  }
+  load() {
+    if (this.create > 0) {
+      this.create--;
+      return true;
+    }
+    else return false;
   }
   add(thing) {
     this.list.push(thing);
@@ -129,7 +137,10 @@ class ClassList {
   }
   remove() {
     for (var i in this.list) {
-      if (this.list[i].z > 500) this.list.splice(i,1);
+      if (this.list[i].z > 20) { 
+        this.list.splice(i,1);
+        this.create++;
+      }
     }
   }
   move(distance) {
@@ -154,6 +165,7 @@ class Wall {
     this.z += distance;
   }
   render() {
+    if (this.z > 20) return -1;
     push();
     switch(this.type) {
       case 0:
@@ -171,8 +183,34 @@ class Wall {
       case 3:
         translate(0,-100,this.z);
         box(400,150,80);
+        break;
+      case 4:
+        translate(0,0,this.z);
+        box(400,50,80);
     }
     pop();
+  }
+  collisionBox(x,y,x1,y1,x2,y2) {
+    if (x >= x1 && x <= x2) {
+      if (y >= y1 && y <= y2) {
+        if (this.z+40 <= 40 && this.z-40 >= -40) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  collision(x,y) {
+    switch (this.type) { 
+      case 1:
+        return collisionBox(x,y,-200,-200,200,-100); 
+      case 2:
+        return collisionBox(x,y,-200,-200,200,-100); 
+      case 3:
+        return collisionBox(x,y,-200,-25,200,25); 
+      case 4:
+        return collisionBox(x,y,-200,-25,200,25); 
+    }
   }
 }
 
@@ -180,11 +218,11 @@ var world = {
   level: new ClassList(),
   start() {
     for (var i = 0;i < 5;i++) {
-      new Wall(this.level,Math.round(Math.random()*5),i*100-500);
+      new Wall(this.level,Math.round(Math.random()*5),i*1000-5000);
     }
   },
   load: function() {
-      new Wall(this.level,Math.round(Math.random()*5));
+      new Wall(this.level,Math.round(Math.random()*5),-5000);
   },
   location: 0,
   render: function() {
@@ -192,15 +230,12 @@ var world = {
   },
   speed: 0.1,
   update: function() {
-    this.speed += deltaTime * 0.0000000001;
-    this.location += this.speed * deltaTime;
+    this.speed += deltaTime * 0.000001;
     this.level.move(this.speed * deltaTime);
-    if (this.location > 500) {
-      this.location = 0;
-      this.load();
-    }
-    this.render();
     this.level.remove();
+    while (this.level.load()) this.load();
+    this.render();
+    this.level.collision();
   }
 }
 
@@ -208,6 +243,7 @@ var world = {
 function setup() {
   createCanvas(400, 400, WEBGL);
   angleMode(DEGREES);
+  world.start();
 }
 
 function draw() {
