@@ -157,17 +157,20 @@ class Wall {
     push();
     switch(this.type) {
       case 0:
-        translate(0,150,this.z);
-        box(400,150);
+        translate(0,100,this.z);
+        box(400,150,80);
         break;
       case 1:
-        translate(-150,0,this.z);
-        box(150,300);
+        translate(-100,0,this.z);
+        box(150,300,80);
         break;
       case 2:
-        translate(150,0,this.z);
-        box(150,400);
+        translate(100,0,this.z);
+        box(150,400,80);
         break;
+      case 3:
+        translate(0,-100,this.z);
+        box(400,150,80);
     }
     pop();
   }
