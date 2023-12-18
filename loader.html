@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Loading...
+        </title>
+        <script src="p5.js"></script>
+    </head>
+    <head>
+        <h1>
+            Loading...
+        </h1>
+        <main>
+
+        </main>
+        <script>
+            function setup() {
+                createCanvas(400, 400);
+                colorMode(HSB);
+            }
+
+            var c = 0;
+            var x = 200;
+            var y = 200;
+            var time = 0;
+            var size = 100;
+
+            function draw() {
+                time += deltaTime * 0.001;
+                background(220);
+                noStroke();
+                c += deltaTime * 0.015;
+                c %= 360;
+                fill(c,100,100);
+                rect(x,y,sin(time)*size,cos(time)*size);
+                arc(x,y,size*2,size*2,-time-PI-HALF_PI,-time);
+            }
+        </script>
+    </head>
+</html>
