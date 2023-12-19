@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Hitbox Test
+        </title>
+        <script src="p5.js"></script>
+    </head>
+    <body>
+        <h1>
+            Hitbox Test
+        </h1>
+        <main>
+
+        </main>
+        <script>
+            class List {
+                constructor() {
+                    this.list = [];
+                }
+                render() {
+                    for (var i in this.list) {
+                    this.list[i].render();
+                    }
+                }
+                add(thing) {
+                    this.list.push(thing);
+                    return this.list.length-1;
+                }
+            }
+            class Hitbox {
+                constructor(list,x,y,z,w,h,d) {
+                    this.list = list.list;
+                    this.x = x;
+                    this.y = y;
+                    this.z = d;
+                    this.w = w;
+                    this.h = h;
+                    this.d = d;
+                    if (this.w < 0) {
+                    this.x += this.w;
+                    this.w = Math.abs(this.w);
+                    }
+                    if (this.h < 0) {
+                    this.y += this.h;
+                    this.h = Math.abs(this.h);
+                    }
+                    if (this.d < 0) {
+                    this.z += this.d;
+                    this.z = Math.abs(this.d);
+                    }
+                    this.i = list.add(this);
+                }
+                render() {
+                    push();
+                    translate(this.x,this.y,this.z);
+                    box(this.w,this.h,this.d);
+                    pop();
+                }
+                move(x,y,z) {
+                    this.x = x;
+                    this.y = y;
+                    this.z = z;
+                }
+                test() {
+                    var x;
+                    var y;
+                    var z;
+                    var w;
+                    var h;
+                    var d;
+                    var collisions = [];
+                    for (var i in this.list) { 
+                        if (i == this.i) continue; 
+                        x = this.list[i].x;
+                        y = this.list[i].y;
+                        z = this.list[i].z;
+                        if (this.x+this.w <= x) continue; 
+                        if (this.y+this.h <= y) continue; 
+                        if (this.z+this.d <= z) continue; 
+                        w = this.list[i].w;
+                        h = this.list[i].h;
+                        d = this.list[i].d;
+                        if (x+w <= this.x) continue; 
+                        if (y+h <= this.y) continue; 
+                        if (z+d <= this.z) continue; 
+                        collisions.push(i);
+                    }
+                    return collisions;
+                }
+            }
+
+            var list = new List();
+            new Hitbox(list,-100,-100,40,100,100,80);
+            new Hitbox(list,100,100,40,100,100,80);
+            var hitbox = new Hitbox(list,50,50,40,100,100,80);
+            var slider;
+
+            function setup() {
+            createCanvas(400, 400, WEBGL);
+            createP("Z distance: ");
+            slider = createSlider(0,800,50,1);
+            }
+
+            function draw() {
+            orbitControl();
+            if (hitbox.test().length > 0) background(200,10,20);
+            else background(220);
+            hitbox.move(mouseX-250,mouseY-250,slider.value());
+            list.render();
+            }
+        </script>
+    </body>
+</html>
