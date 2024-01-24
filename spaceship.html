@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>
+            SpaceShip Movement Test
+        </title>
+        <script src="p5.js"></script>
+    </head>
+    <body>
+        <h1>
+            SpaceShip Movement Test
+        </h1>
+        <main>
+        </main>
+        <script>
+            var i;
+            var fps;
+            function setup() {
+                createCanvas(400, 400);
+                angleMode(RADIANS);
+                fps = createP("FPS: Unknown");
+            }
+
+            //Player
+            var playerpos = {x: 200, y: 200};
+            var playervel = {x: 0, y: 0};
+            var playerrot = 0;
+            var playerrotvel = 0;
+            var engine = false;
+            var turn = 0;
+
+            //Lazers
+            var lazers = [];
+            var cooldown = 0;
+
+            function draw() {
+                background(220);
+                //Movement
+                turn = 0;
+                if (keyIsDown(LEFT_ARROW)) turn -= 1;
+                if (keyIsDown(RIGHT_ARROW)) turn += 1;
+                playerrotvel += turn * deltaTime * 0.005;
+                playerrot += playerrotvel * deltaTime * 0.001;
+                engine = keyIsDown(UP_ARROW);
+                if (engine) {
+                    playervel.x += sin(-playerrot) * deltaTime * 0.02;
+                    playervel.y += cos(-playerrot) * deltaTime * 0.02;
+                }
+                playerpos.x += playervel.x * deltaTime * 0.01;
+                playerpos.y += playervel.y * deltaTime * 0.01;
+                //Boundaries
+                if (playerpos.x < 0) playerpos.x = 0;
+                if (playerpos.x > 400) playerpos.x = 400;
+                if (playerpos.y < 0) playerpos.y = 0;
+                if (playerpos.y > 400) playerpos.y = 400;
+                //Lazers
+                if (cooldown <= 0 && keyIsDown(DOWN_ARROW)) {
+                    lazers.push({x: playerpos.x,y: playerpos.y,rot: playerrot,velx: sin(-playerrot)*20,vely: cos(-playerrot)*20});
+                    cooldown = 5;
+                }
+                cooldown -= deltaTime * 0.01;
+                for (i in lazers) {
+                    lazers[i].x += lazers[i].velx * deltaTime * 0.01;
+                    lazers[i].y += lazers[i].vely * deltaTime * 0.01;
+                }
+                //Render
+                push();
+                translate(playerpos.x,playerpos.y);
+                rotate(playerrot);
+                triangle(0,10,10,-10,-10,-10);
+                line(0,10,0,15)
+                //Fire
+                if (keyIsDown(UP_ARROW)) {
+                    line(-10,-10,-9,-15);
+                    line(-9,-13,-3,-12);
+                    line(-3,-12,0,-15);
+                    line(0,-15,3,-12);
+                    line(3,-12,9,-13);
+                    line(9,-13,10,-10);
+                }
+                pop();
+                //Lazer
+                for (i in lazers) {
+                    push();
+                    translate(lazers[i].x,lazers[i].y);
+                    rotate(lazers[i].rot);
+                    line(0,10,0,15);
+                    pop();
+                }
+            }
+        </script>
+    </body>
+</html>
