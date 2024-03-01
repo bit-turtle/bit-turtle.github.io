@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+        Painter Max
+    </title>
+    <script src="p5.js"></script>
+    <script src="p5.sound.min.js"></script>
+    <script src="papaparse.min.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <main>
+    </main>
+    <script>
+        var drawing = new p5.Table();
+        drawing.addColumn("x");
+        drawing.addColumn("y");
+        drawing.addColumn("size");
+        drawing.addColumn("color");
+        drawing.addColumn("end");
+
+        var settings = {
+        size: undefined,
+        color: undefined,
+        mode: undefined,
+        offset: {
+            x: 0,
+            y: 0,
+        }
+        };
+
+        function setup() {
+        let canvas = createCanvas(windowWidth, windowHeight-100);
+        settings.mode = createRadio("Mode");
+        settings.mode.option("Draw");
+        settings.mode.option("Erase");
+        settings.mode.option("Move");
+        settings.mode.selected("Draw");
+        settings.color = createColorPicker("black");
+        settings.size = createSlider(1,256,10);
+        let undoButton = createButton("Undo");
+        undoButton.mousePressed(() => {
+            for (var i = drawing.getRowCount()-1; i >= 0; i--) {
+            drawing.removeRow(i);
+            if (i > 0 && drawing.getRow(i-1).obj.end == 1) break;
+            }
+        });
+        let clearButton = createButton("Clear Drawing");
+        clearButton.mousePressed(() => {
+            drawing.clearRows();
+        });
+        let resetOffset = createButton("Reset Offset");
+        resetOffset.mousePressed(() => {
+            settings.offset.x = 0;
+            settings.offset.y = 0;
+        });
+        let exportButton = createButton("Export PLI Image");
+        exportButton.mousePressed(() => {
+            save(drawing,"drawing.pli");
+        });
+        let imageButton = createButton("Export PNG Image");
+        imageButton.mousePressed(() => {
+            save(canvas,"drawing.png");
+        });
+        let importButton = createFileInput((file) => {
+            //Process File
+            file.data = String(file.data);
+            var valid = false;
+            let prefix = file.data.slice(0,37);
+            if (prefix == "data:application/octet-stream;base64,") {
+            let data = atob(file.data.substring(37));
+            console.log(data);
+            if (data.slice(0,18) == "x,y,size,color,end") {
+                valid = true;
+                console.log("File Valid");
+                let imported = Papa.parse(data,{header:true});
+                console.log(imported);
+                drawing.clearRows();
+                try {
+                for (var i in imported.data) {
+                    if (i == 0 && i < imported.data.length-2) {continue;}
+                    let newPoint = drawing.addRow();
+                    newPoint.setNum("x",parseInt(imported.data[i].x));
+                    newPoint.setNum("y",parseInt(imported.data[i].y));
+                    newPoint.setNum("size",parseInt(imported.data[i].size));
+                    newPoint.setString("color",String(imported.data[i].color));
+                    newPoint.setNum("end",parseInt(imported.data[i].end));
+                }
+                }
+                catch (error) {
+                alert("Corrupted File!")
+                }
+            }
+            }
+            if (!valid) {
+            alert("Invalid PLI Image!");
+            }
+        });
+        }
+
+        function windowResized() {
+        resizeCanvas(windowWidth,windowHeight-100);
+        }
+
+        function mouseReleased() {
+        if (mouseButton == LEFT && drawing.getRowCount() > 0) {
+            drawing.getRow(drawing.getRowCount()-1).setNum("end",1);
+        }
+        }
+
+        function distance(x1,y1,x2,y2) {
+        return Math.hypot((x1-x2),(y1-y2));
+        }
+
+        function draw() {
+        background(220);
+        if (settings.mode.value() == "Move") {
+            cursor(MOVE);
+            if (mouseIsPressed && mouseY < height) {
+            settings.offset.x += movedX;
+            settings.offset.y += movedY;
+            }
+        }
+        else {
+            cursor(CROSS);
+        }
+        translate(settings.offset.x,settings.offset.y);
+        if (mouseIsPressed && settings.mode.value() == "Draw" && mouseY < height) {
+            let newPoint = drawing.addRow();
+            newPoint.setNum("x",mouseX-settings.offset.x);
+            newPoint.setNum("y",mouseY-settings.offset.y);
+            newPoint.setNum("size",settings.size.value());
+            newPoint.setString("color",settings.color.value());
+            newPoint.setNum("end",0);
+        }
+        
+        for (var i = 0; i < drawing.getRowCount(); i++) {
+            if (i < drawing.getRowCount() && i > 0) {
+            try {
+                stroke(drawing.getRow(i).obj.color);
+            }
+            catch (error) {
+                if (confirm("Repair Corrupted File?")) {
+                if (i > 0) {
+                    drawing.getRow(i).setString("color",drawing.getRow(i-1).obj.color);
+                }
+                }
+                else {
+                drawing.clearRows();
+                }
+            }
+            strokeWeight(drawing.getRow(i).obj.size);
+            if (drawing.getRow(i-1).obj.end == 0) {
+                line(drawing.getRow(i-1).obj.x,drawing.getRow(i-1).obj.y,drawing.getRow(i).obj.x,drawing.getRow(i).obj.y);
+            }
+            if (drawing.getRow(i).obj.end == 1 && (i == 0 | drawing.getRow(i-1).obj.end == 1)) {
+                drawing.removeRow(i);
+                i--;
+            }
+            }
+            if (mouseIsPressed && settings.mode.value() == "Erase" && mouseY < height && mouseX-settings.offset.x > drawing.getRow(i).obj.x-drawing.getRow(i).obj.size/2 && mouseX-settings.offset.x < drawing.getRow(i).obj.x+drawing.getRow(i).obj.size/2 && mouseY-settings.offset.y > drawing.getRow(i).obj.y-drawing.getRow(i).obj.size/2 && mouseY-settings.offset.y < drawing.getRow(i).obj.y+drawing.getRow(i).obj.size/2) {
+            if (i > 0) {
+                drawing.getRow(i-1).setNum("end",1);
+            }
+            drawing.removeRow(i);
+            i--;
+            }
+        }
+    }
+        </script>
+    </body>
+</html>
