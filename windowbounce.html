@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Bouncing Window</h2>
+
+<button id="button" type="button" onclick="start()">
+Create Window
+</button>
+
+<script>
+
+var win = null;
+var x = screen.width/2;
+var y = screen.height/2;
+var w = 200;
+var h = 200;
+var mw = 200;
+var mh = 200;
+var vx = 2;
+var vy = 3;
+
+var started = false;
+
+function start() {
+	if (started) return;
+	started = true;
+	win = window.open("about:blank","Window","popup");
+	win.moveTo(x,y);
+    win.resizeTo(w,h);
+    
+    //Disable Button
+    document.getElementById("button").disabled = true;
+}
+
+function move() {
+	vy += 0.005; // Gravity
+	x += vx;
+    y += vy;
+    if (x > screen.width-mw/2) {
+	    x = screen.width-mw/2;
+        vx *= -1;
+    }
+    if (y > screen.height-mh/2) {
+    	y = screen.height-mh/2;
+        vy *= -1;
+    }
+    if (x < 0-mw/2) {
+    	x = 0-mw/2;
+        vx *= -1;
+    }
+    if (y < 0-mh/2) {
+    	y = 0-mh/2;
+        vy *= -1;
+    }
+}
+
+function resize() {
+	if (y+mh > screen.height) {
+    	var difference = ( (y+mh) - screen.height );
+    	w = mw + difference;
+        h = mh - difference;
+    }
+    if (y < 0) {
+    	var difference = ( -y ); 
+    	w = mw + difference;
+        h = mh - difference;
+    }
+    if (x+mw > screen.width) {
+    	var difference = ( (x+mw) - screen.width );
+        w = mw - difference;
+        h = mh + difference;
+    }
+    if (x < 0) {
+    	var difference = ( -x );
+        w = mw - difference;
+        h = mh + difference;
+    }
+    // Safety Checks
+    if (w < 100) w = 100;
+    if (h < 100) h = 100;
+}
+
+function update() {
+	move();
+    resize();
+    win.moveTo(x-w/2+mw/2,y-h/2+mh/2);
+    win.resizeTo(w,h);
+}
+
+setInterval(update,1);
+
+</script>
+
+</body>
+</html> 
