@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Bit Tac Two</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+html,body {
+	background-color: black;
+    color: white;
+}
+
+button {
+	color: black;
+    background-color: white;
+}
+
+.grid {
+
+ width: 25vmin;
+ height: 25vmin;
+
+}
+
+.result {
+color: black;
+text-align: center;
+ width: 25vmin;
+ height: 25vmin;
+  background-color: white;
+}
+
+.line {
+	background-color: lightgreen;
+}
+
+#error {
+	color: red;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Bit Tac Two</h2>
+
+<div id="main">
+<button type="button"
+onclick="start()">
+Play Game</button>
+</div>
+
+<div id="message" hidden>
+	<h3>It's <span id="turn"></span>'s Turn <span id="error" hidden>Spot Already Taken!</span> </h3>
+</div>
+
+<div id="game" hidden>
+
+<table>
+
+<tr> <td><button class="grid" id="0" onclick="place(0,0)"></button></td> <td><button class="grid" id="1" onclick="place(0,1)"></button></td> <td><button class="grid" id="2" onclick="place(0,2)"></button></td> </tr>
+
+
+<tr> <td><button class="grid" id="3" onclick="place(1,0)"></button></td> <td><button class="grid" id="4" onclick="place(1,1)"></button></td> <td><button class="grid" id="5" onclick="place(1,2)"></button></td> </tr>
+
+
+<tr> <td><button class="grid" id="6" onclick="place(2,0)"></button></td> <td><button class="grid" id="7" onclick="place(2,1)"></button></td> <td><button class="grid" id="8" onclick="place(2,2)"></button></td> </tr>
+
+</table>
+
+</div>
+<div id="over" hidden>
+<h3><span id="winner"></span>, Wins!</h3>
+<button type="button" onclick="start()">Play Again</button>
+<br>
+<table id="results">
+
+<tr>
+
+	<td class="result" id="r0"></td>
+    
+    <td class="result" id="r1"></td>
+    
+    <td class="result" id="r2"></td>
+
+</tr>
+<tr>
+
+	<td class="result" id="r3"></td>
+    
+    <td class="result" id="r4"></td>
+    
+    <td class="result" id="r5"></td>
+
+</tr>
+<tr>
+
+	<td class="result" id="r6"></td>
+    
+    <td class="result" id="r7"></td>
+    
+    <td class="result" id="r8"></td>
+
+</tr>
+
+</table>
+
+</div>
+
+<script>
+function show(element) {
+ element.style.display = "block";
+}
+function hide(element) {
+ element.style.display = "none";
+}
+var main = document.getElementById("main");
+var game = document.getElementById("game");
+var over = document.getElementById("over");
+var cturn = document.getElementById("turn");
+var message = document.getElementById("message");
+var error = document.getElementById("error");
+var board = [[null,null,null],
+             [null,null,null],
+             [null,null,null]];
+                    
+var turn = 0;
+var pattern = {
+	type: 0,
+    variant: 0
+};
+function reset() {
+ for (var x = 0; x < 3; x++) for (var y = 0; y < 3; y++) board[x][y] = null;
+ turn = 0;
+ cturn.textContent = turn.toString();
+ hide(error);
+ show(message);
+ for (var i = 0; i < 9; i++) document.getElementById(i.toString()).textContent = "?";
+}
+function win() {
+
+var winner = null;
+
+ for (var player = 0; player <= 1; player++) { 
+
+  for (var i = 0; i < 3; i++)
+    if ( board[0][i] == player && board[1][i] == player && board[2][i] == player ) { 		winner = player;
+       pattern.type = 0;
+       pattern.variant = i;
+    }
+
+  for (var i = 0; i < 3; i++)
+   if ( board[i][0] == player && board[i][1] == player && board[i][2] == player ) { 		winner = player; 
+   		pattern.type = 1;
+        pattern.variant = i;
+   }
+	
+   if (board[0][0] == player && board[1][1] == player && board[2][2] == player ) {
+   		winner = player;
+   		pattern.type = 2;
+   }
+
+   if (board[0][2] == player && board[1][1] == player && board[2][0] == player ) { 			winner = player; 
+   		pattern.type = 3;
+   }
+
+}
+
+if (winner != null) {
+ hide(game);
+ hide(message);
+ document.getElementById("winner").textContent = winner.toString();
+ for (var x = 0; x < 3; x++) for (var y = 0; y < 3; y++)  { 
+ var element = document.getElementById("r"+(3*x+y).toString());
+ element.classList.remove("line");
+ if (board[x][y] != null ) { element.textContent = board[x][y]; 
+ if (pattern.type == 0) {
+ 	if (pattern.variant == y) {
+    	element.classList.add("line");
+    }
+ }
+ if (pattern.type == 1) {
+ 	if (pattern.variant == x) {
+    	element.classList.add("line");
+    }
+ }
+ if (pattern.type == 2) {
+ 	if ( (x == 0 && y == 0) || (x == 1 && y == 1) || (x == 2 && y == 2) ) {
+    	element.classList.add("line");
+    }
+ }
+ if (pattern.type == 2) {
+ 	if ( (x == 2 && y == 0) || (x == 1 && y == 1) || (x == 2 && y == 0) ) {
+    	element.classList.add("line");
+    }
+ }
+ } else element.textContent = "?";
+ 
+ }
+ show(over);
+}
+
+}
+function place(x,y) {
+  if (board[x][y] == null) { hide(error);
+   board[x][y] = turn;
+   document.getElementById((3*x+y).toString()).textContent = turn;
+  if (turn == 0 ) turn = 1;
+  else turn = 0;
+  cturn.textContent = turn.toString();
+    win();
+    
+  }
+  else show(error);
+}
+function start() {
+ hide(main);
+ hide(over);
+ reset();
+ show(game);
+}
+</script>
+
+</body>
+</html> 
