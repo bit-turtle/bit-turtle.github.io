@@ -172,14 +172,22 @@ var winner = null;
 
 }
 
+if (winner == null) {
+var empty = 0;
+for (var x = 0; x < 3; x++) for (var y = 0; y < 3; y++) if (board[x][y] == null) empty++;
+if (empty == 0) winner = -1;
+}
+
 if (winner != null) {
  hide(game);
  hide(message);
- document.getElementById("winner").textContent = winner.toString();
+ if (winner != -1) document.getElementById("winner").textContent = winner.toString();
+ else document.getElementById("winner").textContent = "Nobody";
  for (var x = 0; x < 3; x++) for (var y = 0; y < 3; y++)  { 
  var element = document.getElementById("r"+(3*x+y).toString());
  element.classList.remove("line");
  if (board[x][y] != null ) { element.textContent = board[x][y]; 
+ if (winner != -1) {
  if (pattern.type == 0) {
  	if (pattern.variant == y) {
     	element.classList.add("line");
@@ -199,6 +207,7 @@ if (winner != null) {
  	if ( (x == 2 && y == 0) || (x == 1 && y == 1) || (x == 0 && y == 2) ) {
     	element.classList.add("line");
     }
+ }
  }
  } else element.textContent = "?";
  
