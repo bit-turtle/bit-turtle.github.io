@@ -15,7 +15,7 @@ Height: <input id="height" type="range" min="1" max="128" value="16"><span id="y
 <button type="button"
 onclick="genmaze()">Generate Maze</button>
 
-<p id="demo"></p>
+<p>Iteration: <span id="iter">0</span></p>
 
 <main></main>
 
@@ -113,9 +113,11 @@ function draw() {
   line(0,size.y * mazescale + 25, (iter/prediter) * size.x * mazescale, size.y * mazescale + 25);
   pop();
   if (done) {
-    text("\n\nDone!\nIterations: " + iter, 0, size.y * mazescale + 50);
+    text("\n\nDone!\nTotal Iterations: " + iter, 0, size.y * mazescale + 50);
     noLoop();
   }
+  
+  document.getElementById("iter").textContent = iter;
 }
 </script>
 
