@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Maze Generator</title>
+<script src="https://bit-turtle.github.io/p5.js"></script>
+</head>
+<body>
+
+<h2>Maze Generator</h2>
+
+Speed: <input id="speed" type="range" min="1" max="128" value="1"><span id="sval">1</span> iterations/frame<br>
+Width: <input id="width" type="range" min="1" max="128" value="16"><span id="xval">16</span><br>
+Height: <input id="height" type="range" min="1" max="128" value="16"><span id="yval">16</span><br>
+
+<button type="button"
+onclick="genmaze()">Generate Maze</button>
+
+<p id="demo"></p>
+
+<main></main>
+
+<script>
+var done = false;
+
+var mazescale = 8;
+var offset = 4;
+var speed = 1;
+
+var size = {x: 8, y: 8};
+var start = {x:Math.floor(Math.random() * size.x), y:Math.floor(Math.random() * size.y)};
+
+var iter = 0;
+var prediter = ( (size.x * size.y - 1)*2+1 );
+
+var tiles = [];
+for (var x = 0; x < size.x; x++) {
+  tiles.push([]);
+  for (var y = 0; y < size.y; y++) {
+    if (x == start.x && y == start.y) tiles[x].push(true); 
+    else tiles[x].push(false);
+  }
+}
+var stack = [start];
+
+function gen() {
+  if (stack.length == 0) return true;
+  iter ++;
+  var pos = stack[stack.length - 1];
+  var sides = [{x: pos.x, y: pos.y + 1}, {x: pos.x + 1, y: pos.y}, {x: pos.x - 1, y: pos.y}, {x: pos.x, y: pos.y - 1}];
+  var chosen = false;
+  while (sides.length > 0) {
+    var rand = Math.floor(Math.random() * sides.length);
+    var side = sides[rand];
+    if (side.x >= 0 && side.x < size.x && side.y >= 0 && side.y < size.y && tiles[side.x][side.y] == false) {
+      stack.push(sides[rand]);
+      tiles[side.x][side.y] = true;
+      chosen = true;
+      break;
+    }
+    sides.splice(rand, 1);
+  }
+  if (chosen == false) {
+    stack.pop(stack.length - 1);
+  }
+  var newpos = stack[stack.length - 1];
+  if (stack.length > 0) line(offset + pos.x * mazescale, offset + pos.y * mazescale,offset + newpos.x * mazescale,offset + newpos.y * mazescale);
+  else return true;
+  return false;
+}
+
+function setup() {
+  createCanvas(max(size.x * 10, 200), size.y * 10 + 100);
+  noLoop();
+}
+
+function begin(mazesize, mazespeed = 1) {
+  speed = mazespeed;
+  size = mazesize;
+  resizeCanvas(max(size.x * 10, 200), size.y * 10 + 100);
+  background(255);
+  start = {x:Math.floor(Math.random() * size.x), y:Math.floor(Math.random() * size.y)};
+  stack = [start];
+  tiles = [];
+  for (var x = 0; x < size.x; x++) {
+  tiles.push([]);
+    for (var y = 0; y < size.y; y++) {
+      if (x == start.x && y == start.y) tiles[x].push(true); 
+      else tiles[x].push(false);
+    }
+  }
+  iter = 0;
+  prediter = ( (size.x * size.y - 1)*2+1 );
+  text("Predicted Iterations: " + prediter, 0, size.y * mazescale + 50);
+  push();
+  fill("black");
+  rect(0,0,size.x * mazescale, size.y * mazescale);
+  pop();
+  done = false;
+  loop();
+}
+
+function draw() {
+  push();
+  stroke(255,200);
+  strokeWeight(4);
+  for (var i = 0; i < speed; i++) {
+    if (!done) done = gen();
+    else break;
+  }
+  pop();
+  push();
+  stroke("blue");
+  line(0,size.y * mazescale + 25, (iter/prediter) * size.x * mazescale, size.y * mazescale + 25);
+  pop();
+  if (done) {
+    text("\n\nDone!\nIterations: " + iter, 0, size.y * mazescale + 50);
+    noLoop();
+  }
+}
+</script>
+
+<script>
+
+document.getElementById("speed").addEventListener("input", (event) => {
+  document.getElementById("sval").textContent = event.target.value;
+});
+
+document.getElementById("width").addEventListener("input", (event) => {
+  document.getElementById("xval").textContent = event.target.value;
+});
+
+document.getElementById("height").addEventListener("input", (event) => {
+  document.getElementById("yval").textContent = event.target.value;
+});
+
+function genmaze() {
+	var s = parseInt(document.getElementById("speed").value);
+    var x = parseInt(document.getElementById("width").value);
+    var y = parseInt(document.getElementById("height").value);
+    begin({x: x, y: y}, s);
+}
+</script>
+
+</body>
+</html> 
