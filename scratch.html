@@ -2,6 +2,8 @@
 <html>
 <head>
 <style>
+html, body { height: 95vh }
+
 body {
   background-color: lightblue;
   display: flex;
@@ -55,8 +57,11 @@ body {
 }
 
 #editor {
-	overflow-y: auto;
-    flex: 1;
+	resize: none;
+    outline: none;
+	background: none;
+	flex: 1 1 auto;
+	border: 1px solid black;
 }
 </style>
 </head>
@@ -73,7 +78,7 @@ body {
     <div class="file">FILE From C</div>
 </div>
 
-<div id="editor"></div>
+<textarea id="editor">hi</textarea>
 
 </body>
 </html>
