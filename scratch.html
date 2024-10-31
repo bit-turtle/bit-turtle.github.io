@@ -9,6 +9,7 @@ body {
 #toolbar {
 	display: flex;
     flex-wrap: nowrap;
+    overflow: scroll;
 	border-bottom: 2px solid black;
     padding-bottom: 5px;
 }
@@ -17,22 +18,58 @@ body {
     height: fit-content;
 	border: 2px solid black;
     border-radius: 5px;
-    padding: 2px;
-    font-family: monospace;
+    padding-left: 2px;
+    padding-right: 2px;
+	font-family: monospace;
     font-weight: bold;
+    white-space: nowrap;
     margin-right: 2px;
+}
+.tool:hover {
+	cursor: pointer;
+    background: lightgrey;
+}
+.new {
+	border-radius: 45%;
+	text-align: center;
+    width: 1.75ch;
+}
+
+#files {
+	display: flex;
+    flex-wrap: nowrap;
+    overflow: scroll;
+}
+.file {
+	border: 2px solid black;
+    margin-top: 5px;
+    white-space: nowrap;
+	margin-right: 2px;
+}
+.file:hover {
+	cursor: pointer;
+	margin-top: 3px;
+    border-bottom: 4px solid black;
+}
+
+#editor {
+	
 }
 </style>
 </head>
 <body>
 
 <div id="toolbar">
-	<div class="tool">File</div>
-    <div class="tool">Make it very dark mode</div>
-    <div class="tool">File</div>
+	<div class="tool">Open</div>
+    <div class="tool">Save</div>
 </div>
 
-<div id="files"></div>
+<div id="files">
+	<div class="file">FILE From C</div>
+    <div class="file">FILE From C</div>
+    <div class="file">FILE From C</div>
+</div>
+
 <div id="editor"></div>
 
 </body>
