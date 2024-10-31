@@ -59,9 +59,26 @@ body {
 	cursor: pointer;
 	background: lightgrey;
 }
-.file:hover {
+.file.open {
 	margin-top: 3px;
     border-bottom: 2px solid black;
+}
+.new {
+	width: 15px;
+    height: 15px;
+    margin-top: 5px;
+    white-space: nowrap;
+	margin-right: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-family: monospace;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 50%;
+}
+.new:hover {
+	cursor: pointer;
+    color: grey;
 }
 
 #editor {
@@ -80,15 +97,30 @@ body {
 <div id="toolbar">
 	<div class="tool">Open</div>
     <div class="tool">Save</div>
+    <div class="tool">Close</div>
+    <!-- Message if Javascript is disabled -->
+    <noscript><div>Javascript is disabled, things might not work right</div></noscript>
 </div>
 
 <div id="files">
-	<div class="file">FILE From C</div>
+	<div id="init" class="file open">FILE From C</div>
     <div class="file">FILE From C</div>
     <div class="file">FILE From C</div>
+    <div class="new">+</div>
 </div>
 
 <textarea id="editor">hi</textarea>
+
+<script>
+var filedata = [""];
+
+function open() {
+
+}
+function save() {
+
+}
+</script>
 
 </body>
 </html>
