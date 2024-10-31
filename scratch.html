@@ -63,23 +63,6 @@ body {
 	margin-top: 3px;
     border-bottom: 2px solid black;
 }
-.new {
-	width: 15px;
-    height: 15px;
-    margin-top: 5px;
-    white-space: nowrap;
-	margin-right: 2px;
-    padding-left: 2px;
-    padding-right: 2px;
-    font-family: monospace;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 50%;
-}
-.new:hover {
-	cursor: pointer;
-    color: grey;
-}
 
 #editor {
 	resize: none;
@@ -95,6 +78,7 @@ body {
 <body>
 
 <div id="toolbar">
+	<div id="new" class="tool">New</div>
 	<div id="open" class="tool">Open</div>
     <div id="save" class="tool">Save</div>
     <div id="close" class="tool">Close</div>
@@ -103,16 +87,33 @@ body {
 </div>
 
 <div id="files">
-	<div id="init" class="file open">FILE From C</div>
-    <div class="file">FILE From C</div>
-    <div class="file">FILE From C</div>
-    <div id="new" class="new">+</div>
 </div>
 
 <textarea id="editor">hi</textarea>
 
 <script>
-var filedata = [""];
+class File {
+	constructor(name, text) {
+    	this.filename = name;
+        this.text = text;
+        
+    }
+    update(text) {
+    	this.text = text;
+    }
+    content() {
+    	return this.text;
+    }
+    rename(name) {
+    	this.filename = name;
+    }
+    name() {
+    	return this.filename;
+    }
+}
+
+var current = null;
+var files = [];
 
 // Open a file
 function open() {
