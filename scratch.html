@@ -95,9 +95,9 @@ body {
 <body>
 
 <div id="toolbar">
-	<div class="tool">Open</div>
-    <div class="tool">Save</div>
-    <div class="tool">Close</div>
+	<div id="open" class="tool">Open</div>
+    <div id="save" class="tool">Save</div>
+    <div id="close" class="tool">Close</div>
     <!-- Message if Javascript is disabled -->
     <noscript><div>Javascript is disabled, things might not work right</div></noscript>
 </div>
@@ -106,7 +106,7 @@ body {
 	<div id="init" class="file open">FILE From C</div>
     <div class="file">FILE From C</div>
     <div class="file">FILE From C</div>
-    <div class="new">+</div>
+    <div id="new" class="new">+</div>
 </div>
 
 <textarea id="editor">hi</textarea>
@@ -114,12 +114,35 @@ body {
 <script>
 var filedata = [""];
 
+// Open a file
 function open() {
-
+	window.alert("Open File");
 }
+document.querySelector("#open").addEventListener("click", open);
+
+// Save current file to disk
 function save() {
-
+	window.alert("Save File");
 }
+document.querySelector("#save").addEventListener("click", save);
+
+// Close current file
+function close() {
+	window.alert("Close File");
+}
+document.querySelector("#close").addEventListener("click", close);
+
+// Create new blank file
+function blank() {
+	window.alert("New File");
+}
+document.querySelector("#new").addEventListener("click", blank);
+
+// Switch current file tab to file id
+function file(id) {
+	window.alert("Switch File: " + id);
+}
+
 </script>
 
 </body>
