@@ -46,22 +46,32 @@ body {
 }
 .file {
 	border: 2px solid black;
+    border-bottom: none;
     margin-top: 5px;
     white-space: nowrap;
 	margin-right: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-family: monospace;
+    font-weight: bold;
 }
 .file:hover {
 	cursor: pointer;
+	background: lightgrey;
+}
+.file:hover {
 	margin-top: 3px;
-    border-bottom: 4px solid black;
+    border-bottom: 2px solid black;
 }
 
 #editor {
 	resize: none;
     outline: none;
+    white-space: nowrap;
+    overflow: scroll;
 	background: none;
 	flex: 1 1 auto;
-	border: 1px solid black;
+	border: 2px solid black;
 }
 </style>
 </head>
