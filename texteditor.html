@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Text Editor</title>
 
-<!-- PWA -->
-<link rel="manifest" href="texteditor.manifest.json" />
-<!-- ios support -->
-<link rel="apple-touch-icon" href="texteditor.png" />
-<meta name="apple-mobile-web-app-status-bar" content="cornflowerblue" />
-<meta name="theme-color" content="cornflowerblue" />
+<link rel="manifest" href="texteditor.manifest.json">
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Text Editor">
+<meta name="apple-mobile-web-app-title" content="Text Editor">
+<meta name="theme-color" content="cornflowerblue">
+<meta name="msapplication-navbutton-color" content="cornflowerblue">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="msapplication-starturl" content="/">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="icon" type="image/png" sizes="72x72" href="texteditor.png">
+<link rel="apple-touch-icon" type="image/png" sizes="72x72" href="texteditor.png">
+
+<title>Text Editor</title>
 
 <style>
 * { margin: 0; }
@@ -267,15 +276,12 @@ textdom.addEventListener("keydown", function(e) {
     }
 }, false);
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function() {
-    navigator.serviceWorker
-      .register("/texteditor.service.js")
-      .then(e=>{})
-      .catch(e=>{})
-  })
-}
+</script>
 
+<script>
+    if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/texteditor.service.js', { scope: '/' });
+    }
 </script>
 
 </body>

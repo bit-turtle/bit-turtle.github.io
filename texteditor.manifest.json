@@ -1,15 +1,15 @@
 {
 	"name": "Text Editor",
-	"short_name": "Text",
-	"start_url": "texteditor.html",
-	"display": "standalone",
+	"description": "A Simple Text Editor",
+	"start_url": "/",
+	"lang": "en-US",
 	"theme_color": "cornflowerblue",
-	"background_color": "lightblue",
-	"orientation": "portrait-primary",
+	"display": "standalone",
 	"icons": [
-		{
-			"src": "/texteditor.png",
-			"type": "image/png", "sizes": "72x72"
-		}
+	  {
+		"src": "texteditor.png",
+		"sizes": "72x72",
+		"type": "image/png"
+	  }
 	]
-}
+  }
