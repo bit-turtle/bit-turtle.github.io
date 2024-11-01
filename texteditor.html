@@ -70,7 +70,7 @@ body {
 #editor {
 	resize: none;
     outline: none;
-    white-space: nowrap;
+    white-space: pre-wrap;
     overflow: scroll;
 	background: none;
 	flex: 1 1 auto;
@@ -223,6 +223,38 @@ function rename() {
     }
 }
 document.querySelector("#name").addEventListener("click", rename);
+
+// Tab Support
+function insertAtCursor (el, text) {
+  text = text || '';
+  if (document.selection) {
+    // IE
+    el.focus();
+    var sel = document.selection.createRange();
+    sel.text = text;
+  } else if (el.selectionStart || el.selectionStart === 0) {
+    // Others
+    var startPos = el.selectionStart;
+    var endPos = el.selectionEnd;
+    el.value = el.value.substring(0, startPos) +
+      text +
+      el.value.substring(endPos, el.value.length);
+    el.selectionStart = startPos + text.length;
+    el.selectionEnd = startPos + text.length;
+  } else {
+    el.value += text;
+  }
+};
+document.querySelector("#editor").addEventListener("keydown", function(e) {
+    var TABKEY = 9;
+    if(e.keyCode == TABKEY) {
+        insertAtCursor(this, "\t");
+    if(e.preventDefault) {
+        e.preventDefault();
+    }
+    return false;
+    }
+}, false);
 
 </script>
 
