@@ -2,7 +2,12 @@
 <html>
 <head>
 <style>
-html, body { height: 95vh }
+* { margin: 0; }
+html { height: 95%; }
+body {
+	height: 100%;
+	padding: 5px;
+}
 
 body {
   background-color: lightblue;
@@ -80,6 +85,7 @@ body {
 <div id="toolbar">
 	<div id="new" class="tool">New</div>
 	<div id="open" class="tool">Open</div>
+    <div id="name" class="tool">Rename</div>
     <div id="save" class="tool">Save</div>
     <div id="close" class="tool">Close</div>
     <!-- Message if Javascript is disabled -->
@@ -92,28 +98,65 @@ body {
 <textarea id="editor">hi</textarea>
 
 <script>
-class File {
-	constructor(name, text) {
-    	this.filename = name;
-        this.text = text;
-        
-    }
-    update(text) {
-    	this.text = text;
-    }
-    content() {
-    	return this.text;
-    }
-    rename(name) {
-    	this.filename = name;
-    }
-    name() {
-    	return this.filename;
+var filedom = document.querySelector("#files");
+var textdom = document.querySelector("#editor");
+
+function tabswitch(id) {
+	return function (event) {
+    	fileswitch(id);
     }
 }
 
-var current = null;
+class File {
+	constructor(id, name, text) {
+    	this.id = id;
+    	this.valid = true;
+    	this.name = name;
+        this.text = text;
+        this.dom = document.createElement("div");
+        this.dom.classList.add("file");
+        this.dom.textContent = name;
+        this.dom.addEventListener("click", tabswitch(this.id));
+        filedom.appendChild(this.dom);
+    }
+    rename(name) { this.name = name; this.dom.textContent = this.name; }
+    focus() { this.dom.className = "file open"; }
+    unfocus() { this.dom.className = "file"; }
+    delete() { this.dom.remove(); }
+    display() { textdom.value = this.text; }
+    update() { this.text = textdom.value; }
+    content() { return this.text; }
+}
+
 var files = [];
+
+var currentid = null;
+var nextid = 0;
+
+function getfile(id) {
+	for (var i = 0; i < files.length; i++) {
+    	if (files[i].id == id) return i;
+    }
+    return null;
+}
+
+function fileswitch(id) {
+	if (currentid != null) {
+    	files[getfile(currentid)].update();
+    	files[getfile(currentid)].unfocus();
+	}
+    currentid = id;
+	files[getfile(currentid)].display();
+	files[getfile(currentid)].focus();
+}
+
+function newfile(name, text) {
+	files.push(new File(nextid, name, text));
+	fileswitch(nextid);
+	nextid++;
+}
+
+newfile("Test", "Thing");
 
 // Open a file
 function open() {
@@ -135,13 +178,21 @@ document.querySelector("#close").addEventListener("click", close);
 
 // Create new blank file
 function blank() {
-	window.alert("New File");
+	newfile("Untitled.txt", "");
 }
 document.querySelector("#new").addEventListener("click", blank);
 
-// Switch current file tab to file id
-function file(id) {
-	window.alert("Switch File: " + id);
+// Rename file
+function rename() {
+	console.log("ok")
+	if (currentid != null) {
+    	files[getfile(currentid)].rename(prompt("Enter File Name:"));
+    }
+}
+document.querySelector("#name").addEventListener("click", rename);
+
+// Rename file
+function rename() {
 }
 
 </script>
