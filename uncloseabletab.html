@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head><title>You Can't Close Me!</title></head>
+    <body>
+        <h1>Can you do it?</h1>
+        <button onclick="window.onbeforeunload = function(){window.alert('The tab can be closed now')}">I'm Done</button>
+        <script>
+            window.onbeforeunload = function(){
+                window.open("https://bit-turtle.github.io/uncloseabletab.html", '_blank').focus();
+            }
+        </script>
+    </body>
+</html>
