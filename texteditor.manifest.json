@@ -3,7 +3,6 @@
 	"short_name":"TextEditor",
 	"start_url":"texteditor.html",
 	"display":"standalone",
-	"background_color":"lightblue",
 	"theme_color":"cornflowerblue",
 	"scope": ".",
 	"description":"A Simple Text Editor.",
