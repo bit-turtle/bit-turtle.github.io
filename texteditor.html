@@ -199,8 +199,10 @@ function close() {
     	files[getfile(currentid)].delete();
         files.splice(getfile(currentid), 1);
         if (files.length > 0) {
-        	currentid = files[Math.min(deletedindex, files.length-1)].id;
-        	fileswitch(currentid);
+        	var newindex = Math.min(deletedindex, files.length-1);
+            currentid = null;
+        	fileswitch(files[newindex].id);
+        	currentid = files[newindex].id;
         }
         else currentid = null;
     }
