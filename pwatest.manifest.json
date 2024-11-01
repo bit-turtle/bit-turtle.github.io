@@ -1,0 +1,17 @@
+{
+	"name":"PWA Test",
+	"short_name":"PWA",
+	"start_url":"pwatest.html",
+	"display":"standalone",
+	"background_color":"#5900b3",
+	"theme_color":"black",
+	"scope": ".",
+	"description":"Tests out PWAs.",
+	"icons":[
+	{
+	"src":"turtle.png",					 
+	"sizes":"250x250",
+	"type":"image/png"
+	}
+]
+}
