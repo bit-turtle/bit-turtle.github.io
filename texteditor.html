@@ -38,10 +38,8 @@ body {
 	cursor: pointer;
     background: lightgrey;
 }
-.new {
-	border-radius: 45%;
-	text-align: center;
-    width: 1.75ch;
+#fileinput {
+	display: none;
 }
 
 #files {
@@ -82,6 +80,8 @@ body {
 </head>
 <body>
 
+<input type="file" id="fileinput"></input>
+
 <div id="toolbar">
 	<div id="new" class="tool">New</div>
 	<div id="open" class="tool">Open</div>
@@ -98,8 +98,11 @@ body {
 <textarea id="editor">hi</textarea>
 
 <script>
+const defaultname = "untitled.txt";
+
 var filedom = document.querySelector("#files");
 var textdom = document.querySelector("#editor");
+var fileinput = document.querySelector("#fileinput");
 
 function tabswitch(id) {
 	return function (event) {
@@ -125,7 +128,6 @@ class File {
     delete() { this.dom.remove(); }
     display() { textdom.value = this.text; }
     update() { this.text = textdom.value; }
-    content() { return this.text; }
 }
 
 var files = [];
@@ -156,44 +158,71 @@ function newfile(name, text) {
 	nextid++;
 }
 
-newfile("Test", "Thing");
+newfile(defaultname, "");
+
+// Process file when file chosen
+function process() {
+	fileinput.files[0].text().then(function(result){
+    	newfile(fileinput.files[0].name, result);
+    });
+}
+fileinput.addEventListener("change", process);
 
 // Open a file
 function open() {
-	window.alert("Open File");
+	fileinput.click();
 }
 document.querySelector("#open").addEventListener("click", open);
 
+function download(content, mimeType, filename){
+  const a = document.createElement('a') // Create "a" element
+  const blob = new Blob([content], {type: mimeType}) // Create a blob (file-like object)
+  const url = URL.createObjectURL(blob) // Create an object URL from blob
+  a.setAttribute('href', url) // Set "a" element link
+  a.setAttribute('download', filename) // Set download filename
+  a.click() // Start downloading
+}
+
 // Save current file to disk
 function save() {
-	window.alert("Save File");
+	if (currentid != null) {
+    	files[getfile(currentid)].update();
+    	download(files[getfile(currentid)].text, "text/plain", files[getfile(currentid)].name);
+    }
 }
 document.querySelector("#save").addEventListener("click", save);
 
 // Close current file
 function close() {
-	window.alert("Close File");
+	if (currentid != null && window.confirm("Close File? (Make sure you saved it first!)") == true) {
+    	var deletedindex = getfile(currentid);
+    	files[getfile(currentid)].delete();
+        files.splice(getfile(currentid), 1);
+        if (files.length > 0) {
+        	currentid = files[Math.min(deletedindex, files.length-1)].id;
+        	fileswitch(currentid);
+        }
+        else currentid = null;
+    }
+    if (currentid == null) {
+    	newfile(defaultname, "");
+    }
 }
 document.querySelector("#close").addEventListener("click", close);
 
 // Create new blank file
 function blank() {
-	newfile("Untitled.txt", "");
+	newfile(defaultname, "");
 }
 document.querySelector("#new").addEventListener("click", blank);
 
 // Rename file
 function rename() {
-	console.log("ok")
 	if (currentid != null) {
-    	files[getfile(currentid)].rename(prompt("Enter File Name:"));
+    	files[getfile(currentid)].rename(window.prompt("Enter File Name:"));
     }
 }
 document.querySelector("#name").addEventListener("click", rename);
-
-// Rename file
-function rename() {
-}
 
 </script>
 
