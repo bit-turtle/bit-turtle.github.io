@@ -1,0 +1,15 @@
+{
+	"name": "Text Editor",
+	"short_name": "Text",
+	"start_url": "texteditor.html",
+	"display": "standalone",
+	"theme_color": "cornflowerblue",
+	"background_color": "lightblue",
+	"orientation": "portrait-primary",
+	"icons": [
+		{
+			"src": "/texteditor.png",
+			"type": "image/png", "sizes": "72x72"
+		}
+	]
+}

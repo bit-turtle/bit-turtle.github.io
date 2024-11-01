@@ -2,6 +2,14 @@
 <html>
 <head>
 <title>Text Editor</title>
+
+<!-- PWA -->
+<link rel="manifest" href="texteditor.manifest.json" />
+<!-- ios support -->
+<link rel="apple-touch-icon" href="texteditor.png" />
+<meta name="apple-mobile-web-app-status-bar" content="cornflowerblue" />
+<meta name="theme-color" content="cornflowerblue" />
+
 <style>
 * { margin: 0; }
 html { height: 95%; }
@@ -248,9 +256,9 @@ function insertAtCursor (el, text) {
     el.value += text;
   }
 };
-document.querySelector("#editor").addEventListener("keydown", function(e) {
+textdom.addEventListener("keydown", function(e) {
     var TABKEY = 9;
-    if(e.keyCode == TABKEY) {
+    if(e.keyCode == TABKEY && document.activeElement == textdom) {
         insertAtCursor(this, "\t");
     if(e.preventDefault) {
         e.preventDefault();
@@ -258,6 +266,15 @@ document.querySelector("#editor").addEventListener("keydown", function(e) {
     return false;
     }
 }, false);
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker
+      .register("/texteditor.service.js")
+      .then(e=>{})
+      .catch(e=>{})
+  })
+}
 
 </script>
 
