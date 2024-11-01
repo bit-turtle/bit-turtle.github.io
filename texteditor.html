@@ -277,9 +277,9 @@ textdom.addEventListener("keydown", function(e) {
 }, false);
 
 // Are you sure close tab message
-window.onbeforeunload = function(){
-  return "Are you sure? (Make sure everything is saved!)";
-}
+window.addEventListener('beforeunload', (event) => {
+  event.returnValue = `Are you sure you want to exit? (Make sure you saved everything!)`;
+});
 
 </script>
 
