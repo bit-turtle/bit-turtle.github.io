@@ -1,36 +1,19 @@
-const CACHE_NAME = `simple-texteditor`;
+var staticCacheName = "texteditor";
 
-// Use the install event to pre-cache all initial resources.
-self.addEventListener('install', event => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    cache.addAll([
-      '/',
-      '/texteditor.html',
-      '/texteditor.png'
-    ]);
-  })());
+self.addEventListener("install", function (e) {
+e.waitUntil(
+	caches.open(staticCacheName).then(function (cache) {
+	return cache.addAll(["/", "/texteditor.html"]);
+	})
+);
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith((async () => {
-    const cache = await caches.open(CACHE_NAME);
+self.addEventListener("fetch", function (event) {
+console.log(event.request.url);
 
-    // Get the resource from the cache.
-    const cachedResponse = await cache.match(event.request);
-    if (cachedResponse) {
-      return cachedResponse;
-    } else {
-        try {
-          // If the resource was not in the cache, try the network.
-          const fetchResponse = await fetch(event.request);
-
-          // Save the resource in the cache and return it.
-          cache.put(event.request, fetchResponse.clone());
-          return fetchResponse;
-        } catch (e) {
-          // The network failed.
-        }
-    }
-  })());
+event.respondWith(
+	caches.match(event.request).then(function (response) {
+	return response || fetch(event.request);
+	})
+);
 });

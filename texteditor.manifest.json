@@ -1,15 +1,17 @@
 {
-	"name": "Text Editor",
-	"description": "A Simple Text Editor",
-	"start_url": "/",
-	"lang": "en-US",
-	"theme_color": "cornflowerblue",
-	"display": "standalone",
-	"icons": [
-	  {
-		"src": "texteditor.png",
-		"sizes": "72x72",
-		"type": "image/png"
-	  }
-	]
-  }
+	"name":"Text Editor",
+	"short_name":"TextEditor",
+	"start_url":"texteditor.html",
+	"display":"standalone",
+	"background_color":"lightblue",
+	"theme_color":"cornflowerblue",
+	"scope": ".",
+	"description":"A Simple Text Editor.",
+	"icons":[
+	{
+	"src":"texteditor.icon.png",
+	"sizes":"250x250",
+	"type":"image/png"
+	}
+]
+}
