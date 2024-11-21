@@ -10,82 +10,84 @@ Create Window
 
 <script>
 
-var win = null;
-var x = screen.width/2;
-var y = screen.height/2;
-var w = 200;
-var h = 200;
+var nextid = 0;
+var windows = [];
+
 var mw = 200;
 var mh = 200;
-var vx = 2;
-var vy = 3;
 
-var started = false;
 
 function start() {
-	if (started) return;
-	started = true;
-	win = window.open("about:blank","Window","popup");
-	win.moveTo(x,y);
-    win.resizeTo(w,h);
-    
-    //Disable Button
-    document.getElementById("button").disabled = true;
+	windows.push({
+    	win: window.open("about:blank",nextid.toString(),"popup"),
+    	x: screen.width/2,
+        y: screen.height/2,
+        w: 200,
+        h: 200,
+        vx: 2,
+        vy: 3
+    });
+	windows[nextid].win.moveTo(windows[nextid].x,windows[nextid].y);
+    windows[nextid].win.resizeTo(windows[nextid].w,windows[nextid].h);
+    nextid++;
 }
 
-function move() {
-	vy += 0.005; // Gravity
-	x += vx;
-    y += vy;
-    if (x > screen.width-mw/2) {
-	    x = screen.width-mw/2;
-        vx *= -1;
+function move(window) {
+	windows[window].vy += 0.005; // Gravity
+	windows[window].x += windows[window].vx;
+    windows[window].y += windows[window].vy;
+    if (windows[window].x > screen.width-mw/2) {
+	    windows[window].x = screen.width-mw/2;
+        windows[window].vx *= -1;
     }
-    if (y > screen.height-mh/2) {
-    	y = screen.height-mh/2;
-        vy *= -1;
+    if (windows[window].y > screen.height-mh/2) {
+    	windows[window].y = screen.height-mh/2;
+        windows[window].vy *= -1;
     }
-    if (x < 0-mw/2) {
-    	x = 0-mw/2;
-        vx *= -1;
+    if (windows[window].x < 0-mw/2) {
+    	windows[window].x = 0-mw/2;
+        windows[window].vx *= -1;
     }
-    if (y < 0-mh/2) {
-    	y = 0-mh/2;
-        vy *= -1;
+    if (windows[window].y < 0-mh/2) {
+    	windows[window].y = 0-mh/2;
+        windows[window].vy *= -1;
     }
 }
 
-function resize() {
-	if (y+mh > screen.height) {
-    	var difference = ( (y+mh) - screen.height );
-    	w = mw + difference;
-        h = mh - difference;
+function resize(window) {
+	if (windows[window].y+mh > screen.height) {
+    	var difference = ( (windows[window].y+mh) - screen.height );
+    	windows[window].w = mw + difference;
+        windows[window].h = mh - difference;
     }
-    if (y < 0) {
-    	var difference = ( -y ); 
-    	w = mw + difference;
-        h = mh - difference;
+    if (windows[window].y < 0) {
+    	var difference = ( -windows[window].y ); 
+    	windows[window].w = mw + difference;
+        windows[window].h = mh - difference;
     }
-    if (x+mw > screen.width) {
-    	var difference = ( (x+mw) - screen.width );
-        w = mw - difference;
-        h = mh + difference;
+    if (windows[window].x+mw > screen.width) {
+    	var difference = ( (windows[window].x+mw) - screen.width );
+        windows[window].w = mw - difference;
+        windows[window].h = mh + difference;
     }
-    if (x < 0) {
-    	var difference = ( -x );
-        w = mw - difference;
-        h = mh + difference;
+    if (windows[window].x < 0) {
+    	var difference = ( -windows[window].x );
+        windows[window].w = mw - difference;
+        windows[window].h = mh + difference;
     }
-    // Safety Checks
-    if (w < 100) w = 100;
-    if (h < 100) h = 100;
+    // Safety Checkswindows[window].
+    if (windows[window].w < 100) windows[window].w = 100;
+    if (windows[window].h < 100) windows[window].h = 100;
 }
 
 function update() {
-	move();
-    resize();
-    win.moveTo(x-w/2+mw/2,y-h/2+mh/2);
-    win.resizeTo(w,h);
+	for (var w = 0; w < windows.length; w++) {
+    	windows[w].win.focus();
+		move(w);
+		resize(w);
+    	windows[w].win.moveTo(windows[w].x-windows[w].w/2+mw/2,windows[w].y-windows[w].h/2+mh/2);
+    	windows[w].win.resizeTo(windows[w].w,windows[w].h);
+    }
 }
 
 setInterval(update,1);
