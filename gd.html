@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            GD Gamemodes
+        </title>
+        <script src="p5.js">
+        </script>
+    </head>
+    <body>
+        <h1>Geometry Dash Gamemodes</h1>
+        <main>
+
+        </main>
+        <script>
+// GD Gamemodes
+
+// Previous value of keyIsPressed
+var prev = false;
+
+var cube = {
+  vel: 0,
+  alt: 0,
+  jump: false
+};
+
+var ship = {
+  ang: 0,
+  alt: 0
+};
+
+var robot = {
+  vel: 0,
+  alt: 0,
+  gas: 0,
+  jump: false
+};
+
+var swing = {
+  vel: 0,
+  alt: 0,
+  tog: false
+};
+
+var ball = {
+  vel: 0,
+  alt: 0,
+  tog: false,
+  jump: false
+};
+
+var ufo = {
+  vel: 0,
+  alt: 0
+};
+
+var wave = {
+  alt: 0
+}
+
+function setup() {
+  createCanvas(400, 400);
+  background(0);
+  fill("white");
+  textSize(50);
+  text("GD Gamemodes", 10, 200);
+}
+
+function draw() {
+  background('rgba(0,0,0,0.05)');
+  noStroke();
+  { // Cube
+  if (keyIsPressed && cube.jump) { cube.vel = -5; cube.jump = false; }
+  cube.vel+=deltaTime*0.01;
+  cube.alt+=cube.vel;
+  if (cube.alt > 400) { cube.alt = 400; cube.vel = 0; cube.jump = true; }
+  if (cube.alt < 0) { cube.alt = 0; cube.vel = 0; }
+  fill("lightgreen");
+  rect(50,cube.alt-5,10,10);
+  }
+  { // Ship
+  if (keyIsPressed) ship.ang-=deltaTime*0.01;
+  else ship.ang+=deltaTime*0.01;
+  ship.alt += ship.ang;
+  if (ship.alt > 400) { ship.alt = 400; ship.ang = 0; }
+  if (ship.alt < 0) { ship.alt = 0; ship.ang = 0; }
+  fill("red");
+  rect(100,ship.alt-5,10,10);
+  }
+  { // Robot
+  if (keyIsPressed && robot.jump && robot.gas > 0) { robot.vel = -deltaTime*0.1; robot.gas -= deltaTime*0.001; }
+  else robot.vel+=deltaTime*0.01;
+  if (prev && !keyIsPressed) robot.jump = false;
+  robot.alt+=robot.vel;
+  if (robot.alt > 400) { robot.alt = 400; robot.vel = 0; robot.gas = 1; robot.jump = true; }
+  if (robot.alt < 0) { robot.alt = 0; robot.vel = 0; }
+  fill("pink");
+  rect(150,robot.alt-5,10,10);
+  }
+  { // Swing copter
+  if (keyIsPressed && !prev) swing.tog = !swing.tog;
+  if (swing.tog) swing.vel-=deltaTime*0.01;
+  else swing.vel+=deltaTime*0.01;
+  swing.alt+=swing.vel;
+  if (swing.alt > 400) { swing.alt = 400; swing.vel = 0; }
+  if (swing.alt < 0) { swing.alt = 0; swing.vel = 0; }
+  fill("blue");
+  rect(200,swing.alt-5,10,10);
+  }
+    { // Ball
+  if (keyIsPressed && !prev && ball.jump) { ball.tog = !ball.tog; ball.jump = false;}
+  if (ball.tog) ball.vel-=deltaTime*0.01;
+  else ball.vel+=deltaTime*0.01;
+  ball.alt+=ball.vel;
+  if (ball.alt > 400) { ball.alt = 400; ball.vel = 0; ball.jump = true; }
+  if (ball.alt < 0) { ball.alt = 0; ball.vel = 0; ball.jump = true; }
+  fill("yellow");
+  rect(250,ball.alt-5,10,10);
+  }
+  { // UFO
+  if (keyIsPressed && !prev) ufo.vel = -5;
+  ufo.vel+=deltaTime*0.01;
+  ufo.alt+=ufo.vel;
+  if (ufo.alt > 400) { ufo.alt = 400; ufo.vel = 0; }
+  if (ufo.alt < 0) { ufo.alt = 0; ufo.vel = 0; }
+  fill("green");
+  rect(300,ufo.alt-5,10,10);
+  }
+  { // Wave
+  if (keyIsPressed) wave.alt -= deltaTime*0.5;
+  else wave.alt += deltaTime*0.5;
+  if (wave.alt > 400) wave.alt = 400;
+  if (wave.alt < 0) wave.alt = 0;
+  fill("purple");
+  rect(350,wave.alt-5,10,10);
+  }
+  // Previous key
+  prev = keyIsPressed;
+}
+        </script>
+    </body>
+</html>
