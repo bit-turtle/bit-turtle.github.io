@@ -79,7 +79,7 @@ class Program {
     // Skip if not running
     if (!this.running) return;
     // Process instruction
-    cycles ++;
+    this.cycles ++;
     switch (this.instruction().type) {
       case STP:
         this.running = false;
