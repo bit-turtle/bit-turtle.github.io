@@ -1,10 +1,19 @@
 <html>
     <head>
         <title>WDR Paper Computer Emulator</title>
-        <script src="wdrpapercomputer.js"></script>
+        <style>
+        	table, tr, th, td {
+            	border: 2px solid black;
+            }
+        </style>
+        <script src="https://bit-turtle.github.io/wdrpapercomputer.js"></script>
     </head>
     <body>
         <h1>WDR Paper Computer Emulator</h1>
+        <button type="button" id="toggle">Start</button>
+        <p>Speed: <input type="number" id="speed" value="2"></input><br>
+        Line: <span id="line">?</span><br>
+        Cycles: <span id="cycles">?</span> <span id="info"></span></p>
         <table id="registers">
             <tr>
                 <th>Register</th>
@@ -12,7 +21,79 @@
             </tr>
         </table>
         <script>
-
+        // Library init
+        var time = Date.now();
+        const register_count = 10;
+        var delay;
+        var program = new Program("inc 0\njmp 0",
+        register_count);
+        var running = false;
+        
+        // Table
+        const table = document.getElementById("registers");
+        const line = document.getElementById("line");
+        const cycles = document.getElementById("cycles");
+        const togglebutton = document.getElementById("toggle");
+        const speedslider = document.getElementById("speed");
+        delay = 1/speedslider.value*1000;
+        var registers = [];
+        function addRegister() {
+          var node = document.createElement("tr");
+          var id = document.createElement("td");
+          id.appendChild(document.createTextNode(registers.length));
+          node.appendChild(id);
+          var data = document.createElement("td");
+          data.appendChild(document.createTextNode("0"));
+          node.appendChild(data);
+          table.appendChild(node);
+          registers.push(data);
+        }
+        function addRegisters(ammount) {
+        	for (;ammount > 0;ammount--) addRegister();
+        }
+        addRegisters(register_count);
+        function updateRegisters() {
+        	for (var reg in registers)
+        		registers[reg].textContent = program.registers[reg];
+        }
+        function updateValues() {
+        	line.textContent = program.counter+1;
+          cycles.textContent = program.cycles;
+        }
+        function update() {
+        	 updateValues();
+           updateRegisters();
+        }
+        function toggle() {
+        	if (running) {
+            	running = false;
+                togglebutton.textContent = "Start";
+            }
+            else {
+            	running = true;
+                togglebutton.textContent = "Stop";
+            }
+        }
+        togglebutton.addEventListener("click", toggle);
+        function speed() {
+        	delay = 1/speedslider.value * 1000;
+        }
+        speedslider.addEventListener("input", speed);
+        var timer = 0;
+        function clock() {
+        	var newtime = Date.now();
+        	var delta = newtime - time;
+            time = newtime;
+            timer += delta;
+            while (timer > delay) {
+            	timer -= delay;
+        		if (running) program.clock();
+                else break;
+            }
+            update();
+        }
+        window.setInterval(clock, 50);
+        
         </script>
     </body>
 </html>
