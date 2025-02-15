@@ -50,26 +50,30 @@ class Program {
     // Skip if empty
     if (instruction == "") return;
     // Encode instruction
-    this.code += instruction + "\n";
     switch (instruction) {
       case "stp":
         this.instructions.push(new Instruction(STP));
+        this.code += "stp\n";
         break;
       case "isz":
         if (isNaN(value)) throw "Expected Number as Register Operand";
         this.instructions.push(new Instruction(ISZ, value));
+        this.code += "isz "+value+"\n";
         break;
       case "jmp":
         if (isNaN(value)) throw "Expected Number as Address Operand";
         this.instructions.push(new Instruction(JMP, value));
+        this.code += "jmp "+value+"\n";
         break;
       case "inc":
         if (isNaN(value)) throw "Expected Number as Register Operand";
         this.instructions.push(new Instruction(INC, value));
+        this.code += "inc "+value+"\n";
         break;
       case "dec":
         if (isNaN(value)) throw "Expected Number as Register Operand";
         this.instructions.push(new Instruction(DEC, value));
+        this.code += "dec "+value+"\n";
         break;
       default:
         throw "Unknown Instruction: " + "\"" + token[0] + "\"";
