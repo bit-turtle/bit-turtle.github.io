@@ -39,7 +39,7 @@ class Program {
       }
     }
   }
-  reset() { this.running = true; this.counter = 0; this.registers.fill(0); }
+  reset() { this.running = true; this.counter = 0; this.cycles = 0; this.registers.fill(0); }
   instruction() { return (this.counter < this.instructions.length) ? this.instructions[this.counter] : Instruction(STP); }
   compile(line) {
     // Separate out comments and split by spaces and make non case sensitive
