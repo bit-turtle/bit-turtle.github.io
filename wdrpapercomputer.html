@@ -2,16 +2,22 @@
     <head>
         <title>WDR Paper Computer Emulator</title>
         <style>
-        	table, tr, th, td {
+        
+        	table, tr, th, td, p {
             	border: 2px solid black;
               vertical-align: top;
-              width: 100%
+              margin: auto;
+              min-width: 50px;
             }
            input {
              width: 50px;
            }
            pre {
              margin: 0px;
+           }
+           pre {
+             width: 80vw;
+             min-height: 20vh;
            }
         </style>
         <script src="https://bit-turtle.github.io/wdrpapercomputer.js"></script>
@@ -22,10 +28,13 @@
         Source Code: <a href="https://bit-turtle.github.io/wdrpapercomputer.js">wdrpapercomputer.js</a><br>
         Wikipedia Page: <a href="https://en.wikipedia.org/wiki/WDR_paper_computer">WDR Paper Computer</a>
         </h3>
-        </button>
         
         
         <table>
+        <tr>
+        <th colspan="2">
+          WDR Paper Computer Emulator
+        </th></tr>
         <tr>
           <td>
           <table>
@@ -84,15 +93,34 @@
         </tr>
         <tr>
           <td>
-            <pre id="code">
-        no code
-        </pre>
+            <pre id="code">no code</pre>
           </td>
         </tr>
         </table>
         </td>
         </tr>
         </table>
+        <br>
+         <table>
+              <tr>
+                <th>Program Editor</th>
+                <td>
+                  <button id="use" type="button">
+                  Use Program
+                  </button>
+                  </td>
+                  <th>
+                    <span id="error"></span>
+                  </th>
+                </tr>
+              <tr>
+                <td colspan="3">
+                  <pre id="src" contenteditable="true">
+                    wow
+                  </pre>
+                </td>
+              </tr>
+            </table>
         
         <script>
         // Library init
@@ -113,6 +141,10 @@
         const speedslider = document.getElementById("speed");
         const info = document.getElementById("info");
         const code = document.getElementById("code");
+        const error = document.getElementById("error");
+        const usebutton = document.getElementById("use");
+        
+        const src = document.getElementById("src");
         delay = 1/speedslider.value*1000;
         var registers = [];
         function addRegister() {
@@ -194,7 +226,19 @@
           updateText();
         }
         resetbutton.addEventListener("click", reset);
-        
+        function use() {
+        try {
+        	var newprog = new Program(src.textContent,register_count);
+          program = newprog;
+          running = false;
+          error.textContent = "Success!";
+          update();
+          }
+          catch (error) {
+          	error.textContent = error;
+          }
+        }
+        usebutton.addEventListener("click", use);
         </script>
     </body>
 </html>
