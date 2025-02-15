@@ -4,22 +4,96 @@
         <style>
         	table, tr, th, td {
             	border: 2px solid black;
+              vertical-align: top;
+              width: 100%
             }
+           input {
+             width: 50px;
+           }
+           pre {
+             margin: 0px;
+           }
         </style>
         <script src="https://bit-turtle.github.io/wdrpapercomputer.js"></script>
     </head>
     <body>
         <h1>WDR Paper Computer Emulator</h1>
+        <h3>
+        Source Code: <a href="https://bit-turtle.github.io/wdrpapercomputer.js">wdrpapercomputer.js</a><br>
+        Wikipedia Page: <a href="https://en.wikipedia.org/wiki/WDR_paper_computer">WDR Paper Computer</a>
+        </h3>
+        </button>
+        
+        
+        <table>
+        <tr>
+          <td>
+          <table>
+          <tr>
+            <td>
         <button type="button" id="toggle">Start</button>
-        <p>Speed: <input type="number" id="speed" value="2"></input><br>
-        Line: <span id="line">?</span><br>
-        Cycles: <span id="cycles">?</span> <span id="info"></span></p>
+        <button type="button" id="step">Step</button>
+        <button type="button" id="reset">Reset</button>
+        </td>
+        <th>
+        <span id="info">Program Ready</span></th>
+          </tr>
+          <tr>
+            <td colspan="2">
+              
+        Speed: <input type="number" id="speed" value="2" min="0"> Hertz
+            </td>
+          </tr>
+          </table>
+        </td>
+        <td>
+        <table>
+        <tr>
+          <th>
+            Line
+          </th>
+          <td>
+            <span id="line">?</span>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            Cycles
+          </th>
+          <td>
+            <span id="cycles">?</span>
+          </td>
+        </tr>
+        </table>
+        </td>
+        </tr>
+        <tr><td>
         <table id="registers">
             <tr>
                 <th>Register</th>
                 <th>Data</th>
             </tr>
         </table>
+        </td>
+        <td>
+        <table>
+        <tr>
+          <th>
+            Program
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <pre id="code">
+        no code
+        </pre>
+          </td>
+        </tr>
+        </table>
+        </td>
+        </tr>
+        </table>
+        
         <script>
         // Library init
         var time = Date.now();
@@ -34,7 +108,11 @@
         const line = document.getElementById("line");
         const cycles = document.getElementById("cycles");
         const togglebutton = document.getElementById("toggle");
+        const stepbutton = document.getElementById("step");
+        const resetbutton = document.getElementById("reset");
         const speedslider = document.getElementById("speed");
+        const info = document.getElementById("info");
+        const code = document.getElementById("code");
         delay = 1/speedslider.value*1000;
         var registers = [];
         function addRegister() {
@@ -60,19 +138,31 @@
         	line.textContent = program.counter+1;
           cycles.textContent = program.cycles;
         }
+        function updateText() {
+        	if (running)
+          	togglebutton.textContent = "Stop";
+          else
+          	togglebutton.textContent = "Start";
+          if (!program.running)
+          	info.textContent = "Program Ended";
+          else
+          	info.textContent = "Program Ready";
+        }
+        function updateCode() {
+        	code.textContent = program.code;
+        }
         function update() {
         	 updateValues();
            updateRegisters();
+           updateText();
+           updateCode();
         }
         function toggle() {
-        	if (running) {
-            	running = false;
-                togglebutton.textContent = "Start";
-            }
-            else {
-            	running = true;
-                togglebutton.textContent = "Stop";
-            }
+        	if (running)
+            running = false;
+          else
+            running = true;
+          updateText();
         }
         togglebutton.addEventListener("click", toggle);
         function speed() {
@@ -85,14 +175,25 @@
         	var delta = newtime - time;
             time = newtime;
             timer += delta;
-            while (timer > delay) {
+            if (delay > 0) while (timer > delay) {
             	timer -= delay;
-        		if (running) program.clock();
-                else break;
+        			if (running) program.clock();
+              else break;
             }
             update();
         }
         window.setInterval(clock, 50);
+        function step() {
+        	program.clock();
+          update();
+        }
+        stepbutton.addEventListener("click", step);
+        function reset() {
+        	program.reset();
+          running = false;
+          updateText();
+        }
+        resetbutton.addEventListener("click", reset);
         
         </script>
     </body>
