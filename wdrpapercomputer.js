@@ -129,6 +129,9 @@ class Program {
       // Additional Instuctions
       case INP:
         this.registers[this.instruction().value] = parseInt(window.prompt("Program Input"));
+        while (isNaN(this.registers[this.instruction().value])) {
+          this.registers[this.instruction().value] = parseInt(window.prompt("Program Input (Must be a Number)"));
+        }
         this.counter ++;
         break;
       case DAT:
