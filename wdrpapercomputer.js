@@ -1,15 +1,22 @@
 // WDR Paper Computer Emulator
 
 // Instruction descriptor
+
+// Default Instructions
 const STP = 0;
 const ISZ = 1;
 const JMP = 2;
 const INC = 3;
 const DEC = 4;
+// Additional Instructions
+const INP = 5;
+const DAT = 6;
+
 class Instruction {
-  constructor(type, value = null) {
+  constructor(type, value = null, operand = null) {
     this.type = type;
     this.value = value;
+    this.operand = operand;
   }
 }
 
@@ -47,6 +54,7 @@ class Program {
     // Get Instruction
     var instruction = token[0];
     var value = parseInt(token[1]);
+    var operand = parseInt(token[2]);
     // Skip if empty
     if (instruction == "") return;
     // Encode instruction
@@ -75,6 +83,19 @@ class Program {
         this.instructions.push(new Instruction(DEC, value));
         this.code += "dec "+value+"\n";
         break;
+      // Additional Intructions
+      case "inp":
+        if (isNaN(value)) throw "Expected Number as Register Operand";
+        this.instructions.push(new Instruction(INP, value));
+        this.code += "inp "+value+"\n";
+        break;
+      case "dat":
+        if (isNaN(value)) throw "Expected Number as Register Operand";
+        if (isNaN(operand)) throw "Expected Number as Value Operand";
+        this.instructions.push(new Instruction(DAT, value, operand));
+        this.code += "dat "+value+" "+operand+"\n";
+        break;
+
       default:
         throw "Unknown Instruction: " + "\"" + token[0] + "\"";
     }
@@ -103,6 +124,15 @@ class Program {
         break;
       case DEC:
         this.registers[this.instruction.value] --;
+        this.counter ++;
+        break;
+      // Additional Instuctions
+      case INP:
+        this.registers[this.instruction().value] = parseInt(window.prompt("Program Input"));
+        this.counter ++;
+        break;
+      case DAT:
+        this.registers[this.instruction().value] = this.instruction().operand;
         this.counter ++;
         break;
     }
