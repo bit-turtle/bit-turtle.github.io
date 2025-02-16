@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>WDR Paper Computer Emulator</title>
@@ -7,7 +8,6 @@
             	border: 2px solid black;
               vertical-align: top;
               margin: auto;
-              min-width: 50px;
             }
            input {
              width: 50px;
@@ -15,9 +15,8 @@
            pre {
              margin: 0px;
            }
-           pre {
-             width: 80vw;
-             min-height: 20vh;
+           button {
+             width: 100%
            }
         </style>
         <script src="https://bit-turtle.github.io/wdrpapercomputer.js"></script>
@@ -28,7 +27,6 @@
         Source Code: <a href="https://bit-turtle.github.io/wdrpapercomputer.js">wdrpapercomputer.js</a><br>
         Wikipedia Page: <a href="https://en.wikipedia.org/wiki/WDR_paper_computer">WDR Paper Computer</a>
         </h3>
-        
         
         <table>
         <tr>
@@ -100,6 +98,7 @@
         </td>
         </tr>
         </table>
+        
         <br>
          <table>
               <tr>
@@ -110,7 +109,7 @@
                   </button>
                   </td>
                   <th>
-                    <span id="error"></span>
+                    <span id="error">Try Writing a Program!</span>
                   </th>
                 </tr>
               <tr>
@@ -121,13 +120,79 @@
                 </td>
               </tr>
             </table>
+            
+            <br>
+        <table>
+        <tr>
+          <th>Instruction</th>
+          <th>Function</th>
+        </tr>
+        <tr>
+          <td>stp</td>
+          <td>Stops/Ends the Program</td>
+        </tr>
+        <tr>
+          <td>isz [register number]</td>
+          <td>
+            Skips the next line if the register's value is 0
+          </td>
+        </tr>
+        <tr>
+          <td>jmp [line number]</td>
+          <td>Make the program run from a certain line number</td>
+        </tr>
+        <tr>
+          <td>
+            inc [register number]
+          </td>
+          <td>
+            Increment a certain register
+          </td>
+        </tr>
+        <tr>
+          <td>
+            dec [register number]
+          </td>
+          <td>
+            Decrements a certain register
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+          <b>Additional Instructions:</b>
+          </td>
+        </tr>
+        <tr>
+          <td>inp [register number]</td>
+          <td>Stores the returned value from a prompt to the user</td>
+        </tr>
+        <tr>
+          <td>dat [register number] [value]</td>
+          <td>Stores a constant value in a register</td>
+        </tr>
+        </table>
         
         <script>
         // Library init
         var time = Date.now();
         const register_count = 10;
         var delay;
-        var program = new Program("inc 0\njmp 0",
+        var default_program = `# Program to add two numbers
+# Get values from user
+inp 0
+inp 1
+# Jump to the loop check
+jmp 6
+# Adding loop
+inc 0
+dec 1
+# Loop check: Loop again if register 1 is still not 0
+isz 1
+jmp 4
+# End of program
+stp
+# Result is in register 0`;
+        var program = new Program(default_program,
         register_count);
         var running = false;
         
@@ -145,6 +210,7 @@
         const usebutton = document.getElementById("use");
         
         const src = document.getElementById("src");
+        src.textContent = default_program;
         delay = 1/speedslider.value*1000;
         var registers = [];
         function addRegister() {
@@ -228,7 +294,7 @@
         resetbutton.addEventListener("click", reset);
         function use() {
         try {
-        	var newprog = new Program(src.textContent,register_count);
+        	var newprog = new Program(src.innerText,register_count);
           program = newprog;
           running = false;
           error.textContent = "Success!";
