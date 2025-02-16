@@ -110,7 +110,7 @@ class Program {
         this.running = false;
         break;
       case ISZ:
-        if (this.registers[this.instruction.value] == 0)
+        if (this.registers[this.instruction().value] == 0)
           this.counter += 2;
         else
           this.counter ++;
