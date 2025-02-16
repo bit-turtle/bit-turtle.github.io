@@ -123,7 +123,7 @@ class Program {
         this.counter ++;
         break;
       case DEC:
-        this.registers[this.instruction.value] --;
+        this.registers[this.instruction().value] --;
         this.counter ++;
         break;
       // Additional Instuctions
