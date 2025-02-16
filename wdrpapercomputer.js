@@ -95,7 +95,7 @@ class Program {
           this.counter ++;
         break;
       case JMP:
-        this.counter = this.instruction().value;
+        this.counter = this.instruction().value-1;
         break;
       case INC:
         this.registers[this.instruction().value] ++;
