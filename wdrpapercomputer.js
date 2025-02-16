@@ -110,7 +110,7 @@ class Program {
         this.running = false;
         break;
       case ISZ:
-        if (this.registers[this.instruction().value] == 0)
+        if (this.registers[this.instruction().value-1] == 0)
           this.counter += 2;
         else
           this.counter ++;
@@ -119,23 +119,23 @@ class Program {
         this.counter = this.instruction().value-1;
         break;
       case INC:
-        this.registers[this.instruction().value] ++;
+        this.registers[this.instruction().value-1] ++;
         this.counter ++;
         break;
       case DEC:
-        this.registers[this.instruction().value] --;
+        this.registers[this.instruction().value-1] --;
         this.counter ++;
         break;
       // Additional Instuctions
       case INP:
-        this.registers[this.instruction().value] = parseInt(window.prompt("Program Input"));
+        this.registers[this.instruction().value-1] = parseInt(window.prompt("Program Input"));
         while (isNaN(this.registers[this.instruction().value])) {
-          this.registers[this.instruction().value] = parseInt(window.prompt("Program Input (Must be a Number)"));
+          this.registers[this.instruction().value-1] = parseInt(window.prompt("Program Input (Must be a Number)"));
         }
         this.counter ++;
         break;
       case DAT:
-        this.registers[this.instruction().value] = this.instruction().operand;
+        this.registers[this.instruction().value-1] = this.instruction().operand;
         this.counter ++;
         break;
     }

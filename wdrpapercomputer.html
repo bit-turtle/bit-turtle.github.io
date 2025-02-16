@@ -179,19 +179,19 @@
         var delay;
         var default_program = `# Program to add two numbers
 # Get values from user
-inp 0
 inp 1
+inp 2
 # Jump to the loop check
 jmp 6
 # Adding loop
-inc 0
-dec 1
-# Loop check: Loop again if register 1 is still not 0
-isz 1
+inc 1
+dec 2
+# Loop check: Loop again if register 2 is still not 0
+isz 2
 jmp 4
 # End of program
 stp
-# Result is in register 0`;
+# Result is in register 1`;
         var program = new Program(default_program,
         register_count);
         var running = false;
@@ -216,7 +216,7 @@ stp
         function addRegister() {
           var node = document.createElement("tr");
           var id = document.createElement("td");
-          id.appendChild(document.createTextNode(registers.length));
+          id.appendChild(document.createTextNode(registers.length+1));
           node.appendChild(id);
           var data = document.createElement("td");
           data.appendChild(document.createTextNode("0"));
