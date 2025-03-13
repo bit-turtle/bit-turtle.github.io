@@ -21,10 +21,23 @@
 
 <style>
 * { margin: 0; }
-html { height: 95%; }
 body {
 	height: 100%;
 	padding: 5px;
+}
+
+#header, #main {
+	margin: 0;
+    padding: 0;
+   	width: calc(100vw - 5px * 2);
+}
+
+#header {
+	height: 48px;
+}
+
+#main {
+    height: calc( calc(100vh - 5px * 2) - 48px);
 }
 
 body {
@@ -34,11 +47,11 @@ body {
 }
 
 #toolbar {
+	height: 23px;
 	display: flex;
     flex-wrap: nowrap;
     overflow: scroll;
 	border-bottom: 2px solid black;
-    padding-bottom: 5px;
 }
 .tool {
 	width: fit-content;
@@ -86,13 +99,14 @@ body {
 }
 
 #editor {
+	border: 2px solid black;
+	width: calc(100vw - 5px * 2 - 8px);
+    height: calc( calc(100vh - 5px * 2) - 48px - 8px);
 	resize: none;
     outline: none;
     white-space: pre-wrap;
     overflow: scroll;
 	background: none;
-	flex: 1 1 auto;
-	border: 2px solid black;
 }
 </style>
 </head>
@@ -100,6 +114,7 @@ body {
 
 <input type="file" id="fileinput"></input>
 
+<div id="header">
 <div id="toolbar">
 	<div id="new" class="tool">New</div>
 	<div id="open" class="tool">Open</div>
@@ -112,8 +127,11 @@ body {
 
 <div id="files">
 </div>
+</div>
 
+<div id="main">
 <textarea id="editor" placeholder="[Empty File]">hi</textarea>
+</div>
 
 <script>
 const defaultname = "untitled.txt";
