@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="p5.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>Image to Text File (Scratch List)</h1>
+    <main>
+    </main>
+    <script>
+        // Thanks to Jared Donovan 2020
+
+let input;
+let img;
+let imgLoaded = false;
+
+function setup() {
+  createCanvas(400, 400);
+  input = createFileInput(handleFile);
+}
+
+function draw() {
+  background(220);
+  if (imgLoaded){
+    image(img, 0, 0, width, height);
+  }
+}
+
+function handleFile(file){
+  imgLoaded = false;
+  if (file.type === 'image') {
+    img = createImg(
+      file.data, 'Uploaded Image', 'anonymous', imgCreated);
+    img.hide();
+  } else {
+    img = null;
+  }
+}
+
+// Once the img element is created, use it to 
+// convert the image element into a p5Image object. 
+function imgCreated(){
+  img.hide();
+  // Create a temporary p5.Graphics object to draw the image.
+  let g = createGraphics(img.elt.width, img.elt.height);
+  g.image(img, 0, 0);
+  // Remove the original element from the DOM.
+  img.remove();
+  // g.get will return image data as a p5.Image object
+  img = g.get(0, 0, g.width, g.height)
+  
+  imgLoaded = true;
+  
+  // Process File
+  let file = createWriter("list.txt");
+  file.write([img.width]);
+  file.write(["\n"]);
+  file.write([img.height]);
+  file.write(["\n"]);
+  img.loadPixels();
+  for (let i = 0; i < img.pixels.length; i+=4) {
+    file.write([ img.pixels[i]*256*256 + img.pixels[i+1]*256 + img.pixels[i+2] ]);
+    file.write(["\n"]);
+  }
+  file.close();
+}
+    </script>
+  </body>
+</html>
