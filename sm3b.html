@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
+    <link rel="stylesheet" type="text/css" href="sm3b.css">
+    <meta charset="utf-8" />
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        display: block;
+      }
+      td {
+          border-top: 2px solid black;
+      }
+      td:nth-child(odd), th:nth-child(odd) {
+        border-right: 2px solid black;
+      }
+      strong {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+    </main>
+    <h1>SM3B: A Small 3-Bit Instruction Set</h1>
+    <h2>2^3 = 8 instructions</h2>
+    <table>
+      <tr>
+        <th>Symbol</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>0</td>
+        <td>Resets X if previous instruction not 0 or 1. Leftshifts X.</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Resets X if previous instruction not 0 or 1. Leftshifts X and adds 1.</td>
+      </tr>
+      <tr>
+        <td>+</td>
+        <td>Adds X to C (accumulator) and copies the result into X</td>
+      </tr>
+      <tr>
+        <td>-</td>
+        <td>Subtracts X from C (accumulator) and copies the result into X</td>
+      </tr>
+      <tr>
+        <td>$</td>
+        <td>Swaps the values of X and Y (general purpose)</td>
+      </tr>
+      <tr>
+        <td>#</td>
+        <td>Swaps the values of X and M (selected memory cell)</td>
+      </tr>
+      <tr>
+        <td>&commat;</td>
+        <td>Swaps the values of X and A (memory pointer)</td>
+      </tr>
+      <tr>
+        <td>?</td>
+        <td>Swaps the values of A (memory pointer) and I (instruction pointer) if X is not equal to zero</td>
+      </tr>
+    </table>
+    <h3>Example Programs</h3>
+    <label for="comment">Show Comments</label>
+    <input type="checkbox" name="comment" onchange="comment();">
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Program</th>
+      </tr>
+      <tr>
+        <td>Default</td>
+        <td><strong>Infinite Loop: </strong>1+$@0+#1@1?<strong>Memory gets filled with numbers sequentially</strong></td>
+      </tr>
+      <tr>
+        <td>Countdown</td>
+        <td><strong>User Input: </strong>1-@#+<strong>Countdown Loop: </strong>101@1-? <strong>Countdown value in C</strong></td>
+      </tr>
+      <tr>
+        <td>Multiplication</td>
+        <td><strong>User Input: </strong>1-@#$0@$#0+@#$1@$#+-$<strong>Multiplication Loop: </strong>0+-@#+#$+$0+-1@#+1-#10101@0+?<strong>Result in Y</strong></td>
+      </tr>
+    </table>
+    <h3>About the Simulator</h3>
+    <ul>
+      <li>Registers:
+        <ul>
+          <li>X: Center</li>
+          <li>Y: Left</li>
+          <li>C: Top</li>
+          <li>A: Right</li>
+          <li>I: Top Right</li>
+          <li>M: Bottom</li>
+        </ul>
+      </li>
+      <li>Memory Map:
+        <ul>
+          <li>0 - 65536: General Purpose Memory</li>
+          <li>-1: User Input (Read Only)</li>
+          <li>All other addresses cause an error if read</li>
+        </ul>
+      </li>
+      <li>Github Repository: <a href="https://github.com/bit-turtle/sm3b">bit-turtle/sm3b</a></li>
+    </ul>
+    <script>
+      var commenttoggle = false;
+      function comment() {
+        let strong = document.querySelectorAll("strong");
+        commenttoggle = !commenttoggle;
+        var index = 0, length = strong.length;
+        for ( ; index < length; index++) {
+            strong[index].style.display = commenttoggle ? "block" : "none";
+        }
+      }
+    </script>
+    <script src="sm3b.js"></script>
+  </body>
+</html>
