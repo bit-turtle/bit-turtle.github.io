@@ -101,16 +101,29 @@ var layout = [
 ];
 var speed = 1;
 var paused = false;
+var memscroll = 0;
+var memscrollspeed = 5;
 function render() {
   reg[4] = mem[reg[2]];
   if (tick == -1) tick = 0;
   else if (!paused) tick += deltaTime/1000;
   // Render
-  for (let i = 0; i < reg.length; i++) if (i != s1 && i != s2)
+  for (let i = 0; i < reg.length; i++) if (i != s1 && i != s2 && !(paused && i == 4) )
     val(reg[i], layout[i][0],layout[i][1]);
   // Mem
-  for (let i = -4; i <= 4; i++) if (i != 0 && reg[2]+i >= 0 && reg[2]+i<mem.length)
-    val(mem[reg[2]+i], i*50+200, layout[4][1]);
+  if (paused || end) {
+    if (keyIsDown(RIGHT_ARROW))
+      memscroll -= deltaTime/1000*memscrollspeed;
+    if (keyIsDown(LEFT_ARROW))
+      memscroll += deltaTime/1000*memscrollspeed;
+    if (memscroll < 0-reg[2])
+      memscroll = 0-reg[2];
+    if (memscroll > mem.length-reg[2]-1)
+      memscroll = mem.length-reg[2]-1;
+  }
+  let memslot = (paused || end) ? Math.round(memscroll) + reg[2] : reg[2];
+  for (let i = -4; i <= 5+Math.round((width-425)/50); i++) if ((paused || i != 0) && memslot+i >= 0 && memslot+i<mem.length)
+    val(mem[memslot+i], i*50+200-(paused || end ? memscroll*50-Math.round(memscroll)*50 : 0), layout[4][1]);
   // Swap
   push();
   if (flag > 0) {
@@ -165,10 +178,13 @@ function render() {
     inst();
   }
   // End
-  if (end) {
-    textSize(25);
+  if (end || paused) {
+    textSize(24);
     textAlign(CENTER);
-    text((err) ? "Error" : "End", 50, 87);
+    text((paused ? "Pause" : (err) ? "Error" : "End"), 50, 87);
+    text(Math.round(memscroll) >= 0? "+" + Math.round(memscroll): Math.round(memscroll), 350, 250);
+    textSize(40);
+    text("←→", 200, 325);
   }
 }
 
@@ -202,10 +218,18 @@ function load() {
 }
 function pause() {
   paused = !paused;
+  memscroll = 0;
 }
-var loadButton, resetButton, speedSlider, pauseButton;
+function offset() {
+  if (pause) {
+    let newoffset = parseInt(prompt("Memory Offset"));
+    if (!isNaN(newoffset))
+      memscroll = newoffset;
+  }
+}
+var loadButton, resetButton, speedSlider, pauseButton, offsetButton;
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(windowWidth >= 400 ? windowWidth : 400, 400);
   loadButton = createButton("Load");
   loadButton.position(27,90);
   loadButton.mousePressed(load);
@@ -218,9 +242,20 @@ function setup() {
   pauseButton = createButton("Pause");
   pauseButton.position(24,130);
   pauseButton.mousePressed(pause);
+  offsetButton = createButton("Offset");
+  offsetButton.position(323, 255);
+  offsetButton.mousePressed(offset);
+  offsetButton.style("display:none");
+}
+function windowResized() {
+  resizeCanvas(windowWidth >= 400 ? windowWidth : 400, 400);
 }
 
 function draw() {
   background(220);
+  if (paused)
+    offsetButton.style("display:block");
+  else
+    offsetButton.style("display:none");
   render();
 }
