@@ -108,7 +108,7 @@ function render() {
   if (tick == -1) tick = 0;
   else if (!paused) tick += deltaTime/1000;
   // Render
-  for (let i = 0; i < reg.length; i++) if (i != s1 && i != s2 && !(paused && i == 4) )
+  for (let i = 0; i < reg.length; i++) if (err || i != s1 && i != s2 && !(paused || end && i == 4) )
     val(reg[i], layout[i][0],layout[i][1]);
   // Mem
   if (paused || end) {
@@ -122,7 +122,7 @@ function render() {
       memscroll = mem.length-reg[2]-1;
   }
   let memslot = (paused || end) ? Math.round(memscroll) + reg[2] : reg[2];
-  for (let i = -4; i <= 5+Math.round((width-425)/50); i++) if ((paused || i != 0) && memslot+i >= 0 && memslot+i<mem.length)
+  for (let i = -4; i <= 5+Math.round((width-425)/50); i++) if ((paused || end || i != 0) && memslot+i >= 0 && memslot+i<mem.length)
     val(mem[memslot+i], i*50+200-(paused || end ? memscroll*50-Math.round(memscroll)*50 : 0), layout[4][1]);
   // Swap
   push();
