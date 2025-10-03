@@ -186,6 +186,8 @@ function render() {
     textSize(40);
     text("←→", 200, 325);
   }
+  else
+    memscroll = 0;
 }
 
 function reset() {
