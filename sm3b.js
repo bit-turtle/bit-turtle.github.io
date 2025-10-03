@@ -159,7 +159,7 @@ function render() {
       else if (reg[2] == -1) {
         // User input
         reg[s1] = parseInt(prompt("User Input"));
-        if (reg[s1] == null) reg[s1] = 0;
+        if (isNaN(reg[s1])) reg[s1] = 0;
         tick = -1;
         s1 = 0;
         s2 = 0;
