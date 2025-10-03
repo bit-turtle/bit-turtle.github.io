@@ -2,7 +2,7 @@
 // Works and looks cool, but not written very neatly
 
 var reg = [0,0,0,-1,0,0];
-/** Reg Ma
+/** Reg Map
 0: X
 1: Y
 2: A
@@ -102,7 +102,7 @@ var layout = [
 var speed = 1;
 var paused = false;
 var memscroll = 0;
-var memscrollspeed = 5;
+var memscrollspeed = 10;
 function render() {
   reg[4] = mem[reg[2]];
   if (tick == -1) tick = 0;
@@ -223,11 +223,9 @@ function pause() {
   memscroll = 0;
 }
 function offset() {
-  if (pause) {
-    let newoffset = parseInt(prompt("Memory Offset"));
-    if (!isNaN(newoffset))
-      memscroll = newoffset;
-  }
+  let newoffset = parseInt(prompt("Memory Offset"));
+  if (!isNaN(newoffset))
+    memscroll = newoffset;
 }
 var loadButton, resetButton, speedSlider, pauseButton, offsetButton;
 function setup() {
@@ -251,6 +249,10 @@ function setup() {
 }
 function windowResized() {
   resizeCanvas(windowWidth >= 400 ? windowWidth : 400, 400);
+}
+function mouseWheel(e) {
+  memscroll += e.deltaX/50;
+  return !((paused || end) && e.deltaY == 0);
 }
 
 function draw() {
