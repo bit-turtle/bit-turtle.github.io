@@ -255,7 +255,7 @@ function windowResized() {
 
 function draw() {
   background(220);
-  if (paused)
+  if (paused || end)
     offsetButton.style("display:block");
   else
     offsetButton.style("display:none");
