@@ -108,7 +108,7 @@ function render() {
   if (tick == -1) tick = 0;
   else if (!paused) tick += deltaTime/1000;
   // Render
-  for (let i = 0; i < reg.length; i++) if (err || i != s1 && i != s2 && !(paused || end && i == 4) )
+  for (let i = 0; i < reg.length; i++) if (err || i != s1 && i != s2 && !((paused || end) && i == 4) )
     val(reg[i], layout[i][0],layout[i][1]);
   // Mem
   if (paused || end) {
