@@ -278,7 +278,7 @@ function writefont(characters, charmap, width, height) {
    // Position
    var u = width-offset*2;
    var v = height-offset*2;
-   size = Math.min(v/h,u/w);
+   size = Math.ceil(Math.min(v/h,u/w));
 
    var x = Math.floor((mouseX-offset)/size);
    var y = Math.floor((mouseY-offset)/size);
