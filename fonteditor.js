@@ -1,16 +1,16 @@
 /*
   Roxus Font Editor
-    .sf (Sheikah Font)
+  .sf (Sheikah Font)
 */
 
 // Font
- var w = 8,h = 8;
- var character = -1;
- var characters = [
- ];
- var charmap = [];
+var w = 8,h = 8;
+var character = -1;
+var characters = [
+];
+var charmap = [];
 
-// // File format
+// File format
 function readbit(value, index) {
   value &= (1 << (7-index) );
   value >>= (7-index);
@@ -86,230 +86,232 @@ function writefont(characters, charmap, width, height) {
   return buffer;
 }
 // Font
- function loadfont(file) {
-   if (file.file) {
-     let reader = new FileReader();
+function loadfont(file) {
+  if (file.file) { // Check if the p5File object contains a native File object
+    let reader = new FileReader();
 
-     reader.onloadend = function(event) {
-       if (event.target.readyState === FileReader.DONE) {
-         let arrayBuffer = event.target.result;
-         let buffer = new Uint8Array(arrayBuffer);
+    reader.onloadend = function(event) {
+      if (event.target.readyState === FileReader.DONE) {
+        let arrayBuffer = event.target.result;
+        let buffer = new Uint8Array(arrayBuffer);
 
-         var dimensions = readfont(buffer, characters, charmap);
-         w = dimensions.width;
-         h = dimensions.height;
-         if (characters.length > 0)
-           character = 0;
-       }
-     };
+        var dimensions = readfont(buffer, characters, charmap);
+        w = dimensions.width;
+        h = dimensions.height;
+        if (characters.length > 0)
+          character = 0;
+      }
+    };
 
-     reader.onerror = function(event) {
-       alert("Error while reading file");
-     };
+    reader.onerror = function(event) {
+      alert("Error while reading file");
+    };
 
-     reader.readAsArrayBuffer(file.file);
-   }
- }
- function savefont(filename) {
-   var font = writefont(characters, charmap, w, h);
-   const blob = new Blob([font], { type: 'application/octet-stream' });
-   const url = URL.createObjectURL(blob);
-   const a = document.createElement('a');
-   a.href = url;
-   a.download = filename;
-   document.body.appendChild(a); // Append to body (can be hidden)
-   a.click();
-   document.body.removeChild(a); // Remove the link
-   URL.revokeObjectURL(url);
- }
+    reader.readAsArrayBuffer(file.file);
+  }  
+}
+function savefont(filename) {
+  var font = writefont(characters, charmap, w, h);
+  const blob = new Blob([font], { type: 'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a); // Append to body (can be hidden)
+  a.click();
+  document.body.removeChild(a); // Remove the link
+  URL.revokeObjectURL(url);
+}
+const testFont = [ 2, 2, "a", 0b10101010, 0b11000000, "b", 0b00100011, 0b11100000]
 
- var size = 20;
+var size = 20;
 
- function tri(x, y, t) {
-   let u = x+size, v = y+size;
-   triangle(
-     // Corner
-     t%2 == 0 ? u : x, Math.floor(t/2) == 0 ? v : y,
-     // Top
-     t%2 == Math.floor(t/2) ? u : x, y,
-     // Bottom
-     t%2 == Math.floor(t/2) ? x : u, v
-   )
- }
+function tri(x, y, t) {
+  let u = x+size, v = y+size;
+  triangle(
+    // Corner
+    t%2 == 0 ? u : x, Math.floor(t/2) == 0 ? v : y,
+    // Top
+    t%2 == Math.floor(t/2) ? u : x, y,
+    // Bottom
+    t%2 == Math.floor(t/2) ? x : u, v
+  )
+}
 
- function rec(x, y) {
-   rect(x, y, size, size);
- }
+function rec(x, y) {
+  rect(x, y, size, size);
+}
 
- function dia(x, y, t) {
-   if (t == 0) quad(
-     x+size/2,y,
-     x,y+size/2,
-     x+size/2,y+size,
-     x+size,y+size/2
-   )
-   else {
-     let mid = size/2;
-     triangle(x, y, x+mid, y, x, y+mid);
-     triangle(x+size, y, x+mid, y, x+size, y+mid);
-     triangle(x, y+size, x+mid, y+size, x, y+mid);
-     triangle(x+size, y+size, x+mid, y+size, x+size, y+mid);
-     push();
-     noFill();
-     strokeWeight(1);
-     pop();
-   }
- }
+function dia(x, y, t) {
+  if (t == 0) quad(
+    x+size/2,y,
+    x,y+size/2,
+    x+size/2,y+size,
+    x+size,y+size/2
+  )
+  else {
+    let mid = size/2;
+    triangle(x, y, x+mid, y, x, y+mid);
+    triangle(x+size, y, x+mid, y, x+size, y+mid);
+    triangle(x, y+size, x+mid, y+size, x, y+mid);
+    triangle(x+size, y+size, x+mid, y+size, x+size, y+mid);
+    push();
+    noFill();
+    strokeWeight(1);
+    pop();
+  }
+}
 
- function dis(x, y, t) {
-   if (t == 1)
-     rec(x,y);
-   else if (t > 5)
-     dia(x, y, t-6);
-   else if (t > 1)
-     tri(x, y, t-2);
- }
+function dis(x, y, t) {
+  if (t == 1)
+    rec(x,y);
+  else if (t > 5)
+    dia(x, y, t-6);
+  else if (t > 1)
+    tri(x, y, t-2);
+}
 
- var fileinput, savebutton;
- function setup() {
-   createCanvas(400, 400);
-   fileinput = createFileInput(loadfont, false);
-   savebutton = createButton("Save Font")
-   savebutton.mousePressed(
-     function() {
-       var filename = prompt("Filename:");
-       savefont(filename == "" ? "font.sf" : filename);
-     }
-   )
- }
+var fileinput, savebutton;
+function setup() {
+  createCanvas(400, 400);
+  fileinput = createFileInput(loadfont, false);
+  savebutton = createButton("Save Font")
+  savebutton.mousePressed(
+    function() {
+      var filename = prompt("Filename:");
+      savefont(filename == "" ? "font.sf" : filename);
+    }
+  )
+}
 
- var counter = 0;
- var speed = 1;
- var anim = true;
- var selection = 1;
+var counter = 0;
+var speed = 1;
+var anim = true;
+var selection = 1;
 
 
- var offset = 100;
+var offset = 100;
 
- function keyPressed() {
-   if (key == "p") {
-     anim = !anim;
-     return;
-   }
-   if (key == "[") {
-     speed++;
-     return;
-   }
-   if (key == "]") {
-     speed = (speed != 0) ? speed - 1 : speed;
-     return;
-   }
-   if (keyCode == LEFT_ARROW) {
-     character = (character <= 0) ? Math.min(0,characters.length-1) : character-1;
-     return;
-   }
-   if (keyCode == RIGHT_ARROW) {
-     character = (character >= characters.length-1) ? character : character+1;
-     return;
-   }
-   if (keyCode == ENTER) {
-     characters.splice(character+1, 0, ch(w,h));
-     charmap.splice(character+1, 0, undefined);
-     character++;
-     return;
-   }
-   if (keyCode == BACKSPACE) {
-     if (character < 0)
-       return
-     characters.splice(character, 1);
-     charmap.splice(character, 1);
-     character = (characters.length == 0) ? -1 : (character <= 0) ? 0 : character-1;
-     return;
-   }
-   if (key == "c") {
-     if (character < 0)
-       return;
-     characters[character] = ch(w,h);
-     return;
-   }
-   if (key == "r") {
-     var neww = parseInt(prompt("Width:"));
-     var newh = parseInt(prompt("Height:"));
-     if (isNaN(neww) || isNaN(newh))
-       return;
-     w = neww;
-     h = newh;
-   }
-   if (key == "m") {
-     var c =  prompt("Map Character:");
-     if (c != null && c.length != 0)
-       charmap[character] = c[0];
-   }
-   if (key == "s") {
-     savefont("font.sf");
-     return;
-   }
-   var newselection = parseInt(key);
-   if (isNaN(newselection))
-     return;
-   if (newselection > 7)
-     selection = 0;
-   else
-     selection = newselection;
- }
+function keyPressed() {
+  if (key == "p") {
+    anim = !anim;
+    return;
+  }
+  if (key == "[") {
+    speed++;
+    return;
+  }
+  if (key == "]") {
+    speed = (speed != 0) ? speed - 1 : speed;
+    return;
+  }
+  if (keyCode == LEFT_ARROW) {
+    character = (character <= 0) ? Math.min(0,characters.length-1) : character-1;
+    return;
+  }
+  if (keyCode == RIGHT_ARROW) {
+    character = (character >= characters.length-1) ? character : character+1;
+    return;
+  }
+  if (keyCode == ENTER) {
+    characters.splice(character+1, 0, ch(w,h));
+    charmap.splice(character+1, 0, undefined);
+    character++;
+    return;
+  }
+  if (keyCode == BACKSPACE) {
+    if (character < 0)
+      return
+    characters.splice(character, 1);
+    charmap.splice(character, 1);
+    character = (characters.length == 0) ? -1 : (character <= 0) ? 0 : character-1;
+    return;
+  }
+  if (key == "c") {
+    if (character < 0)
+      return;
+    characters[character] = ch(w,h);
+    return;
+  }
+  if (key == "r") {
+    var neww = parseInt(prompt("Width:"));
+    var newh = parseInt(prompt("Height:"));
+    if (isNaN(neww) || isNaN(newh))
+      return;
+    w = neww;
+    h = newh;
+  }
+  if (key == "m") {
+    var c =  prompt("Map Character:");
+    if (c != null && c.length != 0)
+      charmap[character] = String.fromCodePoint(c.codePointAt(0));
+  }
+  if (key == "s") {
+    savefont("font.sf");
+    return;
+  }
+  var newselection = parseInt(key);
+  if (isNaN(newselection))
+    return;
+  if (newselection > 7)
+    selection = 0;
+  else
+    selection = newselection;
+}
 
- function draw() {
-   size = 20;
-   background(0);
-   stroke(255);
-   fill(255);
-   strokeWeight(0);
-   if (anim) {
-     for (let i = 0; i < width/size-1; i++)
-       dis(size*i+size/2,size/2,(Math.floor(counter)+i)%8);
-     counter += deltaTime / 1000 * speed;
-   }
-   // Selection
-   dis(size/2, height-size*2+size/2, selection);
-   // Character
-   textAlign(RIGHT);
-   textSize(size);
-   text(character +" " + charmap[character], width-size+size/2, height-size+size/2);
-   // Position
-   var u = width-offset*2;
-   var v = height-offset*2;
-   size = Math.ceil(Math.min(v/h,u/w));
-
-   var x = Math.floor((mouseX-offset)/size);
-   var y = Math.floor((mouseY-offset)/size);
-
-   textAlign(CENTER);
-   textSize(20);
-   text("["+x+","+y+"]", width/2, height-10);
-   noFill();
-   strokeWeight(5);
-   stroke(127);
-   rect(offset-5/2, offset-5/2, w*size+5, h*size+5);
-   fill(127);
-   noStroke();
-   dis(offset+size*x, offset+size*y, selection != 0 ? selection : 1);
-   if (x >= 0 && y >= 0 && x < w && y < h) {
-     if (mouseIsPressed && character < characters.length && character >= 0) {
-       if (characters[character][x] == undefined)
-         characters[character][x] = Array(h).fill(0);
-       characters[character][x][y] = selection;
-     }
-   }
-   // Render
-   fill(255);
-   strokeWeight(0);
-   if (character < characters.length && character >= 0) {
-
-     for (let x = 0; x < w; x++) for (let y = 0; y < h; y++) if (characters[character][x] != undefined)
-       dis(offset+size*x, offset+size*y, characters[character][x][y]);
-   }
+function draw() {
+  size = 20;
+  background(0);
+  stroke(255);
+  fill(255);
+  strokeWeight(0);
+  if (anim) {
+    for (let i = 0; i < width/size-1; i++)
+      dis(size*i+size/2,size/2,(Math.floor(counter)+i)%8);
+    counter += deltaTime / 1000 * speed;
+  }
+  // Selection
+  dis(size/2, height-size*2+size/2, selection);
+  // Character
+  textAlign(RIGHT);
+  textSize(size);
+  text(character +" " + charmap[character], width-size+size/2, height-size+size/2);
+  // Position
+  var u = width-offset*2;
+  var v = height-offset*2;
+  size = Math.ceil(Math.min(v/h,u/w));
+  
+  var x = Math.floor((mouseX-offset)/size);
+  var y = Math.floor((mouseY-offset)/size);
+  
+  textAlign(CENTER);
+  textSize(20);
+  text("["+x+","+y+"]", width/2, height-10);
+  noFill();
+  strokeWeight(5);
+  stroke(127);
+  rect(offset-5/2, offset-5/2, w*size+5, h*size+5);
+  fill(127);
+  noStroke();
+  dis(offset+size*x, offset+size*y, selection != 0 ? selection : 1);
+  if (x >= 0 && y >= 0 && x < w && y < h) {
+    if (mouseIsPressed && character < characters.length && character >= 0) {
+      if (characters[character][x] == undefined)
+        characters[character][x] = Array(h).fill(0);
+      characters[character][x][y] = selection;
+    }
+  }
+  // Render
+  fill(255);
+  strokeWeight(0);
+  if (character < characters.length && character >= 0) {
+    
+    for (let x = 0; x < w; x++) for (let y = 0; y < h; y++) if (characters[character][x] != undefined)
+      dis(offset+size*x, offset+size*y, characters[character][x][y]);
+  }
   else {
     textAlign(CENTER);
     text("Press Enter\nTo create a character\n\nControls:\nNumbers: Select Tile\nArrows: Characters\nM: Set Mapping\nR: Resize Font", width/2, offset+20);
   }
 }
+
