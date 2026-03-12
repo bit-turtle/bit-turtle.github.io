@@ -193,6 +193,7 @@ var selection = 1;
 var offset = 100;
 
 function keyPressed() {
+  // Top animation control
   if (key == "p") {
     anim = !anim;
     return;
@@ -205,6 +206,7 @@ function keyPressed() {
     speed = (speed != 0) ? speed - 1 : speed;
     return;
   }
+  // Scrolling through characters
   if (keyCode == LEFT_ARROW) {
     character = (character <= 0) ? Math.min(0,characters.length-1) : character-1;
     return;
@@ -213,11 +215,29 @@ function keyPressed() {
     character = (character >= characters.length-1) ? character : character+1;
     return;
   }
+  // Move char
+  if (keyCode == UP_ARROW && character >= 0 && character < characters.length-1) {
+    let buffer = characters[character];
+    characters[character] = characters[character+1];
+    characters[character+1] = buffer;
+    character = character + 1;
+  }
+  if (keyCode == DOWN_ARROW && character > 0) {
+    let buffer = characters[character];
+    characters[character] = characters[character-1];
+    characters[character-1] = buffer;
+    character = character - 1;
+  }
+  // Char creation, duplication, and deletion
   if (keyCode == ENTER) {
     characters.splice(character+1, 0, ch(w,h));
     charmap.splice(character+1, 0, undefined);
     character++;
     return;
+  }
+  if (key == ' ' && character >= 0) {
+    characters.splice(character+1, 0, structuredClone(characters[character]));
+    character++;
   }
   if (keyCode == BACKSPACE) {
     if (character < 0)
@@ -227,12 +247,14 @@ function keyPressed() {
     character = (characters.length == 0) ? -1 : (character <= 0) ? 0 : character-1;
     return;
   }
+  // Clear
   if (key == "c") {
     if (character < 0)
       return;
     characters[character] = ch(w,h);
     return;
   }
+  // Resize
   if (key == "r") {
     var neww = parseInt(prompt("Width:"));
     var newh = parseInt(prompt("Height:"));
@@ -241,15 +263,18 @@ function keyPressed() {
     w = neww;
     h = newh;
   }
+  // Set mapping
   if (key == "m") {
     var c =  prompt("Map Character:");
     if (c != null && c.length != 0)
       charmap[character] = String.fromCodePoint(c.codePointAt(0));
   }
+  // Save font
   if (key == "s") {
     savefont("font.sf");
     return;
   }
+  // Switch tile
   var newselection = parseInt(key);
   if (isNaN(newselection))
     return;
@@ -314,4 +339,3 @@ function draw() {
     text("Press Enter\nTo create a character\n\nControls:\nNumbers: Select Tile\nArrows: Characters\nM: Set Mapping\nR: Resize Font", width/2, offset+20);
   }
 }
-
