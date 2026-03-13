@@ -1,9 +1,9 @@
 <html><head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>From Below</title>
+	<title>Nes Game</title>
 
-	<script src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script>
+	<script src="jsnes.min.js"></script>
 	<script src="nes-embed.js"></script>
 	<script>window.onload = function () { nes_load_url("nes-canvas", "nesgame.nes"); }</script>
 </head>
@@ -39,30 +39,20 @@
 			width: 100%;
 			height: 100%;
 		}
+		p {
+			color: white;
+			font-family: monospace;
+		}
+		a {
+			color: lightblue;
+		}
 	</style>
 	<div class="nes-div">
-		<canvas id="nes-canvas" width="256" height="240">
-	</canvas></div>
+		<canvas id="nes-canvas" width="256" height="240"></canvas>
+		<p>
+			Controls: Arrow Keys to Move, X/Z for A/B, and Enter/Shift for Start/Select <br><br>
+			Github Repository: <a href="https://github.com/bit-turtle/nesgame/">bit-turtle/nesgame</a> <br><br>
+			If you have any feedback, or maybe an idea for the name, please fill out the <a href="https://forms.gle/CUqMrwXrPM8BjWDK8">feedback form</a>
+		</p>
+	</div>
 </body></html>
-
-
-<!--
-<!DOCTYPE html>
-
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Embedding Example</title>
-		
-		<script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script>
-		<script type="text/javascript" src="nes-embed.js"></script>
-		<script>window.onload = function(){nes_load_url("nes-canvas", "from_below_2020_07_11.nes");}</script>
-	</head>
-	<body>
-		<div style="width:512px">
-			<canvas id="nes-canvas" width="256" height="240" style="width:100%"/>
-		</div>
-		<p>DPad: Arrow keys<br/>Start: Return, Select: Tab<br/>A Button: A, B Button: S</p>
-	</body>
-</html>
--->
