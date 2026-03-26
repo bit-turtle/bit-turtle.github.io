@@ -76,7 +76,14 @@ function writefont(characters, charmap, width, height) {
   var buffer = new Uint8Array(2+length*characters.length);
   buffer[0] = width; buffer[1] = height;
   for (var c = 2, i = 0; c < buffer.length-length+1; c += length, i++) {
-    var codePoint = charmap[i].codePointAt(0);
+    // Default codepoint of 0
+    var codePoint = 0;
+    if (charmap[i] == undefined || typeof charmap[i] != "string" && isNaN(charmap[i]))
+      alert("Invalid Mapping on character " + i + "\nDefaulting to null");
+    if (typeof charmap[i] === "string")
+        codePoint = charmap[i].codePointAt(0);
+    else
+      codePoint = parseInt(charmap[i]);
     buffer[c+3] = codePoint&0xff;
     buffer[c+2] = (codePoint>>8)&0xff;
     buffer[c+1] = (codePoint>>16)&0xff;
@@ -266,8 +273,13 @@ function keyPressed() {
   // Set mapping
   if (key == "m") {
     var c =  prompt("Map Character:");
-    if (c != null && c.length != 0)
-      charmap[character] = String.fromCodePoint(c.codePointAt(0));
+    if (c != null && c.length != 0) {
+      if (c.length == 1)
+        charmap[character] = String.fromCodePoint(c.codePointAt(0));
+      else {
+        charmap[character] = parseInt(c);
+      }
+    }
   }
   // Save font
   if (key == "s") {
@@ -300,7 +312,7 @@ function draw() {
   // Character
   textAlign(RIGHT);
   textSize(size);
-  text(character +" " + charmap[character], width-size+size/2, height-size+size/2);
+  text(character +" " + (typeof charmap[character] == "number" ? "0x" + charmap[character].toString(16) : charmap[character]) , width-size+size/2, height-size+size/2);
   // Position
   var u = width-offset*2;
   var v = height-offset*2;
