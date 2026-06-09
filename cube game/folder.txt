@@ -1,0 +1,1 @@
+If only GitHub web ui provided a way to create directories
