@@ -32,17 +32,19 @@
 // Levels
 var currentLevel = 0;
 var levels = [
-  [  // Level 0
-    "Click to Play!",  // Start message
+  [  // Tutorial  
+    "Cube Game!",  // Start message
     [  // Spike positions
       [500, 100]
     ],
     [  // Block positions
-      [100, 100]
+      [120, 100]
     ],
     600,  // Win distance
-    "You Win!"  // Win message
+    "Squish!",  // Win message
+    "Click to play!"  // Tip
   ],
+  
   [  // Level 1
     "Level 1",  // Start message
     [  // Spike positions
@@ -53,11 +55,15 @@ var levels = [
       [400, 80],
       [400, 70],
       [800, 100],
+      [840, 100],
       [880, 100]
     ],
-    [],
+    [
+      [830, 50],
+      [850, 50]
+    ],
     1200,  // Win distance
-    "Stage Complete"  // Win message
+    "You Win!"  // Win message
   ],
 ];
 
@@ -108,7 +114,7 @@ async function setup() {
   pixelDensity(1);
   font = await loadFont('font.ttf');
   creditText = await loadStrings("credits.txt")
-  originalImage = createFramebuffer();
+  originalImage= createFramebuffer();
   squishParam = createVector(0, 0, 1, 1);
   bloomShader = buildFilterShader(bloomCallback);
   squishShader = buildMaterialShader(squishCallback);
@@ -162,6 +168,10 @@ function loadLevel() {
   blocks = levels[currentLevel][i++];
   windist = levels[currentLevel][i++];
   winmessage = levels[currentLevel][i++];
+  if (levels[currentLevel].length <= i)
+    tip = "";
+  else
+    tip = levels[currentLevel][i];
 }
 
 var spikeboxes = [];
@@ -181,6 +191,12 @@ var spiked = false;
 const spiketimescale = 0.002;
 
 var dead = true;
+
+
+var blocksquish = false;
+var blocky = 0;
+
+var tip = "";
 
 function aabbHit(hitbox1, hitbox2) {
   return (
@@ -212,24 +228,29 @@ function draw() {
   if (!dead && !spiked && !(flash && flashoverlay > 255)) {
   if (click) {
     playervy = -0.25;
+    if (blocksquish) {
+      playery = blocky;
+      blocksquish = false; 
+    }
   }
       playerx += gamespeed*0.0001*deltaTime;
   
     prevplayery = playery;
   playery += playervy*deltaTime;
-  playervy += 0.001*deltaTime;
+  if (!blocksquish) playervy += 0.001*deltaTime;
     
   playerrot += 0.008*deltaTime;
   
   // Collision
-  if (playery >= 100) {
+  if (playery >= 100 || blocksquish) {
     playersquish += squishfactor * deltaTime*0.06;
-    playery = 100;
+    playery = (blocksquish) ? blocky : 100;
     playervy = 0;
     playerrot = 0;
   }
-  else
+  else {
     playersquish -= squishfactor * deltaTime*0.06;
+  }
   if (playersquish < 0) {
     playersquish = 0;
     dead = true;
@@ -272,7 +293,7 @@ function draw() {
   for (let i = 0; i < blocks.length; i++) {
     let block = {
       x: blocks[i][0]-10-playerx,
-      y: blocks[i][1]-10+100,
+      y: blocks[i][1]-10,
       w: 20,
       h: 20
     };
@@ -288,10 +309,38 @@ function draw() {
   // Stars
   
   // Collision
-  if (!dead && !spiked) for (let i = 0; i < spikeboxes.length; i++) {
+  if (!dead && !spiked) {
+    for (let i = 0; i < spikeboxes.length; i++) {
     if (aabbHit(hitbox, spikeboxes[i])) {
       spiked = true;
       spiketimer = 0;
+      break;
+    }
+    }
+    
+    let blockofsquish = blocksquish;
+    blocksquish = false;
+    for (let i = 0; i < blockboxes.length; i++) {
+      blockboxes[i].y -= 0.1;
+      if (aabbHit(hitbox, blockboxes[i])) {
+        blockboxes[i].y += 0.1;
+        if (prevplayery <= blockboxes[i].y-10) {
+          blocky = blockboxes[i].y-10;
+          playery = blocky;
+          playervy = 0;
+          // Compensate for the 1 frame delay of this system
+          if (!blockofsquish) playersquish += squishfactor * deltaTime*0.06;
+          playerrot = 0;
+          blocksquish = true;
+        }
+        else if (blockofsquish) {
+          blocksquish = true;
+        }
+        else { // Crash
+          spiked = true;
+        }
+        break;
+      }
     }
   }
   
@@ -348,6 +397,15 @@ function draw() {
   cone(20,20,4);
     pop();
   }
+  // Block
+  for (let i = 0; i < blocks.length; i++) {
+    push();
+    noStroke();
+    translate(blocks[i][0], blocks[i][1], 0);
+    fill(75,100,75);
+    box(20);
+    pop();
+  }
   pop();
   
     push();
@@ -377,8 +435,9 @@ function draw() {
     rect(-5-width/2,-5-height/2,width+10,height+10);
     for (let i = 0; i < creditText.length; i++) {
         fill(40, 120, 255);
-      
-      if (creditText[i] == "[cube]") {
+      if (creditText[i] == "")
+        continue;
+      else if (creditText[i] == "[cube]") {
         push();
         squishParam.x = 0;
   squishParam.y = 10+i*20-creditscroll/2+height;
@@ -450,7 +509,7 @@ function draw() {
   if (flash || fade || credits) {
     if (credits) {
       creditscroll += deltaTime*0.15;
-      translate(0,-creditscroll,0);
+      translate(0,-creditscroll*2,0);
     }
     if (flash) {
       flashoverlay += deltaTime*0.15;
@@ -466,7 +525,7 @@ function draw() {
         fade = false;
       }
     }
-    fill(255-creditscroll,255-creditscroll,255-creditscroll,flashoverlay);
+    fill(255,255,255,flashoverlay);
     rect(-5-width/2,-5-height/2,width+10,height+10);
     if (flashoverlay > 320) {
       
