@@ -44,9 +44,21 @@ var levels = [
     "Squish!",  // Win message
     "Click to play!"  // Tip
   ],
-  
-  [  // Level 1
-    "Level 1",  // Start message
+  [
+    "Conservation\nof Squish",  // Start message
+    [  // Spikes
+      [100, 100],
+      [250, 100],
+      [350, 100],
+      [450, 100],
+      [550, 100]
+    ],
+    [],  // Blocks
+    700,  // Win distance
+    "Just Right!"
+  ],
+  [
+    "The Tower",  // Start message
     [  // Spike positions
       [100, 100],
       [200, 100],
@@ -62,9 +74,38 @@ var levels = [
       [830, 50],
       [850, 50]
     ],
-    1200,  // Win distance
-    "You Win!"  // Win message
+    1100,  // Win distance
+    "Amazing!"  // Win message
   ],
+  [
+    "Mind the Gap",
+    [  // Spikes
+      [100, 100], [140, 100], [180, 100], [220, 100], [260, 100], [300, 100], [340, 100], [380, 100]
+    ],
+    [  // Blocks
+      [120, 60], [140, 60],
+      [250, 60], [290, 60], [330, 60]
+    ],
+    500,
+    "Now You're\nRolling!"
+  ],
+  [  // Level 2
+    "A Tight\nSqueeze",  // Start message
+    [  // Spikes
+      [100,100],
+      [300, 100],
+      [500, 100],
+      [550, 100]
+    ],
+    [
+      [120, -70], [120, -50], [120, -30], [120, -10], [120, 30], [120, 10],  [120, 50],
+      [200, 90],
+      [140, 50], [160, 50], [180, 50], [200, 50], [200, 70],
+      [350, 80], [350, 100],
+    ],  // Blocks
+    700,  // Win distance
+    "Wow!"  // Win message
+  ]
 ];
 
 // Shaders
@@ -128,6 +169,7 @@ var creditscroll = 0;
 var flash = false;
 var fade = true;
 var flashoverlay = 255;
+var creditcount = 0;
 
 const squishfactor = 0.0195;
 
@@ -181,7 +223,7 @@ var blockboxes = [];
 var hitboxes = false;
 var directview = false;
 var orbit = false;
-var win = 0;
+var win = currentLevel;
 
 var titlescale = 0;
 const titlesize = 2;
@@ -207,14 +249,18 @@ function aabbHit(hitbox1, hitbox2) {
   );
 }
 
-var clickCooldown = false;
+var homeanimtime = 0;
+
+var prevClick = false;
+var click = false;
+var release = false;
 function draw() {
   
+  prevClick = click;
+  click = keyIsPressed || mouseIsPressed;
+  release = !click && prevClick;
   
-  let click = keyIsPressed || mouseIsPressed;
-  if (!click)
-    clickCooldown = false;
-  if (clickCooldown || credits)
+  if (credits)
     click = false;
   // Controls
   if (playerx > windist)
@@ -261,16 +307,16 @@ function draw() {
   }
   }
   else if (!spiked) {
-    playersquish = 1+sin(millis()*0.01)/2;
+    homeanimtime += deltaTime*(click ? 0.005 : 0.01);
+    playersquish = 1+sin(homeanimtime)/2;
     playerx = 0;
     playery = 100;
     playervx = 0;
     playervy = 0;
     playerrot = 0;
     
-    if (click && !fade && !flash) {
+    if (release && !fade && !flash) {
       dead = false;
-      clickCooldown = true;
     }
   }
   
@@ -437,7 +483,7 @@ function draw() {
         fill(40, 120, 255);
       if (creditText[i] == "")
         continue;
-      else if (creditText[i] == "[cube]") {
+      else if (creditText[i] == "[cube]" || creditText[i] == "[box]") {
         push();
         squishParam.x = 0;
   squishParam.y = 10+i*20-creditscroll/2+height;
@@ -446,7 +492,10 @@ function draw() {
         shader(squishShader);
         translate(0, i*20-creditscroll/2+height, 0);
         rotateY(PI/8);
-        fill(40, 120, 255);
+        if (creditText[i] == "[cube]")
+          fill(40, 120, 255);
+        else
+          fill(75,100,75);
         noStroke();
 
         // Player
@@ -481,6 +530,11 @@ function draw() {
         squishParam.y = 0;
         squishParam.z = 0;
         squishParam.w = 0;
+      }
+      else if (creditText[i] == "[ground]") {
+        translate(0, i*20-creditscroll/2+height, 0);
+        scale(0.25);
+        box(1000, 30, 100);
       }
       else {
     textFont(font);
@@ -535,7 +589,7 @@ function draw() {
       scale(2);
       text(winmessage, 0, 0);
       if (flashoverlay > 500 || click) {
-        flash = false;
+        flash = false; 
         fade = true;
         dead = true;
         if (currentLevel < levels.length-1)
@@ -543,6 +597,7 @@ function draw() {
       else {
         // Game complete
         credits = true;
+        creditcount++;
         fade = false;
         flash = false;
         flashoverlay = 255;
